@@ -13,6 +13,9 @@ require('dotenv').config();
 
 const Kullanici = require('./models/kullanici');
 
+var compression = require('compression');
+var helmet = require('helmet');
+
 
 
 // express app
@@ -54,13 +57,15 @@ passport.deserializeUser(function(id, done) {
     done(err, user);
   });
 });
-app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
+app.use(session({ secret: process.env.SECRET, resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 // middleware & static files
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
+app.use(compression());
+app.use(helmet());
 // app.use((req, res, next) => {
 //   console.log(req.body);
 //   next();
