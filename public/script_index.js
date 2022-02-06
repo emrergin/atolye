@@ -17,13 +17,13 @@ const satirSayisi=document.getElementById("oykuTablosu").children[0].childElemen
 if (satirSayisi>1){
   document.getElementById(`sayiMetin`).textContent="Öykü Sayısı: "+satirSayisi;
 }
+
 function siralamaDegistir(){  
   if (siraDugme.textContent==="Hafta ▲"){
       siraDugme.textContent="Hafta ▼";
-  }
-  else{
+  }else if(siraDugme.textContent==="Hafta ▼"){
     siraDugme.textContent="Hafta ▲";
-  }    
+  } 
   reverseTable();
 }  
 

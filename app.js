@@ -62,7 +62,9 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use(compression());
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false,
+}));
 
 app.use((req, res, next) => {
   res.locals.path = req.path;
