@@ -4,22 +4,22 @@
   "engines": {
     "node": "16.13.1"
   },
-  "description": "a node crash course",
-  "main": "server.js",
+  "description": "literature workshop",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/iamshaunjp/node-crash-course.git"
+    "url": "git+https://github.com/emrergin/atolye.git"
   },
-  "author": "net ninja",
-  "license": "ISC",
+  "author": "Emre Ergin",
+  "license": "",
   "bugs": {
-    "url": "https://github.com/iamshaunjp/node-crash-course/issues"
+    "url": "https://github.com/emrergin/atolye"
   },
-  "homepage": "https://github.com/iamshaunjp/node-crash-course#readme",
+  "homepage": "https://github.com/emrergin/atolye#readme",
   "dependencies": {
     "async": "^3.2.3",
     "dotenv": "^16.0.0",
