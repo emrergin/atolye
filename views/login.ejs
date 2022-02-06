@@ -1,0 +1,18 @@
+<html lang="en">
+<%- include("./partials/head.ejs") %>
+
+<body>
+  <%- include("./partials/nav.ejs") %>
+
+  <h1>Lütfen Giriş Yapın.</h1>
+  <form action="/uyeGirisi" method="POST">
+    <label for="username">Kullanıcı Adı:</label>
+    <input name="username" type="text" />
+    <label for="password">Parola</label>
+    <input name="password" type="password" />
+    <button>Giriş Yap</button>
+  </form>
+
+  <%- include("./partials/footer.ejs") %>
+</body>
+</html>

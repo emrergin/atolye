@@ -1,0 +1,124 @@
+<html lang="en">
+<%- include("./partials/head.ejs") %>
+
+
+<body>
+  <%- include("./partials/nav.ejs") %>
+  <!-- <p> <%=buHafta %></p> -->
+  <div id="filtreler">
+    <select id="haftaSec" autocomplete="off" onChange="window.location.href=this.value">
+        <option value="/">Hafta Seç</option>
+        <% if (haftalar.length > 0) { %>
+          <% haftalar.forEach(hafta => { %>
+            <% if (buHafta==hafta){ %>
+              <option value= "/hafta/<%=hafta %>" selected %>><%= hafta %></option>
+            <% } else {%>
+              <option value= "/hafta/<%=hafta %>" %>><%= hafta %></option>
+            <% } %>
+          <% }) %>
+        <% } %>
+    </select>
+    <select id="yazarSec" autocomplete="off" onChange="window.location.href=this.value">
+        <option value="/">Yazar Seç</option>
+        <% if (yazarlar.length > 0) { %>
+          <% yazarlar.forEach(yazar => { %>
+            <% if (buYazar==yazar){ %>
+              <option value= "/yazar/<%=yazar %>" selected%>><%= yazar %></option>
+            <% } else {%>
+              <option value= "/yazar/<%=yazar %>" %>><%= yazar %></option>
+            <% } %>
+          <% }) %>
+        <% } %>
+    </select>
+    <button onclick="location.href='/rastgele';" >Rastgele!</button>
+  </div>
+  <p id="sayiMetin"></p>
+  <div class="blogs content" id="mainTableContainer">
+    <!-- <h2>Bütün Öyküler</h2> -->
+    <% if (oykuler.length > 0) { %>
+    <table id="oykuTablosu">
+      <tr>
+        <th>
+          Öykü
+        </th> 
+        <th>
+          Yazar
+        </th>
+        <th id="haftaBaslik" onclick="siralamaDegistir()">
+          Hafta ▲
+        </th>
+      </tr>
+      <% oykuler.forEach(oyku => { %>
+        <tr>
+          <td>
+            <a href=<%=oyku.link %>>
+              <%= oyku.baslik %>
+            </a>
+          </td>
+          <td>
+            <a href="/yazar/<%=oyku.yazar %>">
+              <%= oyku.yazar %>
+            </a>
+          </td>
+          <td>
+            <a href="/hafta/<%=oyku.hafta %>">
+             Hafta <%= oyku.hafta %>
+            </a>
+          </td>
+        </tr>
+      <% }) %>
+    </table>
+    <% } else { %>
+      <p>Veritabanı boş...</p>
+    <% } %>
+
+  </div>
+
+
+  <%- include("./partials/footer.ejs") %>
+
+  <script defer>
+    const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
+
+    const satirlar= document.querySelectorAll(`tr`);
+    satirlar.forEach((satir)=>{
+      if (satir.previousElementSibling!== null){
+        if (satir.previousElementSibling.children[2].textContent !== satir.children[2].textContent){
+          satir.style.backgroundColor=`rgb(${randomBetween(220,255)},${randomBetween(220,255)},${randomBetween(220,255)})`;
+        }
+        else{
+          satir.style.backgroundColor=satir.previousElementSibling.style.backgroundColor;
+        }
+      }
+    });
+
+    const siraDugme=document.getElementById(`haftaBaslik`);
+    const satirSayisi=document.getElementById("oykuTablosu").children[0].childElementCount-1;
+    if (satirSayisi>1){
+      document.getElementById(`sayiMetin`).textContent="Öykü Sayısı: "+satirSayisi;
+    }
+    function siralamaDegistir(){  
+      if (siraDugme.textContent==="Hafta ▲"){
+          siraDugme.textContent="Hafta ▼";
+      }
+      else{
+        siraDugme.textContent="Hafta ▲";
+      }    
+      reverseTable();
+    }  
+  
+    function reverseTable() {
+      var table = document.getElementById("oykuTablosu");
+      var trContent = [];
+      for (var i = 1, row; row = table.rows[i]; i++) {
+        trContent.push(row.innerHTML);
+      }
+      trContent.reverse()
+      for (var i = 1, row; row = table.rows[i]; i++) {
+        row.innerHTML = trContent[i];
+      }
+    }
+    
+  </script>
+</body>
+</html>

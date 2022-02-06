@@ -1,0 +1,27 @@
+<nav>
+  <div class="site-title">
+    <a href="/"><h1>Atölye</h1></a>
+    <p>Kâğıtlar ithal, imlecimiz bizimdir.</p>
+  </div>
+
+  <div id="nav2">
+    <div id="kullaniciSelam">
+      <% if (currentUser) {%>
+      Selam, <%=currentUser.gercekAd %>!
+      <% } else { %>
+        Selam, okur!
+      <% } %>
+    </div>
+    <ul>
+      <li><a href="/">Öyküler</a></li>
+      <% if (currentUser){ %>
+      <li><a href="/geciciEkle">Yeni Ekle</a></li>
+
+      <li><a href="/uyeCikisi">Üye Çıkışı</a></li>
+      <% } else { %>
+      <li><a href="/uyeGirisi">Üye Girişi</a></li>
+      <% } %>
+    </ul>
+  </div>
+
+</nav>

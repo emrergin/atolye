@@ -1,0 +1,205 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap');
+body{
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
+  font-family: 'Noto Serif', serif;
+  max-width: 1200px;
+}
+p, h1, h2, h3, a, ul{
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  color: #222;
+}
+
+/* nav & footer styles */
+nav{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 60px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  /* text-transform: uppercase; */
+}
+nav ul{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+nav li{
+  list-style-type: none;
+  margin-left: 20px;
+}
+
+#nav2{
+  display:flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#kullaniciSelam{
+  text-align: right;
+}
+nav h1{
+  font-size: 3em;
+}
+nav p, nav a{
+  color: #777;
+  font-weight: 300;
+}
+footer{
+  color: #777;
+  text-align: center;
+  margin: 80px auto 20px;
+}
+h2{
+  margin-bottom: 40px;
+}
+h3{
+  text-transform: capitalize;
+  margin-bottom: 8px;
+}
+.content{
+  margin-left: 20px;
+}
+
+/* index styles */
+/* .blogs a{ */
+  /* display: block; */
+  /* margin: 40px 0; */
+/* } */
+/* details styles */
+
+#filtreler{
+  text-align: center;    
+  margin: 4vh 0px;
+  display: flex;
+  gap:1vw;
+  align-items:stretch;
+  justify-content: center;
+  /* height: 2em; */
+  flex-wrap: wrap;
+}
+
+#yazarSec,#haftaSec, #haftaBaslik{
+  cursor: pointer;
+}
+
+#haftaBaslik:hover{
+  background-color: #21895C;
+  transition-duration: 0.35s;
+}
+
+button,select{
+  font-size:2vh;
+  border: none;
+  padding: 1vmin;
+  border-radius: 1vmin;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+  /* height: 100%; */
+  cursor: pointer;
+}
+
+#sayiMetin{
+  text-align: center;
+}
+
+table{
+  margin:0px;
+  border-radius: 2vw;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+  border-spacing: 1px 2px;
+}
+
+table td{
+  padding: 1vw;
+}
+
+
+table th{
+  padding: 1vw;
+  background-color: #2c2c2c;
+  color: #dcddde;
+  font-size: 20px;
+}
+
+table th:first-child{
+  border-radius: 10px 0 0 0;
+}
+
+table th:last-child{
+  border-radius: 0 10px 0 0;
+}
+
+tr:nth-child(even){
+  filter: brightness(90%);
+  /* background-color: aliceblue; */
+}
+
+tr:nth-child(odd):hover{
+  filter: saturate(200%);
+}
+
+tr:nth-child(even):hover{
+  filter: saturate(200%) brightness(90%);
+}
+
+
+#mainTableContainer{
+display:flex;
+align-items: center;
+flex-direction: column;
+justify-content: center;
+width: 100%;
+margin: 4vh 0px 1vh 0px;
+}
+.details{
+  position: relative;
+}
+.delete{
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 50%;
+  padding: 8px;
+}
+.delete:hover{
+  cursor: pointer;
+  box-shadow: 1px 2px 3px rgba(0,0,0,0.2);
+}
+
+/* create styles */
+.create-blog form{
+  max-width: 400px;
+  margin: 0 auto;
+}
+.create-blog input,
+.create-blog textarea{
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 8px;
+}
+.create-blog label{
+  display: block;
+  margin-top: 24px;
+}
+textarea{
+  height: 120px;
+}
+/* .create-blog button{
+  margin-top: 20px;
+  background: crimson;
+  color: white;
+  padding: 6px;
+  border: 0;
+  font-size: 1.2em;
+  cursor: pointer;
+} */
+
+.mdeContainer {
+  display: inline-block;
+  width: 48%;
+  vertical-align: top;
+}
