@@ -3,20 +3,16 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const oykuRoutes = require('./routes/oykuRoutes');
 
-
 const path = require("path");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const Kullanici = require('./models/kullanici');
 
 require('dotenv').config();
 
-const Kullanici = require('./models/kullanici');
-
 var compression = require('compression');
 var helmet = require('helmet');
-
-
 
 // express app
 const app = express();
@@ -60,16 +56,14 @@ passport.deserializeUser(function(id, done) {
 app.use(session({ secret: process.env.SECRET, resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-// middleware & static files
+
+// middleware & static files====================
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use(compression());
 app.use(helmet());
-// app.use((req, res, next) => {
-//   console.log(req.body);
-//   next();
-// });
+
 app.use((req, res, next) => {
   res.locals.path = req.path;
   next();
