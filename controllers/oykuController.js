@@ -141,31 +141,41 @@ const rastgele_oyku = (req, res,next) => {
 // }
 
 const oyku_yeni = (req, res) => {
-  const oyku = new Oyku({
-    hafta: -1,
-    yazar: user.gercekAd,
-    baslik: "Demostan",
-    link: "demonk",
-    metin: req.body.metin,
-  });
-  oyku.save()
-    .then(() => {
-      res.redirect('/oykuler');
-    })
-    .catch(err => {
-      console.log(err);
+  if (req.user){
+    const oyku = new Oyku({
+      hafta: -1,
+      yazar: req.user.gercekAd,
+      baslik: "Demostan",
+      link: "demonk",
+      metin: req.body.metin,
     });
+    oyku.save()
+      .then(() => {
+        res.redirect('/oykuler');
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+  else{
+    res.redirect('/uyeGirisi');
+  }
 }
 
 const oyku_gecici = (req, res) => {
-  const oyku = new Oyku(req.body);
-  oyku.save()
-    .then(() => {
-      res.redirect('/oykuler');
-    })
-    .catch(err => {
-      console.log(err);
-    });
+  if (req.user){
+    const oyku = new Oyku(req.body);
+    oyku.save()
+      .then(() => {
+        res.redirect('/oykuler');
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+  else{
+    res.redirect('/uyeGirisi');
+  }
 }
 
 
