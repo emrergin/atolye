@@ -16,3 +16,11 @@ This is the project that made me start learning web development. A webapp that r
 - https://github.com/Ionaru/easy-markdown-editor
 - http://annotatorjs.org
 - https://quilljs.com/
+
+## Sources
+- https://codepen.io/JiveDig/pen/jbdJXR
+- https://github.com/iamshaunjp/node-crash-course
+
+## What I learned
+- Back-end is hard.
+- An HTML form can not have a put action. See: https://stackoverflow.com/questions/8054165/using-put-method-in-html-form

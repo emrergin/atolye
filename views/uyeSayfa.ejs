@@ -5,9 +5,38 @@
 <body>
   <%- include("./partials/nav.ejs") %>
 
-  <div id="tarihMetin"></div>
+  <div >
+    <span id="tarihMetin"></span>
+    <span><%=mevcutMod %>
+    </span>
+  </div>
 
+ 
+  <%# if (mevcutMod==="Taahhüt"){ %>
+  <div id="taahhutKutusu">
+    Bu hafta öykü yazacak mısın?
+    <form class="switch-field">
+      <input type="radio" id="radio-one" name="katilim" value="yazacak" onchange="yazcam()"
+      <% if (currentUser.katilim==="yazacak"){%> checked <%} %>/> 
+      <label for="radio-one">Evet</label>
+      <input type="radio" id="radio-two" name="katilim" value="yazmayacak" onchange="yazcam()"
+      <% if (currentUser.katilim==="yazmayacak"){%> checked <%} %>/> 
+      <label for="radio-two">Hayır</label>
+    </form>
+  </div>
+  <%#} %>
 
+ <%# if (mevcutMod==="Öykü Yazma" && currentUser.katilim==="yazacak"){%>
+    <div class="create-blog content">
+      <form action="/oykuler/linkYolla" method="POST">
+        <label for="baslik">Başlık</label>
+        <input type="text" id="baslik" name="baslik" required>
+        <label for="link">Link</label>
+        <input type="text" id="link" name="link" required>
+        <button>Gönder</button>
+      </form>
+    </div>
+<%#} %>
   <%- include("./partials/footer.ejs") %>
 
 
@@ -17,15 +46,40 @@
   const tarihMetni=document.getElementById(`tarihMetin`);    
 
   const gunler = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
-  const isler = ["Öykü Yazma","","","Taahhüt","","Öykü Yazma","Öykü Yazma"];
 
   const bugununTarihi = new Date();
-  let gun = gunler[bugununTarihi.getDay()];
-  let gunIs = isler[bugununTarihi.getDay()];
+  // let gun = gunler[bugununTarihi.getDay()];
+  let gun = gunler[bugununTarihi.getMinutes()%7];
 
-  tarihMetni.textContent= bugununTarihi.toLocaleString("tr-TR");
-  tarihMetni.textContent+= `. Bugün ${gun}.`;
-  if (gunIs){tarihMetni.textContent+= ` ${gunIs} günü.`;}
+  tarihMetni.textContent= bugununTarihi.toLocaleString("tr-TR", {year: 'numeric', month: 'long', 
+  day: 'numeric', hour: '2-digit', minute: '2-digit'})+`. Bugün ${gun}.`;
+
+
+
+  // console.log(someData);
+  // console.log(putMethod.body);
+
+  function yazcam(){
+    
+    const someData = {
+      title: "katilim beyani",
+      katilim : document.querySelector('input[name="katilim"]:checked').value
+    }    
+
+    const putMethod = {
+      method: 'PUT', // Method itself
+      headers: {
+        'Content-type': 'application/json  ; charset=UTF-8' // Indicates the content 
+      },
+      body: JSON.stringify(someData)
+    }
+
+    fetch(`/uyeSayfa/yazcam`,putMethod)
+      .then(response => response.json())
+      .then(data => console.log(data)) // Manipulate the data retrieved back, if we want to do something with it
+      .catch(err => console.log(err)) // Do something with the error
+  }
+
 </script>
 
 </html>

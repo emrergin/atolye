@@ -7,6 +7,7 @@ const path = require("path");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+
 const Kullanici = require('./models/kullanici');
 
 require('dotenv').config();
@@ -60,6 +61,7 @@ app.use(passport.session());
 // middleware & static files====================
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(morgan('dev'));
 app.use(compression());
 app.use(helmet({
@@ -81,6 +83,29 @@ app.post(
 
 app.use(function(req, res, next) {
   res.locals.currentUser = req.user;
+  next();
+});
+//Date functions
+app.use(function(req, res, next) {
+  const d=new Date();
+  let minutes=d.getMinutes();
+  let mevcutMod="";
+  let modcounter=minutes % 7;
+
+  switch (modcounter) {
+    case 0:
+    case 5:
+    case 6:
+      mevcutMod="Öykü Yazma";
+      break;
+    case 3:
+      mevcutMod="Taahhüt";
+      break;
+    default:
+      mevcutMod="-";
+  }
+  app.locals.mevcutMod = mevcutMod;
+  // console.log(mevcutMod);
   next();
 });
 
@@ -107,6 +132,7 @@ app.get('/geciciEkle', (req, res) => {
   res.render('create', { title: 'GeciciGiris'});
 });
 
+//uye routes
 app.get('/uyeSayfa', (req, res) => {
   if (!res.locals.currentUser){
     res.redirect('/oykuler');
@@ -115,8 +141,28 @@ app.get('/uyeSayfa', (req, res) => {
     res.render('uyeSayfa', { title: 'Üye Anasayfa'});
   }  
 });
+
+
+app.put('/uyeSayfa/yazcam', (req,res)=>{
+  Kullanici.findById(req.user._id, function (err, doc) {
+    if (err){
+      console.log(err)
+    }
+    doc.katilim = req.body.katilim;
+    doc.save()      
+      .then(() => {
+        res.redirect('/uyeSayfa');
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  });
+});
+
 // oyku routes
 app.use('/', oykuRoutes);
+
+
 
 // 404 page
 app.use((req, res) => {

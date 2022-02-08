@@ -4,15 +4,17 @@
 
 <body>
   <%- include("./partials/nav.ejs") %>
+  <div class="create-blog">
+    <h1>Lütfen Giriş Yapın.</h1>
+    <form action="/uyeGirisi" method="POST">
+      <label for="username">Kullanıcı Adı:</label>
+      <input name="username" type="text" />
+      <label for="password">Parola</label>
+      <input name="password" type="password" />
+      <button>Giriş Yap</button>
+    </form>
+  </div>
 
-  <h1>Lütfen Giriş Yapın.</h1>
-  <form action="/uyeGirisi" method="POST">
-    <label for="username">Kullanıcı Adı:</label>
-    <input name="username" type="text" />
-    <label for="password">Parola</label>
-    <input name="password" type="password" />
-    <button>Giriş Yap</button>
-  </form>
 
   <%- include("./partials/footer.ejs") %>
 </body>

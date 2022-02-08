@@ -162,6 +162,27 @@ const oyku_yeni = (req, res) => {
   }
 }
 
+const oyku_yeni2 = (req, res) => {
+  if (req.user){
+    const oyku = new Oyku({
+      hafta: -1,
+      yazar: req.user.gercekAd,
+      baslik: req.body.baslik,
+      link: req.body.link,
+    });
+    oyku.save()
+      .then(() => {
+        res.redirect('/oykuler');
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+  else{
+    res.redirect('/uyeGirisi');
+  }
+}
+
 const oyku_gecici = (req, res) => {
   if (req.user){
     const oyku = new Oyku(req.body);
@@ -196,7 +217,8 @@ module.exports = {
   yazar_index,
   oyku_yeni,
   rastgele_oyku,
-  oyku_gecici
+  oyku_gecici,
+  oyku_yeni2
   // , 
   // blog_details, 
   // blog_create_get, 

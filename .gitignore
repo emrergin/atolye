@@ -102,3 +102,7 @@ dist
 
 # TernJS port file
 .tern-port
+
+#utility files
+utility4.js
+utility*.js

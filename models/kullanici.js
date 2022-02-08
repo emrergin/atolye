@@ -14,6 +14,28 @@ const kullaniciSchema = new Schema({
     type: String,
     required: true
   },
+  yetki:{
+    type: String,
+    enum: ['admin', 'aktif', 'deaktif',],
+    default: 'aktif',
+    required: true
+  },
+  sekil:{
+    type: String,
+    enum: ['okurYazar', 'yazar'],
+    default: 'yazar',
+    required: true
+  },
+  katilim:{
+    type: String,
+    enum: ['yazacak', 'yazmayacak', 'yazdi'],
+    default: 'yazmayacak',
+    required: true
+  },
+  yorumYuzdesi:{
+    type: mongoose.Types.Decimal128,
+    default: 1
+  }
 }, { timestamps: true });
 
 const Kullanici = mongoose.model('Kullanici',kullaniciSchema,'kullanicilar');
