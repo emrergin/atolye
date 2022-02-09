@@ -113,6 +113,7 @@ app.use(function(req, res, next) {
 //Date functions
 app.use(function(req, res, next) {
   const d=new Date();
+  d.setHours(d.getHours() + 3);
   // let minutes=d.getMinutes();
   // let minutes=d.getDay();
   let mevcutMod="";
