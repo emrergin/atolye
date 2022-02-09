@@ -1,5 +1,25 @@
 const Oyku = require('../models/oyku');
+const Kullanici = require('../models/kullanici');
 const async = require(`async`);
+
+// utilities==========================
+async function haftaBul(){
+  try{
+    const sonOyku=await Oyku.find().sort({ _id: -1 }).limit(1);
+    let yeniHafta=sonOyku[0].hafta;
+    const bugununTarihi = new Date();
+    const gunfark=(bugununTarihi-sonOyku[0].createdAt)/1000/60/60/24;
+    if (gunfark>4){
+      yeniHafta+=1;
+    }
+    return yeniHafta;
+  }
+  catch (e) {
+    console.log('caught', e);
+  }
+}
+
+//controllers ==============================================
 
 const oyku_index = (req, res,next) => {
   async.parallel({
@@ -164,15 +184,27 @@ const oyku_yeni = (req, res) => {
 
 const oyku_yeni2 = (req, res) => {
   if (req.user){
-    const oyku = new Oyku({
-      hafta: -1,
-      yazar: req.user.gercekAd,
-      baslik: req.body.baslik,
-      link: req.body.link,
-    });
-    oyku.save()
-      .then(() => {
-        res.redirect('/oykuler');
+    haftaBul()
+      .then(result =>{
+        const oyku = new Oyku({
+          hafta: result,
+          yazar: req.user.gercekAd,
+          baslik: req.body.baslik,
+          link: req.body.link,
+        });
+        oyku.save()
+          .then(() => {            
+            Kullanici.findById(req.user._id, function (err, doc) {
+              if (err){
+                console.log(err)
+              }
+              doc.katilim = "yazdi";
+              doc.save()      
+                .then(() => {
+                  res.redirect('/uyeSayfa');
+                });
+            });            
+          });
       })
       .catch(err => {
         console.log(err);

@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const oykuRoutes = require('./routes/oykuRoutes');
+const uyeRoutes = require('./routes/uyeRoutes');
 
 const path = require("path");
 const session = require("express-session");
@@ -9,6 +10,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
 const Kullanici = require('./models/kullanici');
+const Server = require('./models/server');
 
 require('dotenv').config();
 
@@ -80,17 +82,41 @@ app.post(
     failureRedirect: "/"
   })
 );
-
 app.use(function(req, res, next) {
   res.locals.currentUser = req.user;
   next();
 });
+//moderasyon
+app.use(function(req, res, next) {
+  async function haftaBul(){
+    try{
+      const moderasyonVerisi=await Server.findOne();
+      let sonTarih=moderasyonVerisi.sonModerasyon;
+      const bugununTarihi = new Date();
+      const gunfark=(bugununTarihi-sonTarih)/1000/60/60/24;
+      if (gunfark>7){
+        await Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  });
+        await Kullanici.updateMany({katilim: "yazacak"},{  $set: { yetki:"deaktif" }  });
+        await Server.updateOne({}, {$set: { sonModerasyon:Date.now() } });
+      }      
+    }
+    catch (e) {
+      console.log('caught', e);
+    }
+  }
+  haftaBul();
+  next();
+});
+
+
+
 //Date functions
 app.use(function(req, res, next) {
   const d=new Date();
-  let minutes=d.getMinutes();
+  // let minutes=d.getMinutes();
+  // let minutes=d.getDay();
   let mevcutMod="";
-  let modcounter=minutes % 7;
+  let modcounter=d.getDay();
 
   switch (modcounter) {
     case 0:
@@ -133,33 +159,9 @@ app.get('/geciciEkle', (req, res) => {
 });
 
 //uye routes
-app.get('/uyeSayfa', (req, res) => {
-  if (!res.locals.currentUser){
-    res.redirect('/oykuler');
-  }
-  else{
-    res.render('uyeSayfa', { title: 'Üye Anasayfa'});
-  }  
-});
 
-
-app.put('/uyeSayfa/yazcam', (req,res)=>{
-  Kullanici.findById(req.user._id, function (err, doc) {
-    if (err){
-      console.log(err)
-    }
-    doc.katilim = req.body.katilim;
-    doc.save()      
-      .then(() => {
-        res.redirect('/uyeSayfa');
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  });
-});
-
-// oyku routes
+// routes
+app.use('/uyeSayfa', uyeRoutes);
 app.use('/', oykuRoutes);
 
 
