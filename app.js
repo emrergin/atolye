@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const oykuRoutes = require('./routes/oykuRoutes');
 const uyeRoutes = require('./routes/uyeRoutes');
+const apiRoutes = require('./routes/apiRoutes');
 
 const path = require("path");
 const session = require("express-session");
@@ -163,7 +164,9 @@ app.get('/geciciEkle', (req, res) => {
 
 // routes
 app.use('/uyeSayfa', uyeRoutes);
+app.use('/api', apiRoutes);
 app.use('/', oykuRoutes);
+
 
 
 
