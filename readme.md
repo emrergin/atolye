@@ -13,13 +13,15 @@ This is the project that made me start learning web development. A webapp that r
 - [MongoDB](https://www.mongodb.com/)
 
 ## To be implemented
-- https://github.com/Ionaru/easy-markdown-editor
-- http://annotatorjs.org
-- https://quilljs.com/
+- Internal text editor
+- Internal comments
+- Comment checking and assigning.
 
 ## Sources
 - https://codepen.io/JiveDig/pen/jbdJXR
 - https://github.com/iamshaunjp/node-crash-course
+- https://www.smashingmagazine.com/2021/05/building-wysiwyg-editor-javascript-slatejs/
+	- https://github.com/shalabhvyas/wysiwyg-editor
 
 ## What I learned
 - Back-end is hard.

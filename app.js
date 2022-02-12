@@ -114,10 +114,10 @@ app.use(function(req, res, next) {
 app.use(function(req, res, next) {
   const d=new Date();
   d.setHours(d.getHours() + 3);
-  // let minutes=d.getMinutes();
-  // let minutes=d.getDay();
   let mevcutMod="";
-  let modcounter=d.getDay();
+  let modcounter=d.getMinutes()%7;
+
+  // let modcounter=d.getDay();
 
   switch (modcounter) {
     case 0:

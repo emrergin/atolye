@@ -119,7 +119,8 @@ const yazar_index = (req, res,next) => {
                             oykuler: results.oykuler, 
                             haftalar: results.haftalar, 
                             yazarlar:siraliYazarlar, 
-                            buHafta:`/`, buYazar:yazar} );
+                            buHafta:`/`, buYazar:yazar,
+                            mesaj: 'Böyle bir yazar yok yahut bu yazar henüz bir öykü yazmamış.'} );
   });
 };
 

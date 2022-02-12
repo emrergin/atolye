@@ -61,15 +61,18 @@
             </a>
           </td>
           <td>
-            <a href="/hafta/<%=oyku.hafta %>">
-             Hafta <%= oyku.hafta %>
-            </a>
+            <a href="/hafta/<%=oyku.hafta %>">Hafta <%= oyku.hafta %></a>
           </td>
         </tr>
       <% }) %>
     </table>
     <% } else { %>
-      <p>Veritabanı boş...</p>
+      <p><% if (mesaj=== undefined){ %>
+        Veritabanı boş...
+      <% }else{ %>
+        <%=mesaj%>
+        <%}%>
+      </p>
     <% } %>
 
   </div>
@@ -79,8 +82,8 @@
 </body>
 
 <script defer>
-let sira=1;
-const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
+  let sira=1;
+  const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
 
   const satirlar= document.querySelectorAll(`tr`);
   satirlar.forEach((satir)=>{

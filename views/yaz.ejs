@@ -2,10 +2,6 @@
 <html lang="tr">
 <%- include("./partials/head.ejs") %>
 
-<head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
-</head>
-
 <body>
   <%- include("./partials/nav.ejs") %>
 
@@ -20,26 +16,4 @@
 </body>
 
 
-<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
-<script>
-  const easyMDE = new EasyMDE({
-    element: document.getElementById("yaziKutusu"),
-  autosave: {
-        enabled: true,
-        uniqueId: "MyUniqueID",
-        timeFormat: {
-            locale: 'tr-TR',
-            format: {
-                year: 'numeric',
-                month: 'long',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-            },
-        },
-        text: "Kaydedildi: "},
-        spellChecker: false
-  });
-  easyMDE.value(``);
-</script>
 </html>

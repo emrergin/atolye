@@ -5,67 +5,90 @@
 <body>
   <%- include("./partials/nav.ejs") %>
 
-  <div >
-    <span id="tarihMetin"></span>
-    <span><%=mevcutMod %>
-    </span>
-  </div>
-
-  <ul>    
-    <% switch (currentUser.katilim) {
-      case "yazacak": %>
-      <li>Bu hafta öykü yazacağınızı vaad ettiniz.</li>
-    <% break;
-      case "yazmayacak": %>
-      <li>Bu hafta öykü yazmayacakmışsınız.</li>
-    <% break;
-      case "yazdi": %>
-      <li>Bu haftaki öykünüzü yolladınız.</li>
-    <% break;
-    default:
-    break; } %>    
+  <h1>Üye Sayfası</h1>
+  <div id="uyeSayfaMain">    
+    <div id="uyeSayfaContent">      
+      <div>
+        <span id="tarihMetin"></span>
+        <span><%=mevcutMod %>
+        </span>
+      </div>    
    
-    <% if(currentUser.yetki==="deaktif"){%>
-      <li>Atılan bir üyesiniz. Şu an bunu görüyorsanız sitemizin yapımı bitmemiş demektir.</li>
-    <% } else { %>
-      <li>Aktif bir üyesiniz. </li>
-    <% } %>
+        <% switch (currentUser.katilim) {
+          case "yazacak": %>
+          <div id="yazmaGostergesi" >Bu hafta öykü yazacağınızı vaad ettiniz.</div>
+        <% break;
+          case "yazmayacak": %>
+          <div id="yazmaGostergesi" >Bu hafta öykü yazmayacakmışsınız.</div>
+        <% break;
+          case "yazdi": %>
+          <div>Bu haftaki öykünüzü yolladınız.</div>
+        <% break;
+        default:
+        break; } %>    
+       
+        <% if(currentUser.yetki==="deaktif"){%>
+          <div>Atılan bir üyesiniz. Şu an bunu görüyorsanız sitemizin yapımı bitmemiş demektir.</div>
+        <% } else { %>
+          <div>Aktif bir üyesiniz. </div>
+        <% } %>
+        
+     
+      <% if (mevcutMod==="Taahhüt"){ %>
+        <div id="taahhutKutusu">
+          Bu hafta öykü yazacak mısınız?
+          <form class="switch-field">
+            <input type="radio" id="radio-one" name="katilim" value="yazacak" onchange="yazcam()"
+            <% if (currentUser.katilim==="yazacak"){%> checked <%} %>/> 
+            <label for="radio-one">Evet</label>
+            <input type="radio" id="radio-two" name="katilim" value="yazmayacak" onchange="yazcam()"
+            <% if (currentUser.katilim==="yazmayacak"){%> checked <%} %>/> 
+            <label for="radio-two">Hayır</label>
+          </form>
+        </div>
+      <%} %>
     
-  </ul>
- 
-  <% if (mevcutMod==="Taahhüt"){ %>
-  <div id="taahhutKutusu">
-    Bu hafta öykü yazacak mısın?
-    <form class="switch-field">
-      <input type="radio" id="radio-one" name="katilim" value="yazacak" onchange="yazcam()"
-      <% if (currentUser.katilim==="yazacak"){%> checked <%} %>/> 
-      <label for="radio-one">Evet</label>
-      <input type="radio" id="radio-two" name="katilim" value="yazmayacak" onchange="yazcam()"
-      <% if (currentUser.katilim==="yazmayacak"){%> checked <%} %>/> 
-      <label for="radio-two">Hayır</label>
-    </form>
-  </div>
-  <%} %>
-
- <% if (mevcutMod==="Öykü Yazma"){%>
-  <% if (currentUser.katilim==="yazacak"){%>
-    <div class="create-blog content">
-      <form action="/oykuler/linkYolla" method="POST">
-        <label for="baslik">Başlık</label>
-        <input type="text" id="baslik" name="baslik" required>
-        <label for="link">Link</label>
-        <input type="text" id="link" name="link" required>
-        <button>Gönder</button>
-      </form>
-    </div>
-    <% } else{%>
-      Öykü yazmayı taahhüt etmediniz.
+     <% if (mevcutMod==="Öykü Yazma"){%>
+      <% if (currentUser.katilim==="yazacak"){%>
+        <div class="create-blog content">
+          <form action="/oykuler/linkYolla" method="POST">
+            <label for="baslik">Başlık</label>
+            <input type="text" id="baslik" name="baslik" required>
+            <label for="link">Link</label>
+            <input type="text" id="link" name="link" required>
+            <button>Gönder</button>
+          </form>
+        </div>
+        <% } else{%>
+          <div>Öykü yazmayı taahhüt etmediniz.</div>
+        <% } %>
     <% } %>
-<% } %>
+      
+    </div >
+      
+    <div id="yorumYuzdesiKutusu">
+      <div id="yorumYuzdesiSayisi">
+        <%=`%${Math.round(currentUser.yorumYuzdesi*1000)/10}`%>
+      </div>
+      <div>
+        Yorum Yüzdesi
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h2>Yorumlanacak Öyküler</h2>
+    <p>Burada yorumlamaktan sorumlu olduğunuz öyküler görünecek.</p>
+    <h2>Öyküleriniz</h2>
+    <p><a href="../yazar/<%=currentUser.gercekAd%>">Buradan erişebilirsiniz. </a></p>
+  </div>
+  
+  
   <%- include("./partials/footer.ejs") %>
 
 
 </body>
+
 
 <script defer>
   const tarihMetni=document.getElementById(`tarihMetin`);    
@@ -73,11 +96,21 @@
   const gunler = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
 
   const bugununTarihi = new Date();
-  let gun = gunler[bugununTarihi.getDay()];
-  // let gun = gunler[bugununTarihi.getMinutes()%7];
+  // let gun = gunler[bugununTarihi.getDay()];
+  let gun = gunler[bugununTarihi.getMinutes()%7];
 
   tarihMetni.textContent= bugununTarihi.toLocaleString("tr-TR", {year: 'numeric', month: 'long', 
   day: 'numeric', hour: '2-digit', minute: '2-digit'})+`. Bugün ${gun}.`;
+
+  const yorumYuzdeKutusu=document.getElementById("yorumYuzdesiSayisi");
+  
+  var yorumYuzdesi = <%= currentUser.yorumYuzdesi%>; 
+  // var yorumYuzdesi = 0.72; 
+  let yorumYuzdeKutusuDegerO=Math.max((Math.round(yorumYuzdesi*100)-60)/40,0);  
+
+  // let yorumYuzdeKutusuDeger=1; 
+  yorumYuzdeKutusu.style.color = `rgb(${200*(1-yorumYuzdeKutusuDegerO)}, ${200*(yorumYuzdeKutusuDegerO)}, 0)`;
+
 
 
 
@@ -96,8 +129,14 @@
       body: JSON.stringify(someData)
     }
 
+    if (document.querySelector('input[name="katilim"]:checked').value==="yazacak"){
+      document.getElementById("yazmaGostergesi").textContent="Bu hafta öykü yazacağınızı taahhüt ettiniz.";
+    }else{
+      document.getElementById("yazmaGostergesi").textContent="Bu hafta öykü yazmayacakmışsınız.";
+    }
+
     fetch(`/uyeSayfa/yazcam`,putMethod)
-      .then(() =>location.reload())
+      // .then(() =>location.reload())
       .catch(err => console.log(err)); // Do something with the error
   }
 
