@@ -1,17 +1,8 @@
 const Oyku = require('../models/oyku');
-// actual controllers=========
-// const uyeMain = (req, res) => {
-//   if (!res.locals.currentUser){
-//     res.redirect('/oykuler');
-//   }
-//   else{
-//     res.render('uyeSayfa', { title: 'Üye Anasayfa'});
-//   }  
-// }
 
 
 const oykuler = (req, res) => {
-  Oyku.find().sort({ createdAt: -1 })
+  Oyku.find({},{ hafta: 1, yazar: 1, baslik:1, link:1}).sort({ createdAt: -1 })
     .then(result => {
       res.json(result);
     })

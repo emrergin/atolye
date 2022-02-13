@@ -194,17 +194,11 @@ const oyku_yeni2 = (req, res) => {
           link: req.body.link,
         });
         oyku.save()
-          .then(() => {            
-            Kullanici.findById(req.user._id, function (err, doc) {
-              if (err){
-                console.log(err)
-              }
-              doc.katilim = "yazdi";
-              doc.save()      
-                .then(() => {
-                  res.redirect('/uyeSayfa');
-                });
-            });            
+          .then(() => {    
+             Kullanici.findOneAndUpdate({_id: req.user.id},{katilim: "yazdi"})
+              .then(() => {
+                res.redirect('/uyeSayfa');
+              });         
           });
       })
       .catch(err => {

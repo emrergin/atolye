@@ -1,5 +1,5 @@
 const Kullanici = require('../models/kullanici');
-// actual controllers=========
+
 const uyeMain = (req, res) => {
   if (!res.locals.currentUser){
     res.redirect('/oykuler');
