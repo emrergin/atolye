@@ -24,7 +24,7 @@ async function haftaBul(){
 const oyku_index = (req, res,next) => {
   async.parallel({
       oykuler: function(callback) {
-        Oyku.find().sort({ hafta: -1 })
+        Oyku.find().sort({ _id: -1  })
         .exec(callback);
       },
       yazarlar: function(callback) {
@@ -58,7 +58,7 @@ const hafta_index = (req, res,next) => {
   const hafta = req.params.hafta;
   async.parallel({
       oykuler: function(callback) {
-        Oyku.find({"hafta": hafta}).sort({ createdAt: -1 })
+        Oyku.find({"hafta": hafta}).sort({ _id: -1 })
         .exec(callback);
       },
       yazarlar: function(callback) {
@@ -93,7 +93,7 @@ const yazar_index = (req, res,next) => {
   const yazar = decodeURI(req.params.yazar);
   async.parallel({
       oykuler: function(callback) {
-        Oyku.find({"yazar": yazar}).sort({ hafta: -1 })
+        Oyku.find({"yazar": yazar}).sort({ _id: -1 })
         .exec(callback);
       },
       yazarlar: function(callback) {
@@ -156,10 +156,6 @@ const rastgele_oyku = (req, res,next) => {
                            buHafta:`/`, buYazar:`/`} );
   });
 };
-
-// const blog_create_get = (req, res) => {
-//   res.render('create', { title: 'Create a new blog' });
-// }
 
 const oyku_yeni = (req, res) => {
   if (req.user){

@@ -94,6 +94,7 @@ app.use(function(req, res, next) {
       const moderasyonVerisi=await Server.findOne();
       let sonTarih=moderasyonVerisi.sonModerasyon;
       const bugununTarihi = new Date();
+      bugununTarihi.setHours(bugununTarihi.getHours() + 3);
       const gunfark=(bugununTarihi-sonTarih)/1000/60/60/24;
       if (gunfark>7){
         await Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  });
