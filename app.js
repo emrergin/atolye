@@ -11,7 +11,8 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
 const Kullanici = require('./models/kullanici');
-const Server = require('./models/server');
+
+const Moderasyon = require('./modules/haftalikModerasyon.js');
 
 require('dotenv').config();
 
@@ -23,7 +24,11 @@ const app = express();
 
 // connect to mongodb & listen for requests
 
-mongoose.connect(process.env.MONGOURL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGOURL, { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    useFindAndModify: false
+  })
   .then(result => app.listen(process.env.PORT || 3000))
   .catch(err => console.log(err));
 
@@ -88,29 +93,7 @@ app.use(function(req, res, next) {
   next();
 });
 //moderasyon
-app.use(function(req, res, next) {
-  async function haftaBul(){
-    try{
-      const moderasyonVerisi=await Server.findOne();
-      let sonTarih=moderasyonVerisi.sonModerasyon;
-      const bugununTarihi = new Date();
-      bugununTarihi.setHours(bugununTarihi.getHours() + 3);
-      const gunfark=(bugununTarihi-sonTarih)/1000/60/60/24;
-      if (gunfark>7){
-        await Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  });
-        await Kullanici.updateMany({katilim: "yazacak"},{  $set: { yetki:"deaktif" }  });
-        await Server.updateOne({}, {$set: { sonModerasyon:Date.now() } });
-      }      
-    }
-    catch (e) {
-      console.log('caught', e);
-    }
-  }
-  haftaBul();
-  next();
-});
-
-
+app.use(Moderasyon);
 
 //Date functions
 app.use(function(req, res, next) {
@@ -134,7 +117,6 @@ app.use(function(req, res, next) {
       mevcutMod="-";
   }
   app.locals.mevcutMod = mevcutMod;
-  // console.log(mevcutMod);
   next();
 });
 
@@ -153,17 +135,16 @@ app.get('/', (req, res) => {
   res.redirect('/oykuler');
 });
 
-app.get('/yeniYaz', (req, res) => {
-  res.render('yaz', { title: 'Yaz' });
+app.get('/hakkinda', (req, res) => {
+  res.render('about', { title: 'Hakkında'});
 });
 
 app.get('/geciciEkle', (req, res) => {
   res.render('create', { title: 'GeciciGiris'});
 });
 
-//uye routes
 
-// routes
+// subroutes
 app.use('/uyeSayfa', uyeRoutes);
 app.use('/api', apiRoutes);
 app.use('/', oykuRoutes);

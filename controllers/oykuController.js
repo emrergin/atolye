@@ -159,28 +159,7 @@ const rastgele_oyku = (req, res,next) => {
 
 const oyku_yeni = (req, res) => {
   if (req.user){
-    const oyku = new Oyku({
-      hafta: -1,
-      yazar: req.user.gercekAd,
-      baslik: "Demostan",
-      link: "demonk",
-      metin: req.body.metin,
-    });
-    oyku.save()
-      .then(() => {
-        res.redirect('/oykuler');
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-  else{
-    res.redirect('/uyeGirisi');
-  }
-}
-
-const oyku_yeni2 = (req, res) => {
-  if (req.user){
+    let oykuHukmu = req.user.sekil==="okurYazar"? false : true;    
     haftaBul()
       .then(result =>{
         const oyku = new Oyku({
@@ -188,6 +167,8 @@ const oyku_yeni2 = (req, res) => {
           yazar: req.user.gercekAd,
           baslik: req.body.baslik,
           link: req.body.link,
+          yazarObje: req.user._id,
+          yorumAtamasi: oykuHukmu
         });
         oyku.save()
           .then(() => {    
@@ -222,26 +203,13 @@ const oyku_gecici = (req, res) => {
   }
 }
 
-
-// const blog_delete = (req, res) => {
-//   const id = req.params.id;
-//   Blog.findByIdAndDelete(id)
-//     .then(result => {
-//       res.json({ redirect: '/blogs' });
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// }
-
 module.exports = {
   oyku_index,
   hafta_index,
   yazar_index,
   oyku_yeni,
   rastgele_oyku,
-  oyku_gecici,
-  oyku_yeni2
+  oyku_gecici
   // , 
   // blog_details, 
   // blog_create_get, 

@@ -48,11 +48,11 @@
         </div>
       <%} %>
     
-     <% if (mevcutMod==="Öykü Yazma"){%>
+     <%if (mevcutMod==="Öykü Yazma"){%>
       <% switch (currentUser.katilim) {
         case "yazacak": %>
         <div class="create-blog content">
-          <form action="/oykuler/linkYolla" method="POST">
+          <form action="/oykuler/" method="POST">
             <label for="baslik">Başlık</label>
             <input type="text" id="baslik" name="baslik" required>
             <label for="link">Link</label>

@@ -1,3 +1,4 @@
+const Kullanici = require('./kullanici');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -20,6 +21,15 @@ const oykuSchema = new Schema({
   },
   metin: {
     type: String
+  },
+  yorumAtamasi: {
+    type: Boolean,
+    default: true,
+    required: true
+  },
+  yazarObje:{
+    type: Schema.Types.ObjectId, 
+    ref: 'Kullanici'
   },
 }, { timestamps: true });
 
