@@ -27,7 +27,7 @@
         default:
         break; } %>    
        
-        <% if(currentUser.yetki==="deaktif"){%>
+        <% if(!currentUser.aktif){%>
           <div>Atılan bir üyesiniz. Şu an bunu görüyorsanız sitemizin yapımı bitmemiş demektir.</div>
         <% } else { %>
           <div>Aktif bir üyesiniz. </div>
@@ -84,12 +84,10 @@
     <h2>Yorumlanacak Öyküler</h2>
     <p>Burada yorumlamaktan sorumlu olduğunuz öyküler görünecek.</p>
     <h2>Öyküleriniz</h2>
-    <p><a href="../yazar/<%=currentUser.gercekAd%>">Buradan erişebilirsiniz. </a></p>
+    <p><a href="../yazar/<%=currentUser.gercekAd%>" class="visibleLink">Buradan</a> erişebilirsiniz.</p>
   </div>
-  
-  
+    
   <%- include("./partials/footer.ejs") %>
-
 
 </body>
 

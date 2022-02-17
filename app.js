@@ -139,6 +139,7 @@ app.get('/hakkinda', (req, res) => {
   res.render('about', { title: 'Hakkında'});
 });
 
+
 app.get('/geciciEkle', (req, res) => {
   res.render('create', { title: 'GeciciGiris'});
 });

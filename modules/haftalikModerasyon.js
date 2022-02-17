@@ -12,7 +12,7 @@ module.exports = function (req, res, next) {
       const gunfark=(bugununTarihi-sonTarih)/1000/60/60/24;
       // const gunfark=(bugununTarihi-sonTarih)/1000/60;
       if (gunfark>7){
-          await Kullanici.updateMany({katilim: "yazacak"},{  $set: { yetki:"deaktif" }  });
+          await Kullanici.updateMany({katilim: "yazacak"},{  $set: { aktif: false }  });
           await Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  });  
           yorumAta();        
           await Server.updateOne({}, {$set: { sonModerasyon:bugununTarihi} });          
@@ -25,7 +25,7 @@ module.exports = function (req, res, next) {
   async function yorumAta(){
     const yorumlanacaklar= await Oyku.find({ yorumAtamasi: false }).populate('yazarObje');
     // const yorumlanacaklar= await Oyku.find();
-    const yorumlayacaklar= await Kullanici.find({ yetki: "aktif", sekil: "okurYazar"});
+    const yorumlayacaklar= await Kullanici.find({ aktif: true, sekil: "okurYazar"});
     // const yorumlayacaklar= await Kullanici.find({ yetki: "aktif", sekil: "yazar"});
     if (yorumlanacaklar.length && (yorumlayacaklar.length>1))
     {

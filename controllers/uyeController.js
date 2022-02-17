@@ -1,4 +1,5 @@
 const Kullanici = require('../models/kullanici');
+const Kelime = require('../models/kelime');
 
 const uyeMain = (req, res) => {
   if (!res.locals.currentUser){
@@ -26,8 +27,29 @@ const yazToggle = (req,res)=>{
   });
 }
 
+const yetkiliSayfa = (req, res) => {
+  if (!res.locals.currentUser || !res.locals.currentUser.admin){
+    res.redirect('/oykuler');
+  }
+  else{
+    Kelime.aggregate(
+      [ 
+        { $sample: { size: 3 } } ,
+        { $project: { kelime: 1,  _id: 0,} }
+      ]
+   )
+    .then(result => {
+      res.render('admin', { title: 'Yönetici Sayfası', kelimeler:result});
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  }
+}
+
 
 module.exports = {
   uyeMain,
-  yazToggle
+  yazToggle,
+  yetkiliSayfa
 }

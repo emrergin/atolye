@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="tr">
+<%- include("./partials/head.ejs") %>
+
+<% kelimeler%>
+<body>
+  <%- include("./partials/nav.ejs") %>
+  <h2>Öneri Kelimeler</h2>
+  <%=kelimeler[0].kelime%>, <%=kelimeler[1].kelime%>, <%=kelimeler[2].kelime%>.
+
+  <div class="create-blog content">
+    <form action="/uyeSayfa/gorev" method="POST">
+      <label for="link">Hafta Görevi</label>
+      <textarea type="text" id="link" name="link" required> </textarea>
+      <button>Gönder</button>
+    </form>
+  </div>
+
+  <%- include("./partials/footer.ejs") %>
+</body>
+</html>
