@@ -5,8 +5,8 @@ const oykuRoutes = require('./routes/oykuRoutes');
 const uyeRoutes = require('./routes/uyeRoutes');
 const apiRoutes = require('./routes/apiRoutes');
 
-const path = require("path");
 const session = require("express-session");
+const MemoryStore = require('memorystore')(session)
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
@@ -62,7 +62,15 @@ passport.deserializeUser(function(id, done) {
     done(err, user);
   });
 });
-app.use(session({ secret: process.env.SECRET, resave: false, saveUninitialized: true }));
+app.use(session({
+  cookie: { maxAge: 86400000 },
+  store: new MemoryStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+  }),
+  secret: process.env.SECRET, 
+  resave: false, 
+  saveUninitialized: true 
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -73,13 +81,9 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(compression());
 app.use(helmet({
+  //buranin incelenmesi lazim.
   contentSecurityPolicy: false,
 }));
-
-app.use((req, res, next) => {
-  res.locals.path = req.path;
-  next();
-});
 
 app.post(
   "/uyeGirisi",
@@ -149,8 +153,6 @@ app.get('/geciciEkle', (req, res) => {
 app.use('/uyeSayfa', uyeRoutes);
 app.use('/api', apiRoutes);
 app.use('/', oykuRoutes);
-
-
 
 
 // 404 page

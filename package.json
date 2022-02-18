@@ -31,10 +31,10 @@
     "express-validator": "^6.14.0",
     "helmet": "^5.0.2",
     "lodash": "^4.17.15",
+    "memorystore": "^1.6.7",
     "mongoose": "^5.13.14",
     "morgan": "^1.10.0",
     "passport": "^0.5.2",
-    "passport-local": "^1.0.0",
-    "path": "^0.12.7"
+    "passport-local": "^1.0.0"
   }
 }

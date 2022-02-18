@@ -1,5 +1,6 @@
 const Kullanici = require('../models/kullanici');
 const Kelime = require('../models/kelime');
+const Server = require('../models/server');
 
 const uyeMain = (req, res) => {
   if (!res.locals.currentUser){
@@ -47,9 +48,33 @@ const yetkiliSayfa = (req, res) => {
   }
 }
 
+const gorevBelirleme = (req, res) => {
+  if (req.user.admin){
+    Server.findOne({},function (err, doc) {
+        if (err){
+          console.log(err)
+        }
+        doc.katilim = req.body.gorev;
+        doc.save()      
+          .then(() => {
+            res.redirect(303,'/yetkili/');
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      });
+  }
+  else if(req.user){
+    res.redirect('/uyeSayfasi');
+  }
+  else{
+    res.redirect('/uyeGirisi');
+  }
+}
 
 module.exports = {
   uyeMain,
   yazToggle,
-  yetkiliSayfa
+  yetkiliSayfa,
+  gorevBelirleme
 }
