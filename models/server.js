@@ -5,6 +5,9 @@ const serverSchema = new Schema({
   sonModerasyon: {
     type: Date,
     required: true,
+  },
+  gorev: {
+    type: String,
   }
 });
 

@@ -1,15 +1,30 @@
 const Kullanici = require('../models/kullanici');
-const Kelime = require('../models/kelime');
 const Server = require('../models/server');
+const async = require(`async`);
 
 const uyeMain = (req, res) => {
   if (!res.locals.currentUser){
     res.redirect('/oykuler');
   }
   else{
-    res.render('uyeSayfa', { title: 'Üye Anasayfa'});
-  }  
-}
+    async.parallel({
+      gorev: function(callback) {
+        Server.findOne()
+        .exec(callback);
+      },
+      yazarlar: function(callback) {
+        Kullanici.find({katilim: "yazacak"},{_id:0, gercekAd:1})
+        .exec(callback);
+      },
+    },function(err, results) {
+      if (err) { return next(err); }
+
+      res.render('uyeSayfa', { title: 'Üye Anasayfa' , gorev: results.gorev.gorev, yazarlar: results.yazarlar});
+
+    });
+  } 
+};
+
 
 
 const yazToggle = (req,res)=>{
@@ -33,14 +48,9 @@ const yetkiliSayfa = (req, res) => {
     res.redirect('/oykuler');
   }
   else{
-    Kelime.aggregate(
-      [ 
-        { $sample: { size: 3 } } ,
-        { $project: { kelime: 1,  _id: 0,} }
-      ]
-   )
-    .then(result => {
-      res.render('admin', { title: 'Yönetici Sayfası', kelimeler:result});
+    Server.findOne()
+    .then((ser) => {
+      res.render('admin', { title: 'Yönetici Sayfası' , gorev: ser.gorev});
     })
     .catch(err => {
       console.log(err);
@@ -54,10 +64,10 @@ const gorevBelirleme = (req, res) => {
         if (err){
           console.log(err)
         }
-        doc.katilim = req.body.gorev;
+        doc.gorev = req.body.gorev;
         doc.save()      
           .then(() => {
-            res.redirect(303,'/yetkili/');
+            res.redirect(303,'./yetkili');
           })
           .catch(err => {
             console.log(err);
@@ -65,7 +75,7 @@ const gorevBelirleme = (req, res) => {
       });
   }
   else if(req.user){
-    res.redirect('/uyeSayfasi');
+    res.redirect('/uyeSayfa');
   }
   else{
     res.redirect('/uyeGirisi');

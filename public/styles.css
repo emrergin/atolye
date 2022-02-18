@@ -198,7 +198,7 @@ textarea{
 
 
 /* UYE SAYFASI============================================================================================= */
-#taahhutKutusu{
+#taahhutKutusu,#oykuKutusu{
   display: flex;
   flex-direction: column;
   align-items: center;

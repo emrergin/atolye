@@ -2,6 +2,7 @@ const Kullanici = require('../models/kullanici');
 const Server = require('../models/server');
 const Oyku = require('../models/oyku');
 const Yorum = require('../models/yorum');
+const Kelime = require('../models/kelime');
 
 module.exports = function (req, res, next) {
   async function haftalikModerasyon(){
@@ -11,10 +12,11 @@ module.exports = function (req, res, next) {
       const bugununTarihi = new Date();
       const gunfark=(bugununTarihi-sonTarih)/1000/60/60/24;
       // const gunfark=(bugununTarihi-sonTarih)/1000/60;
-      if (gunfark>7){
+      if (gunfark>=7){
+          gorevYenile();
           await Kullanici.updateMany({katilim: "yazacak"},{  $set: { aktif: false }  });
-          await Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  });  
-          yorumAta();        
+          yorumAta();     
+          await Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  });   
           await Server.updateOne({}, {$set: { sonModerasyon:bugununTarihi} });          
       }
     }
@@ -91,8 +93,25 @@ module.exports = function (req, res, next) {
         yorumcu: yorum.yorumlayan,
       })
       await yYorum.save();
+    }    
+  }
+
+  async function gorevYenile(){
+    try{
+      const yazanlar=await Kullanici.find({katilim: "yazdi"}); 
+      if (yazanlar.length){
+        const yeniKelimeler= await Kelime.aggregate(
+          [ 
+            { $sample: { size: 3 } } ,
+            { $project: { kelime: 1,  _id: 0,} }
+          ]
+       );
+       await Server.updateOne({}, {$set: { gorev:yeniKelimeler.join(', ')} });
+      }
     }
-    
+    catch (e) {
+      console.log('caught', e);
+    }
   }
   haftalikModerasyon();
   next();

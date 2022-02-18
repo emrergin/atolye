@@ -45,12 +45,22 @@
             <% if (currentUser.katilim==="yazmayacak"){%> checked <%} %>/> 
             <label for="radio-two">Hayır</label>
           </form>
+          <% if (yazarlar.length > 0) { 
+            const yazarList=yazarlar.map(function(elem){return elem.gercekAd;}).join(`, `)%>
+            <p> Yazacaklar: <%=yazarList%>.</p>
+            <% }else{ %>
+              İlk yazan siz olacaksınız.
+            <%}%>
         </div>
       <%} %>
-    
+
      <%if (mevcutMod==="Öykü Yazma"){%>
       <% switch (currentUser.katilim) {
         case "yazacak": %>
+      <div id="oykuKutusu">
+        <h3>Bu Haftanın Görevi</h3>
+        <p><%= gorev%></p>
+        
         <div class="create-blog content">
           <form action="/oykuler/" method="POST">
             <label for="baslik">Başlık</label>
@@ -60,6 +70,7 @@
             <button>Gönder</button>
           </form>
         </div>
+      </div>
       <% break;
         case "yazmayacak": %>
         <div id="yazmaGostergesi" >Öykü yazmayı taahhüt etmediniz.</div>
