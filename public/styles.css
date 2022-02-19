@@ -1,10 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap');
+
+html{
+  border-top: 6px solid #9d9ad9;
+  
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='12' viewBox='0 0 20 12'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='charlie-brown' fill='%239C92AC' fill-opacity='0.4'%3E%3Cpath d='M9.8 12L0 2.2V.8l10 10 10-10v1.4L10.2 12h-.4zm-4 0L0 6.2V4.8L7.2 12H5.8zm8.4 0L20 6.2V4.8L12.8 12h1.4zM9.8 0l.2.2.2-.2h-.4zm-4 0L10 4.2 14.2 0h-1.4L10 2.8 7.2 0H5.8z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+/* background-color: #37a987; */
+/* background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%234b3d8f' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E"); */
+}
+
 body{
   max-width: 1200px;
-  margin: 20px auto;
+  margin: 0px auto;
   padding: 0 20px;
   font-family: 'Noto Serif', serif;
   max-width: 1200px;
+  background-color: #ffffff;
 }
 p, h1, h2, h3, a, ul{
   margin: 0;
@@ -20,6 +30,7 @@ nav{
   margin-bottom: 60px;
   padding-bottom: 10px;
   border-bottom: 1px solid #ddd;
+  padding-top: 10px;
   /* text-transform: uppercase; */
 }
 nav ul{
@@ -44,6 +55,8 @@ nav li{
 nav h1{
   font-size: 3em;
 }
+
+
 nav p, nav a{
   color: #777;
   font-weight: 300;
@@ -52,6 +65,8 @@ footer{
   color: #777;
   text-align: center;
   margin: 80px auto 20px;
+  padding-bottom: 15px;
+  box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
 }
 h1{
   margin-top: 40px;

@@ -166,7 +166,7 @@ const oyku_yeni = (req, res) => {
           hafta: result,
           yazar: req.user.gercekAd,
             //sadece ilk harfler buyuk
-          baslik: req.body.baslik.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()), 
+          baslik: req.body.baslik.toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()), 
           link: req.body.link,
           yazarObje: req.user._id,
           yorumAtamasi: oykuHukmu

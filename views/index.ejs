@@ -82,14 +82,15 @@
 </body>
 
 <script defer>
-  let sira=1;
-  const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
+  let sira=1;  
+
+  const renkMatrisi=[`#ebf1f9`,`#d7d6ef`,`#c3d7ec`];
 
   const satirlar= document.querySelectorAll(`tr`);
   satirlar.forEach((satir)=>{
     if (satir.previousElementSibling!== null){
       if (satir.previousElementSibling.children[2].textContent !== satir.children[2].textContent){
-        satir.style.backgroundColor=`rgb(${randomBetween(220,255)},${randomBetween(220,255)},${randomBetween(220,255)})`;
+        satir.style.backgroundColor=renkMatrisi[parseInt(satir.children[2].textContent.slice(19))%3];
       }
       else{
         satir.style.backgroundColor=satir.previousElementSibling.style.backgroundColor;
