@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap');
 
 html{
-  border-top: 6px solid #9d9ad9;
+  
   
 background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='12' viewBox='0 0 20 12'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='charlie-brown' fill='%239C92AC' fill-opacity='0.4'%3E%3Cpath d='M9.8 12L0 2.2V.8l10 10 10-10v1.4L10.2 12h-.4zm-4 0L0 6.2V4.8L7.2 12H5.8zm8.4 0L20 6.2V4.8L12.8 12h1.4zM9.8 0l.2.2.2-.2h-.4zm-4 0L10 4.2 14.2 0h-1.4L10 2.8 7.2 0H5.8z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 /* background-color: #37a987; */
@@ -15,6 +15,7 @@ body{
   font-family: 'Noto Serif', serif;
   max-width: 1200px;
   background-color: #ffffff;
+  border-top: 6px solid #9d9ad9;
 }
 p, h1, h2, h3, a, ul{
   margin: 0;
@@ -31,7 +32,6 @@ nav{
   padding-bottom: 10px;
   border-bottom: 1px solid #ddd;
   padding-top: 10px;
-  /* text-transform: uppercase; */
 }
 nav ul{
   display: flex;
@@ -56,10 +56,25 @@ nav h1{
   font-size: 3em;
 }
 
+#kharfi{
+  font-size:1.5em; 
+  font-weight: 500;
+  transition: text-shadow 0.75s ease;
+}
+
+#kharfi:hover{
+  text-shadow:
+  -1.5px -1.5px 0 #000000,
+  1.5px -1.5px 0 #000000,
+  -1.5px 1.5px 0 #000000,
+  1.5px 1.5px 0 #000000;
+}
+
 
 nav p, nav a{
   color: #777;
   font-weight: 300;
+  padding-left:10px;
 }
 footer{
   color: #777;
@@ -85,12 +100,6 @@ h3{
   margin-left: 20px;
 }
 
-/* index styles */
-/* .blogs a{ */
-  /* display: block; */
-  /* margin: 40px 0; */
-/* } */
-/* details styles */
 
 #filtreler{
   text-align: center;    
@@ -99,7 +108,6 @@ h3{
   gap:1vw;
   align-items:stretch;
   justify-content: center;
-  /* height: 2em; */
   flex-wrap: wrap;
 }
 
@@ -114,6 +122,7 @@ h3{
 
 button,select{
   font-size:2vh;
+  min-width: 100px;
   border: none;
   padding: 1vmin;
   border-radius: 1vmin;
@@ -314,4 +323,11 @@ svg{
 
 .visibleLink{
   text-decoration:underline;
+}
+
+@media (max-width:700px) { 
+  #ul-solUstLinkler{
+    flex-direction: column;
+    gap:10px;
+  }
 }

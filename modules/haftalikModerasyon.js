@@ -11,13 +11,14 @@ module.exports = function (req, res, next) {
       let sonTarih=moderasyonVerisi.sonModerasyon;
       const bugununTarihi = new Date();
       const gunfark=(bugununTarihi-sonTarih)/1000/60/60/24;
+      const eklenecekGun=7*Math.floor(gunfark/7);
       // const gunfark=(bugununTarihi-sonTarih)/1000/60;
       if (gunfark>=7){
           gorevYenile();
           await Kullanici.updateMany({katilim: "yazacak"},{  $set: { aktif: false }  });
           yorumAta();     
           await Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  });   
-          await Server.updateOne({}, {$set: { sonModerasyon:bugununTarihi} });          
+          await Server.updateOne({}, {$set: { sonModerasyon:sonTarih.setDate(sonTarih.getDate() + eklenecekGun)} });          
       }
     }
     catch (e) {
@@ -35,19 +36,21 @@ module.exports = function (req, res, next) {
       for (oyku of yorumlanacaklar){
         topAgirlik+=parseFloat(oyku.yazarObje.yorumYuzdesi);
       }
+      // console.log(topAgirlik);
       if (topAgirlik!==0){
         let toplamYorumSayisi=yorumlayacaklar.length*3;
         let oykuMatrisi=[];
         for (oyku of yorumlanacaklar){
           let oObj={};
           let agirlik=parseFloat(oyku.yazarObje.yorumYuzdesi)/topAgirlik;
+          oObj.id=oyku._id;
           oObj.yazar=oyku.yazarObje;
           oObj.baslik=oyku.baslik;
           oObj.link=oyku.link;
           oObj.yakYorumSayisi=Math.min(Math.floor(toplamYorumSayisi*agirlik),yorumlayacaklar.length-1);
           oykuMatrisi.push(oObj);
         }
-        oykuMatrisi=oykuMatrisi.filter(i => i.agirlik);
+        oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi);
         oykuMatrisi.sort((a, b) => a.yakYorumSayisi - b.yakYorumSayisi);
 
         let yorumcuMatrisi=[];
@@ -59,7 +62,8 @@ module.exports = function (req, res, next) {
           yorumcuMatrisi.push(kObj);
         }
 
-        let yorumMatrisi=[];
+        var yorumMatrisi=[];
+        var tamamMatrisi=[];
         while (yorumcuMatrisi.length && oykuMatrisi.length)
         {
           let indisYorumcu = Math.floor(Math.random() * yorumcuMatrisi.length);
@@ -69,14 +73,17 @@ module.exports = function (req, res, next) {
               var secilenOyku=oykuMatrisi[indisOyku];
             }while (secilenOyku.yazar === yorumcuMatrisi[indisYorumcu].id);
             let yorumObje={};
-            yorumObje.oykuBasligi=secilenOyku.baslik;
-            yorumObje.oykuBasligi=secilenOyku.link;
+            yorumObje.baslik=secilenOyku.baslik;
+            yorumObje.link=secilenOyku.link;
             yorumObje.yorumlayan=yorumcuMatrisi[indisYorumcu].id;
-            yorumObje.yorumlanan=secilenOyku.yazar;
+            yorumObje.yorumlanan=secilenOyku.yazar.id;
             yorumcuMatrisi[indisYorumcu].hYorumSayisi+=1;
             oykuMatrisi[indisOyku].yakYorumSayisi-=1;
             yorumMatrisi.push(yorumObje);
             yorumcuMatrisi=yorumcuMatrisi.filter(i => i.hYorumSayisi<3);
+            oykuMatrisi.filter(i => i.yakYorumSayisi<=0).map((bitenOyku)=>{
+              tamamMatrisi.push(bitenOyku.id);
+            });
             oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi>0);
           }else{
             yorumcuMatrisi=yorumcuMatrisi.splice(indisYorumcu,1);
@@ -84,7 +91,7 @@ module.exports = function (req, res, next) {
         }
       }
     }
-    // console.log(yorumMatrisi);
+    
     for await (yorum of yorumMatrisi){
       const yYorum= new Yorum({
         baslik: yorum.baslik,
@@ -93,7 +100,10 @@ module.exports = function (req, res, next) {
         yorumcu: yorum.yorumlayan,
       })
       await yYorum.save();
-    }    
+    }   
+    for await (bitenOyku of tamamMatrisi){
+      await Oyku.updateOne({_id: bitenOyku}, {$set: { yorumAtamasi: true} }); 
+    }
   }
 
   async function gorevYenile(){
@@ -106,13 +116,15 @@ module.exports = function (req, res, next) {
             { $project: { kelime: 1,  _id: 0,} }
           ]
        );
-       await Server.updateOne({}, {$set: { gorev:yeniKelimeler.join(', ')} });
+       await Server.updateOne({}, {$set: { gorev:yeniKelimeler.map(a => a.kelime).join(', ')} });
       }
     }
     catch (e) {
       console.log('caught', e);
     }
   }
+  
   haftalikModerasyon();
+  // yorumAta();
   next();
 };

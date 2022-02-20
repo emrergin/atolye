@@ -12,6 +12,12 @@ This is the project that made me start learning web development. A webapp that r
 - **CSS 3**
 - [MongoDB](https://www.mongodb.com/)
 
+## Features
+- Automatic weekly writing tasks that can be overridden by admin input.
+- Weekly commitments to writing. Commitments are binding, the code allows auto kicking commmitters who did not write their story.
+- Participants are assigned randomly as commenters to stories of others.
+- So far, comments and stories are dealt externally with Google Docs.
+
 ## To be implemented
 - Internal text editor
 - Internal comments
@@ -20,8 +26,9 @@ This is the project that made me start learning web development. A webapp that r
 ## Sources
 - https://codepen.io/JiveDig/pen/jbdJXR
 - https://github.com/iamshaunjp/node-crash-course
-- https://www.smashingmagazine.com/2021/05/building-wysiwyg-editor-javascript-slatejs/
+- (Not yet implemented) https://www.smashingmagazine.com/2021/05/building-wysiwyg-editor-javascript-slatejs/
 	- https://github.com/shalabhvyas/wysiwyg-editor
+- https://heropatterns.com/
 
 ## What I learned
 - Back-end is hard.
