@@ -7,79 +7,12 @@
 
   <h1>Üye Sayfası</h1>
   <div id="uyeSayfaMain">    
-    <div id="uyeSayfaContent">      
-      <div>
-        <span id="tarihMetin"></span>
-        <span><%=mevcutMod %>
-        </span>
-      </div>    
-   
-        <% switch (currentUser.katilim) {
-          case "yazacak": %>
-          <div id="yazmaGostergesi" >Bu hafta öykü yazacağınızı vaad ettiniz.</div>
-        <% break;
-          case "yazmayacak": %>
-          <div id="yazmaGostergesi" >Bu hafta öykü yazmayacakmışsınız.</div>
-        <% break;
-          case "yazdi": %>
-          <div>Bu haftaki öykünüzü yolladınız.</div>
-        <% break;
-        default:
-        break; } %>    
-       
-        <% if(!currentUser.aktif){%>
-          <div>Atılan bir üyesiniz. Şu an bunu görüyorsanız sitemizin yapımı bitmemiş demektir.</div>
-        <% } else { %>
-          <div>Aktif bir üyesiniz. </div>
-        <% } %>
-        
-     
-      <%# if (mevcutMod==="Taahhüt"){ %>
-        <div id="taahhutKutusu">
-          Bu hafta öykü yazacak mısınız?
-          <form class="switch-field">
-            <input type="radio" id="radio-one" name="katilim" value="yazacak" onchange="yazcam()"
-            <% if (currentUser.katilim==="yazacak"){%> checked <%} %>/> 
-            <label for="radio-one">Evet</label>
-            <input type="radio" id="radio-two" name="katilim" value="yazmayacak" onchange="yazcam()"
-            <% if (currentUser.katilim==="yazmayacak"){%> checked <%} %>/> 
-            <label for="radio-two">Hayır</label>
-          </form>
-          <% if (yazarlar.length > 0) { 
-            const yazarList=yazarlar.map(function(elem){return elem.gercekAd;}).join(`, `)%>
-            <p> Yazacaklar: <%=yazarList%>.</p>
-            <% }else{ %>
-              İlk yazan siz olacaksınız.
-            <%}%>
-        </div>
-      <%#} %>
-
-     <%if (mevcutMod==="Öykü Yazma"){%>
-      <% switch (currentUser.katilim) {
-        case "yazacak": %>
-      <div id="oykuKutusu">
-        <h3>Bu Haftanın Görevi</h3>
-        <p><%= gorev%></p>
-        
-        <div class="create-blog content">
-          <form action="/oykuler/" method="POST">
-            <label for="baslik">Başlık</label>
-            <input type="text" id="baslik" name="baslik" required>
-            <label for="link">Link</label>
-            <input type="text" id="link" name="link" required>
-            <button>Gönder</button>
-          </form>
-        </div>
-      </div>
-      <% break;
-        case "yazmayacak": %>
-        <div id="yazmaGostergesi" >Öykü yazmayı taahhüt etmediniz.</div>
-      <% break;
-      default:
-      break; } %>   
-    <% } %>
+    <div id="uyeSayfaContent">   
+      <%- include("./partials/uyeStatus.ejs") %>
+      <%- include("./partials/uyeTaahhut.ejs") %>
+      <%- include("./partials/uyeOykuGonder.ejs") %>     
+    </div>
       
-    </div >
       
     <div id="yorumYuzdesiKutusu">
       <div id="yorumYuzdesiSayisi">
@@ -91,9 +24,60 @@
     </div>
   </div>
 
+
   <div>
     <h2>Yorumlanacak Öyküler</h2>
-    <p>Burada yorumlamaktan sorumlu olduğunuz öyküler görünecek.</p>
+    <% if (yorumlar.length===0){%>
+    <p>Şu an yorumlamanız gereken öykü bulunnmamaktadır.</p>
+    <%}else{%>
+      <table id="yorumTablosu" rules="all">
+        <tr>
+          <th>
+            Öykü
+          </th> 
+          <th>
+            Yorum?
+          </th>
+        </tr>
+        <% yorumlar.forEach(oyku => { %>
+          <tr >
+            <td>
+              <a href=<%=oyku.link %>>
+                <%= oyku.baslik %>
+              </a>
+            <td>
+              <input type="checkbox" class="yorumladimBox" data-yorumid="<%= oyku._id%>" autocomplete="off">
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    <%}%>
+    <h2>Onayınızı Bekleyen Yorumlar</h2>
+    <% if (onaylar.length===0){%>
+      <p>Şu an onaylamanız gereken öykü bulunnmamaktadır.</p>
+      <%}else{%>
+        <table id="yorumTablosu" rules="all">
+          <tr>
+            <th>
+              Öykü
+            </th> 
+            <th>
+              Onay?
+            </th>
+          </tr>
+          <% onaylar.forEach(oyku => { %>
+            <tr >
+              <td>
+                <a href=<%=oyku.link %>>
+                  <%= oyku.baslik %>
+                </a>
+              <td>
+                <input type="checkbox" class="onayladimBox" data-yorumid="<%= oyku._id%>" autocomplete="off">
+              </td>
+            </tr>
+          <% }) %>
+        </table>
+      <%}%>
     <h2>Öyküleriniz</h2>
     <p><a href="../yazar/<%=currentUser.gercekAd%>" class="visibleLink">Buradan</a> erişebilirsiniz.</p>
   </div>
@@ -124,6 +108,18 @@
   // let yorumYuzdeKutusuDeger=1; 
   yorumYuzdeKutusu.style.color = `rgb(${200*(1-yorumYuzdeKutusuDegerO)}, ${200*(yorumYuzdeKutusuDegerO)}, 0)`;
 
+  const yorumcekbokslari = document.querySelectorAll('.yorumladimBox');
+
+  yorumcekbokslari.forEach((boks) => {
+    boks.addEventListener('change', yorumladim);
+  });
+
+  const onaycekbokslari = document.querySelectorAll('.onayladimBox');
+
+  onaycekbokslari.forEach((boks) => {
+    boks.addEventListener('change', onayladim);
+  });
+
 
 
 
@@ -150,6 +146,46 @@
 
     fetch(`/uyeSayfa/yazcam`,putMethod)
       // .then(() =>location.reload())
+      .catch(err => console.log(err)); // Do something with the error
+  }
+
+  function yorumladim(e){
+    
+    const someData = {
+      title: "yorumlama beyani",
+      yorumladim : e.target.checked
+    }    
+
+    const putMethod = {
+      method: 'PUT', // Method itself
+      headers: {
+        'Content-type': 'application/json  ; charset=UTF-8' // Indicates the content 
+      },
+      body: JSON.stringify(someData)
+    }
+    console.log(`/uyeSayfa/yorumladim/${e.target.dataset.yorumid}`)
+    fetch(`/uyeSayfa/yorumladim/${e.target.dataset.yorumid}`,putMethod)
+      .then(() =>location.reload())
+      .catch(err => console.log(err)); // Do something with the error
+  }
+
+  function onayladim(e){
+    
+    const someData = {
+      title: "onaylama beyani",
+      onayladim : e.target.checked
+    }    
+
+    const putMethod = {
+      method: 'PUT', // Method itself
+      headers: {
+        'Content-type': 'application/json  ; charset=UTF-8' // Indicates the content 
+      },
+      body: JSON.stringify(someData)
+    }
+    console.log(`/uyeSayfa/onayladim/${e.target.dataset.yorumid}`)
+    fetch(`/uyeSayfa/onayladim/${e.target.dataset.yorumid}`,putMethod)
+      .then(() =>location.reload())
       .catch(err => console.log(err)); // Do something with the error
   }
 

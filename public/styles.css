@@ -303,6 +303,12 @@ textarea{
   text-shadow: 2px 2px 5px black;
 }
 
+#yorumTablosu{
+  margin:0px;
+  border-radius: 0vw;
+  border-spacing: 1px 2px;
+}
+
 /* Hakkinda=============== */
 #teknolojiler{
   display: flex;

@@ -1,5 +1,6 @@
 const Kullanici = require('../models/kullanici');
 const Server = require('../models/server');
+const Yorum = require('../models/yorum');
 const async = require(`async`);
 
 const uyeMain = (req, res) => {
@@ -16,10 +17,22 @@ const uyeMain = (req, res) => {
         Kullanici.find({katilim: "yazacak"},{_id:0, gercekAd:1})
         .exec(callback);
       },
+      yorumlar: function(callback) {
+        Yorum.find({yorumcu: res.locals.currentUser._id, yorumcuOnayi: false},{yorumcuOnayi:1,baslik:1,link:1})
+        .exec(callback);
+      },
+      onaylar: function(callback) {
+        Yorum.find({yazar: res.locals.currentUser._id, yorumcuOnayi: true, yazarOnayi:false},{yazarOnayi:1,baslik:1,link:1})
+        .exec(callback);
+      },
     },function(err, results) {
       if (err) { return next(err); }
 
-      res.render('uyeSayfa', { title: 'Üye Anasayfa' , gorev: results.gorev.gorev, yazarlar: results.yazarlar});
+      res.render('uyeSayfa', {title: 'Üye Anasayfa' ,
+                              gorev: results.gorev.gorev, 
+                              yazarlar: results.yazarlar, 
+                              yorumlar: results.yorumlar,
+                              onaylar: results.onaylar});
 
     });
   } 
@@ -33,6 +46,40 @@ const yazToggle = (req,res)=>{
       console.log(err)
     }
     doc.katilim = req.body.katilim;
+    doc.save()      
+      .then(() => {
+        res.redirect(303,'/uyeSayfa/');
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  });
+}
+
+const yorumToggle1 = (req,res)=>{
+  const id = req.params.id;
+  Yorum.findById(id, function (err, doc) {
+    if (err){
+      console.log(err)
+    }
+    doc.yorumcuOnayi = req.body.yorumladim;
+    doc.save()      
+      .then(() => {
+        res.redirect(303,'/uyeSayfa/');
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  });
+}
+
+const yorumToggle2 = (req,res)=>{
+  const id = req.params.id;
+  Yorum.findById(id, function (err, doc) {
+    if (err){
+      console.log(err)
+    }
+    doc.yazarOnayi = req.body.onayladim;
     doc.save()      
       .then(() => {
         res.redirect(303,'/uyeSayfa/');
@@ -86,5 +133,7 @@ module.exports = {
   uyeMain,
   yazToggle,
   yetkiliSayfa,
-  gorevBelirleme
+  gorevBelirleme,
+  yorumToggle1,
+  yorumToggle2
 }

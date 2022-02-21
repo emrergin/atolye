@@ -1,0 +1,19 @@
+<% if (mevcutMod==="Taahhüt"){ %>
+    <div id="taahhutKutusu">
+      Bu hafta öykü yazacak mısınız?
+      <form class="switch-field">
+        <input type="radio" id="radio-one" name="katilim" value="yazacak" onchange="yazcam()"
+        <% if (currentUser.katilim==="yazacak"){%> checked <%} %>/> 
+        <label for="radio-one">Evet</label>
+        <input type="radio" id="radio-two" name="katilim" value="yazmayacak" onchange="yazcam()"
+        <% if (currentUser.katilim==="yazmayacak"){%> checked <%} %>/> 
+        <label for="radio-two">Hayır</label>
+      </form>
+      <% if (yazarlar.length > 0) { 
+        const yazarList=yazarlar.map(function(elem){return elem.gercekAd;}).join(`, `)%>
+        <p> Yazacaklar: <%=yazarList%>.</p>
+        <% }else{ %>
+          İlk yazan siz olacaksınız.
+        <%}%>
+    </div>
+  <%} %>
