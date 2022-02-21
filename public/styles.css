@@ -329,5 +329,7 @@ svg{
   #ul-solUstLinkler{
     flex-direction: column;
     gap:10px;
+    margin-left: -50px;
+    text-align:right;
   }
 }

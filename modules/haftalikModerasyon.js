@@ -12,7 +12,6 @@ module.exports = function (req, res, next) {
       const bugununTarihi = new Date();
       const gunfark=(bugununTarihi-sonTarih)/1000/60/60/24;
       const eklenecekGun=7*Math.floor(gunfark/7);
-      // const gunfark=(bugununTarihi-sonTarih)/1000/60;
       if (gunfark>=7){
           gorevYenile();
           await Kullanici.updateMany({katilim: "yazacak"},{  $set: { aktif: false }  });
@@ -25,84 +24,77 @@ module.exports = function (req, res, next) {
       console.log('caught', e);
     }
   }
+
   async function yorumAta(){
-    const yorumlanacaklar= await Oyku.find({ yorumAtamasi: false }).populate('yazarObje');
-    // const yorumlanacaklar= await Oyku.find();
-    const yorumlayacaklar= await Kullanici.find({ aktif: true, sekil: "okurYazar"});
-    // const yorumlayacaklar= await Kullanici.find({ yetki: "aktif", sekil: "yazar"});
+    let yorumlanacaklar= await Oyku.find({ yorumAtamasi: false },{yazarObje:1,baslik:1,link: 1}).populate('yazarObje','yorumYuzdesi');
+    let yorumlayacaklar= await Kullanici.find({ aktif: true, sekil: "okurYazar"},{_id:1,yorumYuzdesi:1})
+
     if (yorumlanacaklar.length && (yorumlayacaklar.length>1))
     {
       let topAgirlik=0;
       for (oyku of yorumlanacaklar){
         topAgirlik+=parseFloat(oyku.yazarObje.yorumYuzdesi);
       }
-      // console.log(topAgirlik);
       if (topAgirlik!==0){
         let toplamYorumSayisi=yorumlayacaklar.length*3;
+
         let oykuMatrisi=[];
-        for (oyku of yorumlanacaklar){
+        for (let j = 0; j < yorumlanacaklar.length ;j++) {
           let oObj={};
-          let agirlik=parseFloat(oyku.yazarObje.yorumYuzdesi)/topAgirlik;
-          oObj.id=oyku._id;
-          oObj.yazar=oyku.yazarObje;
-          oObj.baslik=oyku.baslik;
-          oObj.link=oyku.link;
+          oObj._id=yorumlanacaklar[j]._id;
+          oObj.baslik= yorumlanacaklar[j].baslik;
+          oObj.link=yorumlanacaklar[j].link;
+          oObj.yazarObje=yorumlanacaklar[j].yazarObje;
+          let agirlik=parseFloat(yorumlanacaklar[j].yazarObje.yorumYuzdesi)/topAgirlik;
           oObj.yakYorumSayisi=Math.min(Math.floor(toplamYorumSayisi*agirlik),yorumlayacaklar.length-1);
+          oObj.indis=j;
           oykuMatrisi.push(oObj);
         }
+
         oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi);
-        oykuMatrisi.sort((a, b) => a.yakYorumSayisi - b.yakYorumSayisi);
+        yorumlayacaklar.sort((a, b) => parseFloat(b.yorumYuzdesi) - parseFloat(a.yorumYuzdesi));
 
-        let yorumcuMatrisi=[];
-        for (kullanici of yorumlayacaklar){
-          let kObj={};
-          kObj.id=kullanici._id;
-          kObj.hYorumSayisi=0;
-          kObj.yuzde=kullanici.yorumYuzdesi;
-          yorumcuMatrisi.push(kObj);
-        }
-
+        // Yorum Dagitimi burada basliyor=====================
         var yorumMatrisi=[];
         var tamamMatrisi=[];
-        while (yorumcuMatrisi.length && oykuMatrisi.length)
-        {
-          let indisYorumcu = Math.floor(Math.random() * yorumcuMatrisi.length);
-          if (oykuMatrisi.filter(i=> i.yazarObje!== yorumcuMatrisi[indisYorumcu].id).length){
-            do{
-              var indisOyku = Math.floor(Math.random() * oykuMatrisi.length);
-              var secilenOyku=oykuMatrisi[indisOyku];
-            }while (secilenOyku.yazar === yorumcuMatrisi[indisYorumcu].id);
+
+        for (yorumcu of yorumlayacaklar){
+          let buKisininYorumlayabilecegiOykuler=oykuMatrisi.filter(i=> (i.yazarObje._id.toString() !== yorumcu._id.toString()));
+          buKisininYorumlayabilecegiOykuler=shuffle(buKisininYorumlayabilecegiOykuler);
+          let secilenler=buKisininYorumlayabilecegiOykuler.slice(0, 3);
+
+          for (secilenOyku of secilenler){
             let yorumObje={};
             yorumObje.baslik=secilenOyku.baslik;
             yorumObje.link=secilenOyku.link;
-            yorumObje.yorumlayan=yorumcuMatrisi[indisYorumcu].id;
-            yorumObje.yorumlanan=secilenOyku.yazar.id;
-            yorumcuMatrisi[indisYorumcu].hYorumSayisi+=1;
-            oykuMatrisi[indisOyku].yakYorumSayisi-=1;
+            yorumObje.yorumlayan=yorumcu._id;
+            yorumObje.yorumlanan=secilenOyku.yazarObje._id;
             yorumMatrisi.push(yorumObje);
-            yorumcuMatrisi=yorumcuMatrisi.filter(i => i.hYorumSayisi<3);
-            oykuMatrisi.filter(i => i.yakYorumSayisi<=0).map((bitenOyku)=>{
-              tamamMatrisi.push(bitenOyku.id);
-            });
-            oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi>0);
-          }else{
-            yorumcuMatrisi=yorumcuMatrisi.splice(indisYorumcu,1);
+            oykuMatrisi[secilenOyku.indis].yakYorumSayisi-=1;
+          }
+          
+          oykuMatrisi.filter(i => i.yakYorumSayisi<=0).map((bitenOyku)=>{
+            tamamMatrisi.push(bitenOyku.id);
+          });
+          oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi>0);
+
+          if (!oykuMatrisi.length){
+            break;
           }
         }
       }
-    }
-    
-    for await (yorum of yorumMatrisi){
-      const yYorum= new Yorum({
-        baslik: yorum.baslik,
-        link: yorum.link,
-        yazar: yorum.yorumlanan,
-        yorumcu: yorum.yorumlayan,
-      })
-      await yYorum.save();
-    }   
-    for await (bitenOyku of tamamMatrisi){
-      await Oyku.updateOne({_id: bitenOyku}, {$set: { yorumAtamasi: true} }); 
+      for await (yorum of yorumMatrisi){
+        const yYorum= new Yorum({
+          baslik: yorum.baslik,
+          link: yorum.link,
+          yazar: yorum.yorumlanan,
+          yorumcu: yorum.yorumlayan,
+        })
+        await yYorum.save();
+      }   
+      for await (bitenOyku of tamamMatrisi){
+        await Oyku.updateOne({_id: bitenOyku}, {$set: { yorumAtamasi: true} }); 
+      }
     }
   }
 
@@ -125,6 +117,15 @@ module.exports = function (req, res, next) {
   }
   
   haftalikModerasyon();
-  // yorumAta();
+  // yorumAta(); 
   next();
 };
+
+function shuffle(array) {
+  let resArray=array;
+  for (let i = resArray.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [resArray[i], resArray[j]] = [resArray[j], resArray[i]];
+  }
+  return resArray;
+}
