@@ -26,9 +26,11 @@ This is the project that made me start learning web development. A webapp that r
 ## Sources
 - https://codepen.io/JiveDig/pen/jbdJXR
 - https://github.com/iamshaunjp/node-crash-course
+- https://game-icons.net/1x1/delapouite/pencil.html
+- https://game-icons.net/1x1/delapouite/choice.html
+- https://heropatterns.com/
 - (Not yet implemented) https://www.smashingmagazine.com/2021/05/building-wysiwyg-editor-javascript-slatejs/
 	- https://github.com/shalabhvyas/wysiwyg-editor
-- https://heropatterns.com/
 
 ## What I learned
 - Back-end is hard.

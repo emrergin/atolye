@@ -1,10 +1,4 @@
    
-      <div>
-        <span id="tarihMetin"></span>
-        <span><%=mevcutMod %>
-        </span>
-      </div>
-
 <% switch (currentUser.katilim) {
     case "yazacak": %>
     <div id="yazmaGostergesi" >Bu hafta öykü yazacağınızı vaad ettiniz.</div>
@@ -21,5 +15,19 @@
   <% if(!currentUser.aktif){%>
     <div>Atılan bir üyesiniz. Şu an bunu görüyorsanız sitemizin yapımı bitmemiş demektir.</div>
   <% } else { %>
-    <div>Aktif bir üyesiniz</div>
+    <div>Hâlâ atılmamışsınız. Tebrikler.</div>
   <% } %>
+
+  <div>        
+    <% if (mevcutMod==='Taahhüt'){ %>
+    <div class="modMarker">
+      <div><%- include ("../../public/choice.svg") %></div>
+      <div><h3>Taahhüt Zamanı</h3></div>
+    </div>
+    <%}else if (mevcutMod==='Öykü Yazma'){%>
+      <div class="modMarker">
+        <div><%- include ("../../public/choice.svg") %></div>
+        <div><h3>Öykü Yazma Zamanı</h3></div>
+      </div>
+      <%}%>
+  </div>

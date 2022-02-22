@@ -20,8 +20,6 @@ const yorumSchema = new Schema({
   },
   yorumcuOnayi: {
     type: Boolean,
-    required: true,
-    default: false
   },
   yazarOnayi: {
     type: Boolean,

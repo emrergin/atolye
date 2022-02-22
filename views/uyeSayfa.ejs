@@ -5,7 +5,11 @@
 <body>
   <%- include("./partials/nav.ejs") %>
 
-  <h1>Üye Sayfası</h1>
+  <div id="uyeHeader">
+    <h1>Üye Sayfası</h1>
+    <p id="tarihMetin"></p>
+  </div>
+  
   <div id="uyeSayfaMain">    
     <div id="uyeSayfaContent">   
       <%- include("./partials/uyeStatus.ejs") %>
@@ -28,7 +32,7 @@
   <div>
     <h2>Yorumlanacak Öyküler</h2>
     <% if (yorumlar.length===0){%>
-    <p>Şu an yorumlamanız gereken öykü bulunnmamaktadır.</p>
+    <p>Şu an yorumlamanız gereken öykü bulunmamaktadır.</p>
     <%}else{%>
       <table id="yorumTablosu" rules="all">
         <tr>
@@ -54,7 +58,7 @@
     <%}%>
     <h2>Onayınızı Bekleyen Yorumlar</h2>
     <% if (onaylar.length===0){%>
-      <p>Şu an onaylamanız gereken öykü bulunnmamaktadır.</p>
+      <p>Şu an onaylamanız gereken yorum bulunmamaktadır.</p>
       <%}else{%>
         <table id="yorumTablosu" rules="all">
           <tr>
@@ -62,7 +66,10 @@
               Öykü
             </th> 
             <th>
-              Onay?
+              Yeterli Yorum
+            </th>
+            <th>
+              Yetersiz Yorum
             </th>
           </tr>
           <% onaylar.forEach(oyku => { %>
@@ -73,6 +80,9 @@
                 </a>
               <td>
                 <input type="checkbox" class="onayladimBox" data-yorumid="<%= oyku._id%>" autocomplete="off">
+              </td>
+              <td>
+                <input type="checkbox" class="onaylamadimBox" data-yorumid="<%= oyku._id%>" autocomplete="off">
               </td>
             </tr>
           <% }) %>
@@ -117,6 +127,14 @@
   const onaycekbokslari = document.querySelectorAll('.onayladimBox');
 
   onaycekbokslari.forEach((boks) => {
+    boks.truth=true;
+    boks.addEventListener('change', onayladim);
+  });
+
+  const onaylamacekbokslari = document.querySelectorAll('.onaylamadimBox');
+
+  onaylamacekbokslari.forEach((boks) => {
+    boks.truth=false;
     boks.addEventListener('change', onayladim);
   });
 
@@ -173,7 +191,7 @@
     
     const someData = {
       title: "onaylama beyani",
-      onayladim : e.target.checked
+      onayladim : (e.target.truth && e.target.checked)
     }    
 
     const putMethod = {
