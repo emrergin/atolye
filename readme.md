@@ -26,8 +26,9 @@ This is the project that made me start learning web development. A webapp that r
 ## Sources
 - https://codepen.io/JiveDig/pen/jbdJXR
 - https://github.com/iamshaunjp/node-crash-course
-- https://game-icons.net/1x1/delapouite/pencil.html
-- https://game-icons.net/1x1/delapouite/choice.html
+- Icons made by Delapouite. Available on https://game-icons.net
+    - https://game-icons.net/1x1/delapouite/pencil.html
+    - https://game-icons.net/1x1/delapouite/choice.html
 - https://heropatterns.com/
 - (Not yet implemented) https://www.smashingmagazine.com/2021/05/building-wysiwyg-editor-javascript-slatejs/
 	- https://github.com/shalabhvyas/wysiwyg-editor
@@ -35,7 +36,7 @@ This is the project that made me start learning web development. A webapp that r
 ## What I learned
 - Back-end is hard.
 - An HTML form can not have a put action. See: https://stackoverflow.com/questions/8054165/using-put-method-in-html-form
-- On default, edirecting a POST request results in a GET request, whereas, redirecting a PUT request results in a PUT request. See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections
+- On default, redirecting a POST request results in a GET request, whereas, redirecting a PUT request results in a PUT request. See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections
 - Heroku uses UTC timezone by default. This can be overridden, but this approach is usually not recommended. See: https://help.heroku.com/JZKJJ4NC/how-do-i-set-the-timezone-on-my-dyno
 - Better to use `var` inside of **do-while** loops.
 - The passport.use() method expects your POST request to have the `username` and `password` fields. But this can be circumvented with field definitions.

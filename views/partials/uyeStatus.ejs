@@ -1,22 +1,4 @@
-   
-<% switch (currentUser.katilim) {
-    case "yazacak": %>
-    <div id="yazmaGostergesi" >Bu hafta öykü yazacağınızı vaad ettiniz.</div>
-  <% break;
-    case "yazmayacak": %>
-    <div id="yazmaGostergesi" >Bu hafta öykü yazmayacakmışsınız.</div>
-  <% break;
-    case "yazdi": %>
-    <div>Bu haftaki öykünüzü yolladınız.</div>
-  <% break;
-  default:
-  break; } %>    
- 
-  <% if(!currentUser.aktif){%>
-    <div>Atılan bir üyesiniz. Şu an bunu görüyorsanız sitemizin yapımı bitmemiş demektir.</div>
-  <% } else { %>
-    <div>Hâlâ atılmamışsınız. Tebrikler.</div>
-  <% } %>
+<div id="solKutular">
 
   <div>        
     <% if (mevcutMod==='Taahhüt'){ %>
@@ -31,3 +13,71 @@
       </div>
       <%}%>
   </div>
+
+  <% if (mevcutMod==="Taahhüt"){ %>
+    <div id="taahhutKutusu">
+      Bu hafta öykü yazacak mısınız?
+      <form class="switch-field" id="taahhutDugmesi">
+        <input type="radio" id="radio-one" name="katilim" value="yazacak" onchange="yazcam()"
+        <% if (currentUser.katilim==="yazacak"){%> checked <%} %>/> 
+        <label for="radio-one">Evet</label>
+        <input type="radio" id="radio-two" name="katilim" value="yazmayacak" onchange="yazcam()"
+        <% if (currentUser.katilim==="yazmayacak"){%> checked <%} %>/> 
+        <label for="radio-two">Hayır</label>
+      </form>
+      <% if (yazarlar.length > 0) { 
+        const yazarList=yazarlar.map(function(elem){return elem.gercekAd;}).join(`, `)%>
+        <p> Yazacaklar: <%=yazarList%>.</p>
+        <% }else{ %>
+          İlk yazan siz olacaksınız.
+        <%}%>
+    </div>
+  <%} %>
+
+  
+
+  <%if (mevcutMod==="Öykü Yazma"){%>
+    <% switch (currentUser.katilim) {
+      case "yazacak": %>
+    <div id="oykuKutusu">
+      <h3>Bu Haftanın Görevi</h3>
+      <p><%= gorev%></p>
+      
+      <div class="create-blog content">
+        <form action="/oykuler/" method="POST">
+          <label for="baslik">Başlık</label>
+          <input type="text" id="baslik" name="baslik" required>
+          <label for="link">Link</label>
+          <input type="text" id="link" name="link" required>
+          <button>Gönder</button>
+        </form>
+      </div>
+    </div>
+    <% break;
+      case "yazmayacak": %>
+      <div id="yazmaGostergesi" >Öykü yazmayı taahhüt etmediniz.</div>
+    <% break;
+    default:
+    break; } %>   
+  <% } %>
+
+</div>
+
+<% switch (currentUser.katilim) {
+case "yazacak": %>
+  <div id="yazmaGostergesi" class="uyeStatus">Bu hafta öykü yazacağınızı vaad ettiniz.</div>
+<% break;
+  case "yazmayacak": %>
+<div id="yazmaGostergesi" class="uyeStatus">Bu hafta öykü yazmayacakmışsınız.</div>
+  <% break;
+case "yazdi": %>
+  <div class="uyeStatus">Bu haftaki öykünüzü yolladınız.</div>
+<% break;
+default:
+break; } %>    
+
+<% if(!currentUser.aktif){%>
+  <div class="uyeStatus">Atılan bir üyesiniz. Şu an bunu görüyorsanız sitemizin yapımı bitmemiş demektir.</div>
+<% } else { %>
+  <div class="uyeStatus">Hâlâ atılmamışsınız. Tebrikler.</div>
+<% } %>

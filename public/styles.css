@@ -17,12 +17,7 @@ body{
   background-color: #ffffff;
   border-top: 6px solid #9d9ad9;
 }
-p, h1, h2, h3, a, ul{
-  margin: 0;
-  padding: 0;
-  text-decoration: none;
-  color: #222;
-}
+
 
 /* nav & footer styles */
 nav{
@@ -87,6 +82,13 @@ footer{
   padding-bottom: 15px;
   box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
 }
+
+p, h1, h2, h3, a, ul{
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  color: #222;
+}
 h1{
   margin-top: 40px;
   margin-bottom: 40px;
@@ -96,7 +98,6 @@ h2{
   margin-bottom: 20px;
 }
 h3{
-  text-transform: capitalize;
   margin-top: 15px;
   margin-bottom: 10px;
 }
@@ -226,16 +227,7 @@ textarea{
 
 
 /* UYE SAYFASI============================================================================================= */
-#taahhutKutusu,#oykuKutusu{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 1vh;
-  gap: 1vw;
-  box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
-  padding-top: 1vmin;
-  padding-bottom: 1vmin;
-}
+
 /* https://codepen.io/JiveDig/pen/jbdJXR ==========================*/
 .switch-field {
 	display: flex;
@@ -286,10 +278,34 @@ textarea{
 	border-radius: 0 4px 4px 0;
 }
 /* Alinti bitti========================= */
+
+#taahhutKutusu,#oykuKutusu{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  /* box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px; */
+  background-color: #fbfafc;
+  padding: 15px;
+}
+
+
+#taahhutKutusu{
+  margin-bottom: 15px;
+}
+
+#taahhutDugmesi{
+  margin:8px;
+}
+
 #uyeSayfaMain{
   display:flex;
   justify-content: space-evenly;
   align-items: flex-start;
+}
+
+.uyeStatus{
+  margin-bottom: 10px;;
 }
 
 #uyeHeader{
@@ -298,23 +314,29 @@ textarea{
   align-items: center;
 }
 
-.modMarker{
- display: flex;
- box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
- padding: 0;
- justify-content: flex-start;
- gap: 15px;
- /* border: 2px solid red; */
+#uyeHeader >h1{
+  margin-top:0;
 }
 
-#uyeSayfaContent > *{
-  margin: 10px;
+.modMarker{
+ display: flex;
+ /* box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px; */
+ border-bottom:1px solid rgba(136, 165, 191, 0.48) ;
+ padding: 0;
+ justify-content: flex-start;
+ align-content: center;
+ gap: 15px;
+}
+
+#solKutular{
+  box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
 }
 
 #yorumYuzdesiKutusu{
   box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
   padding: 2vmax;
-  text-align: center;  
+  text-align: center; 
+  margin-bottom: 15px;
 }
 
 #yorumYuzdesiSayisi{
@@ -333,7 +355,6 @@ textarea{
   display: flex;
   flex-direction: column;
   gap: 1vh;
-  /* align-content: flex-start; */
 }
 
 #teknolojiler li{
@@ -359,15 +380,39 @@ svg .about{
 
   body{
     margin:0px;
-    padding: 10px;
+    padding: 10px 10px 0px 10px;
   }
 
   nav{
-    margin: 0px -5px;
+    margin: 0px -5px 40px 0px;
   }
 
   h1>span{
     font-size: 0.8em;
   }
 
+  #uyeSayfaMain{
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+
+  #yorumYuzdesiKutusu{
+    order:-1;
+  }
+
+  #uyeHeader{
+    flex-direction: column;
+    margin-bottom:15px;
+    align-items: flex-start;
+  }
+
 }
+
+@media (max-width:400px) { 
+  h1>span{
+    font-size: 0.7em;
+  }
+
+}
+
