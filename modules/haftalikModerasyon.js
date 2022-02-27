@@ -11,6 +11,7 @@ const Kelime = require('../models/kelime');
 
 module.exports = async function haftalikModerasyon(){
     try{
+      // await yorumAta();
       const moderasyonVerisi=await Server.findOne();
       let sonTarih=moderasyonVerisi.sonModerasyon;
       const bugununTarihi = new Date();
@@ -33,7 +34,10 @@ module.exports = async function haftalikModerasyon(){
   
   async function yorumAta(){
     let yorumlanacaklar= await Oyku.find({ yorumAtamasi: false },{yazarObje:1,baslik:1,link: 1}).populate('yazarObje','yorumYuzdesi');
-    let yorumlayacaklar= await Kullanici.find({ aktif: true, sekil: "okurYazar"},{_id:1,yorumYuzdesi:1})
+    let yorumlayacaklar= await Kullanici.find({ aktif: true, sekil: "okurYazar"},{_id:1,yorumYuzdesi:1});
+
+    // console.log(yorumlanacaklar);
+    // console.log(yorumlayacaklar);
   
     if (yorumlanacaklar.length && (yorumlayacaklar.length>1))
     {
@@ -56,6 +60,7 @@ module.exports = async function haftalikModerasyon(){
           oObj.indis=j;
           oykuMatrisi.push(oObj);
         }
+        // console.log(oykuMatrisi);
   
         oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi);
         yorumlayacaklar.sort((a, b) => parseFloat(b.yorumYuzdesi) - parseFloat(a.yorumYuzdesi));
@@ -70,6 +75,7 @@ module.exports = async function haftalikModerasyon(){
           let secilenler=buKisininYorumlayabilecegiOykuler.slice(0, 3);
   
           for (secilenOyku of secilenler){
+
             let yorumObje={};
             yorumObje.baslik=secilenOyku.baslik;
             yorumObje.link=secilenOyku.link;
@@ -80,9 +86,14 @@ module.exports = async function haftalikModerasyon(){
           }
           
           oykuMatrisi.filter(i => i.yakYorumSayisi<=0).map((bitenOyku)=>{
-            tamamMatrisi.push(bitenOyku.id);
+            // console.log(bitenOyku);
+            tamamMatrisi.push(bitenOyku._id);
           });
           oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi>0);
+          //silinen oykuler diger indislerde sorun cikariyor
+          for (let k = 0; k < oykuMatrisi.length ;k++) {
+            oykuMatrisi[k].indis=k;
+          }
   
           if (!oykuMatrisi.length){
             break;
@@ -99,6 +110,7 @@ module.exports = async function haftalikModerasyon(){
         await yYorum.save();
       }   
       for await (bitenOyku of tamamMatrisi){
+        // console.log(bitenOyku);
         await Oyku.updateOne({_id: bitenOyku}, {$set: { yorumAtamasi: true} }); 
       }
     }
