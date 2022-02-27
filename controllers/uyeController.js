@@ -22,7 +22,7 @@ const uyeMain = (req, res) => {
         .exec(callback);
       },
       onaylar: function(callback) {
-        Yorum.find({yazar: res.locals.currentUser._id, yorumcuOnayi: true, yazarOnayi:null},{yazarOnayi:1,baslik:1,link:1, yorumcuIsim})
+        Yorum.find({yazar: res.locals.currentUser._id, yorumcuOnayi: true, yazarOnayi:null},{yazarOnayi:1,baslik:1,link:1, yorumcuIsim:1})
         .exec(callback);
       },
     },function(err, results) {
