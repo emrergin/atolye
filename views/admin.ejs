@@ -4,7 +4,11 @@
 
 <body>
   <%- include("./partials/nav.ejs") %>
-
+  <%if (yazarlar.length){%>
+    <p> <b>Yazacaklar: </b> <%=yazarlar%>. </p>
+  <%}else{%>
+    <p>Bu hafta taahhüt eden yok.</p>
+  <%}%>
   <%if (mevcutMod==="Öykü Yazma"){%>
     <p>Şu an öykü yazma zamanı. Mevcut görev:<%=gorev%> </p>
   <%}else{%>

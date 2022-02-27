@@ -157,6 +157,14 @@ const rastgele_oyku = (req, res,next) => {
   });
 };
 
+function capitalize([firstLetter, ...rest]) {
+  return [firstLetter.toLocaleUpperCase('tr'), ...rest].join('');
+}
+
+function titleCase(baslik){
+  return baslik.split(/\s+/).map(capitalize).join(' ');
+}
+
 const oyku_yeni = (req, res) => {
   if (req.user){
     let oykuHukmu = req.user.sekil==="okurYazar"? false : true;    
@@ -166,7 +174,7 @@ const oyku_yeni = (req, res) => {
           hafta: result,
           yazar: req.user.gercekAd,
             //sadece ilk harfler buyuk
-          baslik: req.body.baslik.toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()), 
+          baslik: titleCase(req.body.baslik.toLocaleLowerCase('tr')), 
           link: req.body.link,
           yazarObje: req.user._id,
           yorumAtamasi: oykuHukmu

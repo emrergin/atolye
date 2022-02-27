@@ -98,14 +98,14 @@
 <script defer>
   const tarihMetni=document.getElementById(`tarihMetin`);    
 
-  const gunler = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
+  // const gunler = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
 
   const bugununTarihi = new Date();
-  let gun = gunler[bugununTarihi.getDay()];
+  // let gun = gunler[bugununTarihi.getDay()];
   // let gun = gunler[bugununTarihi.getMinutes()%7];
 
   tarihMetni.textContent= bugununTarihi.toLocaleString("tr-TR", {year: 'numeric', month: 'long', 
-  day: 'numeric', hour: '2-digit', minute: '2-digit'})+`. Bugün ${gun}.`;
+  day: 'numeric', weekday: 'long', hour: '2-digit', minute: '2-digit'});
 
   const yorumYuzdeKutusu=document.getElementById("yorumYuzdesiSayisi");
   

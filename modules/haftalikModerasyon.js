@@ -1,11 +1,15 @@
+// require('dotenv').config({path: '../.env'});
+// require('dotenv').config();
+
+// connect to mongodb & listen for requests
+
 const Kullanici = require('../models/kullanici');
 const Server = require('../models/server');
 const Oyku = require('../models/oyku');
 const Yorum = require('../models/yorum');
 const Kelime = require('../models/kelime');
 
-module.exports = function (req, res, next) {
-  async function haftalikModerasyon(){
+module.exports = async function haftalikModerasyon(){
     try{
       const moderasyonVerisi=await Server.findOne();
       let sonTarih=moderasyonVerisi.sonModerasyon;
@@ -13,22 +17,24 @@ module.exports = function (req, res, next) {
       const gunfark=(bugununTarihi-sonTarih)/1000/60/60/24;
       const eklenecekGun=7*Math.floor(gunfark/7);
       if (gunfark>=7){
-          gorevYenile();
           await Kullanici.updateMany({katilim: "yazacak"},{  $set: { aktif: false }  });
-          yorumAta();     
+          yorumAta();             
+          gorevYenile();  
           await Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  });   
           await Server.updateOne({}, {$set: { sonModerasyon:sonTarih.setDate(sonTarih.getDate() + eklenecekGun)} });          
+      }else{
+        console.log(bugununTarihi+'-- moderasyon vakti gelmedi.');
       }
     }
     catch (e) {
       console.log('caught', e);
     }
-  }
-
+  
+  
   async function yorumAta(){
     let yorumlanacaklar= await Oyku.find({ yorumAtamasi: false },{yazarObje:1,baslik:1,link: 1}).populate('yazarObje','yorumYuzdesi');
     let yorumlayacaklar= await Kullanici.find({ aktif: true, sekil: "okurYazar"},{_id:1,yorumYuzdesi:1})
-
+  
     if (yorumlanacaklar.length && (yorumlayacaklar.length>1))
     {
       let topAgirlik=0;
@@ -37,7 +43,7 @@ module.exports = function (req, res, next) {
       }
       if (topAgirlik!==0){
         let toplamYorumSayisi=yorumlayacaklar.length*3;
-
+  
         let oykuMatrisi=[];
         for (let j = 0; j < yorumlanacaklar.length ;j++) {
           let oObj={};
@@ -50,19 +56,19 @@ module.exports = function (req, res, next) {
           oObj.indis=j;
           oykuMatrisi.push(oObj);
         }
-
+  
         oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi);
         yorumlayacaklar.sort((a, b) => parseFloat(b.yorumYuzdesi) - parseFloat(a.yorumYuzdesi));
-
+  
         // Yorum Dagitimi burada basliyor=====================
         var yorumMatrisi=[];
         var tamamMatrisi=[];
-
+  
         for (yorumcu of yorumlayacaklar){
           let buKisininYorumlayabilecegiOykuler=oykuMatrisi.filter(i=> (i.yazarObje._id.toString() !== yorumcu._id.toString()));
           buKisininYorumlayabilecegiOykuler=shuffle(buKisininYorumlayabilecegiOykuler);
           let secilenler=buKisininYorumlayabilecegiOykuler.slice(0, 3);
-
+  
           for (secilenOyku of secilenler){
             let yorumObje={};
             yorumObje.baslik=secilenOyku.baslik;
@@ -77,7 +83,7 @@ module.exports = function (req, res, next) {
             tamamMatrisi.push(bitenOyku.id);
           });
           oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi>0);
-
+  
           if (!oykuMatrisi.length){
             break;
           }
@@ -97,7 +103,7 @@ module.exports = function (req, res, next) {
       }
     }
   }
-
+  
   async function gorevYenile(){
     try{
       const yazanlar=await Kullanici.find({katilim: "yazdi"}); 
@@ -107,8 +113,8 @@ module.exports = function (req, res, next) {
             { $sample: { size: 3 } } ,
             { $project: { kelime: 1,  _id: 0,} }
           ]
-       );
-       await Server.updateOne({}, {$set: { gorev:yeniKelimeler.map(a => a.kelime).join(', ')} });
+        );
+        await Server.updateOne({}, {$set: { gorev:yeniKelimeler.map(a => a.kelime).join(', ')} });
       }
     }
     catch (e) {
@@ -116,16 +122,12 @@ module.exports = function (req, res, next) {
     }
   }
   
-  haftalikModerasyon();
-  // yorumAta(); 
-  next();
-};
-
-function shuffle(array) {
-  let resArray=array;
-  for (let i = resArray.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [resArray[i], resArray[j]] = [resArray[j], resArray[i]];
-  }
-  return resArray;
+  function shuffle(array) {
+    let resArray=array;
+    for (let i = resArray.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [resArray[i], resArray[j]] = [resArray[j], resArray[i]];
+    }
+    return resArray;
+  }  
 }

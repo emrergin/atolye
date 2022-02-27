@@ -95,15 +95,26 @@ const yetkiliSayfa = (req, res) => {
     res.redirect('/oykuler');
   }
   else{
-    Server.findOne()
-    .then((ser) => {
-      res.render('admin', { title: 'Yönetici Sayfası' , gorev: ser.gorev});
-    })
-    .catch(err => {
-      console.log(err);
-    });
+    async.parallel({
+      gorev: function(callback) {
+        Server.findOne()
+        .exec(callback);
+      },
+      yazarlar: function(callback) {
+        Kullanici.find({katilim: "yazacak"},{_id:0, gercekAd:1})
+        .exec(callback);
+      },
+      },function(err, results) {
+        if (err) { return next(err); }
+      
+        res.render('admin', { title: 'Yönetici Sayfası' ,
+                              gorev:results.gorev.gorev,
+                              yazarlar: results.yazarlar.map(a => a.gercekAd).join(', ')});                             
+      
+      });
   }
 }
+
 
 const gorevBelirleme = (req, res) => {
   if (req.user.admin){

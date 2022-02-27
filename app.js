@@ -12,8 +12,6 @@ const LocalStrategy = require("passport-local").Strategy;
 
 const Kullanici = require('./models/kullanici');
 
-const Moderasyon = require('./modules/haftalikModerasyon.js');
-
 require('dotenv').config();
 
 var compression = require('compression');
@@ -96,8 +94,12 @@ app.use(function(req, res, next) {
   res.locals.currentUser = req.user;
   next();
 });
-//moderasyon
-app.use(Moderasyon);
+// moderasyon
+app.use(function (req, res, next) {  
+  const haftalikModerasyon=require('./modules/haftalikModerasyon');
+  haftalikModerasyon();
+  next();
+});
 
 //Date functions
 app.use(function(req, res, next) {

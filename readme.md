@@ -40,4 +40,5 @@ This is the project that made me start learning web development. A webapp that r
 - Heroku uses UTC timezone by default. This can be overridden, but this approach is usually not recommended. See: https://help.heroku.com/JZKJJ4NC/how-do-i-set-the-timezone-on-my-dyno
 - Better to use `var` inside of **do-while** loops.
 - The passport.use() method expects your POST request to have the `username` and `password` fields. But this can be circumvented with field definitions.
+- Javascript Regex does not well behave with all unicode characters, and it does not have an equivalent expression to `\p{L}`.
 
