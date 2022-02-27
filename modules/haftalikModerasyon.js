@@ -11,7 +11,7 @@ const Kelime = require('../models/kelime');
 
 module.exports = async function haftalikModerasyon(){
     try{
-      await yorumAta();
+      // await yorumAta();
       const moderasyonVerisi=await Server.findOne();
       let sonTarih=moderasyonVerisi.sonModerasyon;
       const bugununTarihi = new Date();
