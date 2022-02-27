@@ -11,7 +11,7 @@ const Kelime = require('../models/kelime');
 
 module.exports = async function haftalikModerasyon(){
     try{
-      // await yorumAta();
+      await yorumAta();
       const moderasyonVerisi=await Server.findOne();
       let sonTarih=moderasyonVerisi.sonModerasyon;
       const bugununTarihi = new Date();
@@ -34,7 +34,7 @@ module.exports = async function haftalikModerasyon(){
   
   async function yorumAta(){
     let yorumlanacaklar= await Oyku.find({ yorumAtamasi: false },{yazarObje:1,baslik:1,link: 1}).populate('yazarObje','yorumYuzdesi');
-    let yorumlayacaklar= await Kullanici.find({ aktif: true, sekil: "okurYazar"},{_id:1,yorumYuzdesi:1});
+    let yorumlayacaklar= await Kullanici.find({ aktif: true, sekil: "okurYazar"},{_id:1,yorumYuzdesi:1, gercekAd:1});
 
     // console.log(yorumlanacaklar);
     // console.log(yorumlayacaklar);
@@ -80,6 +80,7 @@ module.exports = async function haftalikModerasyon(){
             yorumObje.baslik=secilenOyku.baslik;
             yorumObje.link=secilenOyku.link;
             yorumObje.yorumlayan=yorumcu._id;
+            yorumObje.gercekAd=yorumcu.gercekAd;
             yorumObje.yorumlanan=secilenOyku.yazarObje._id;
             yorumMatrisi.push(yorumObje);
             oykuMatrisi[secilenOyku.indis].yakYorumSayisi-=1;
@@ -106,6 +107,7 @@ module.exports = async function haftalikModerasyon(){
           link: yorum.link,
           yazar: yorum.yorumlanan,
           yorumcu: yorum.yorumlayan,
+          yorumcuIsim: yorum.gercekAd,
         })
         await yYorum.save();
       }   
