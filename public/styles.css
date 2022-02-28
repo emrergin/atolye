@@ -353,6 +353,12 @@ textarea{
   border-spacing: 1px 2px;
 }
 
+.tabloButonu{
+  margin-top:-10px;
+  margin-bottom: -10px;
+  visibility: hidden;
+}
+
 /* Hakkinda=============== */
 #teknolojiler{
   display: flex;

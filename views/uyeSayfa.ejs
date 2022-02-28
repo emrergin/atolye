@@ -48,7 +48,8 @@
                 <%= oyku.baslik %>
               </a>
             <td>
-              <input type="checkbox" class="yorumladimBox" data-yorumid="<%= oyku._id%>" autocomplete="off">
+              <input type="checkbox" class="yorumladimBox" data-yorumid="<%= oyku._id%>" autocomplete="off" onchange="yorumladim()">
+              <button data-yorumid="<%= oyku._id%>" autocomplete="off" class="tabloButonu" onclick="yorumladimOnay()">Gönder?</button>
             </td>
           </tr>
         <% }) %>
@@ -67,10 +68,10 @@
               Yorumcu
             </th> 
             <th>
-              Yeterli Yorum
+              Yeterli
             </th>
             <th>
-              Yetersiz Yorum
+              Yetersiz
             </th>
           </tr>
           <% onaylar.forEach(oyku => { %>
@@ -83,10 +84,10 @@
                 <%= oyku.yorumcuIsim%>
               </td>
               <td>
-                <input type="checkbox" class="onayladimBox" data-yorumid="<%= oyku._id%>" autocomplete="off">
+                <input type="radio" id="onayladim" class="onayladimBox" name="onay" data-yorumid="<%= oyku._id%>" autocomplete="off" value="true">
               </td>
               <td>
-                <input type="checkbox" class="onaylamadimBox" data-yorumid="<%= oyku._id%>" autocomplete="off">
+                <input type="radio" id="onaylamadim" class="onaylamadimBox" name="onay" data-yorumid="<%= oyku._id%>" autocomplete="off" value="false">
               </td>
             </tr>
           <% }) %>
@@ -116,17 +117,8 @@
   const yorumYuzdeKutusu=document.getElementById("yorumYuzdesiSayisi");
   
   var yorumYuzdesi = <%= currentUser.yorumYuzdesi%>; 
-  // var yorumYuzdesi = 0.72; 
   let yorumYuzdeKutusuDegerO=Math.max((Math.round(yorumYuzdesi*100)-60)/40,0);  
-
-  // let yorumYuzdeKutusuDeger=1; 
   yorumYuzdeKutusu.style.color = `rgb(${200*(1-yorumYuzdeKutusuDegerO)}, ${200*(yorumYuzdeKutusuDegerO)}, 0)`;
-
-  const yorumcekbokslari = document.querySelectorAll('.yorumladimBox');
-
-  yorumcekbokslari.forEach((boks) => {
-    boks.addEventListener('change', yorumladim);
-  });
 
   const onaycekbokslari = document.querySelectorAll('.onayladimBox');
 
@@ -141,8 +133,6 @@
     boks.truth=false;
     boks.addEventListener('change', onayladim);
   });
-
-
 
 
   function yazcam(){
@@ -171,11 +161,20 @@
       .catch(err => console.log(err)); // Do something with the error
   }
 
-  function yorumladim(e){
+  function yorumladim(){
+    if(event.target.checked){
+      event.target.nextElementSibling.style.visibility = "visible";
+    }
+    else
+    {
+      event.target.nextElementSibling.style.visibility = "hidden";
+    }
+  }
+  function yorumladimOnay(){
     
     const someData = {
       title: "yorumlama beyani",
-      yorumladim : e.target.checked
+      yorumladim : true
     }    
 
     const putMethod = {
@@ -185,8 +184,8 @@
       },
       body: JSON.stringify(someData)
     }
-    console.log(`/uyeSayfa/yorumladim/${e.target.dataset.yorumid}`)
-    fetch(`/uyeSayfa/yorumladim/${e.target.dataset.yorumid}`,putMethod)
+    console.log(`/uyeSayfa/yorumladim/${event.target.dataset.yorumid}`)
+    fetch(`/uyeSayfa/yorumladim/${event.target.dataset.yorumid}`,putMethod)
       .then(() =>location.reload())
       .catch(err => console.log(err)); // Do something with the error
   }
