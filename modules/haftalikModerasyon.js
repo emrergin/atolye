@@ -23,9 +23,10 @@ module.exports = async function haftalikModerasyon(){
           gorevYenile();  
           await Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  });   
           await Server.updateOne({}, {$set: { sonModerasyon:sonTarih.setDate(sonTarih.getDate() + eklenecekGun)} });          
-      }else{
-        console.log(bugununTarihi+'-- moderasyon vakti gelmedi.');
       }
+      // else{
+      //   console.log(bugununTarihi+'-- moderasyon vakti gelmedi.');
+      // }
     }
     catch (e) {
       console.log('caught', e);

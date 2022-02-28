@@ -73,6 +73,9 @@
             <th>
               Yetersiz
             </th>
+            <th >
+              Onay
+            </th>
           </tr>
           <% onaylar.forEach(oyku => { %>
             <tr >
@@ -83,11 +86,21 @@
               <td>
                 <%= oyku.yorumcuIsim%>
               </td>
-              <td>
-                <input type="radio" id="onayladim" class="onayladimBox" name="onay" data-yorumid="<%= oyku._id%>" autocomplete="off" value="true">
+              <td style="text-align: center;">
+                <input type="radio" id="onayladim"
+                class="onayladimBox" name="onay" 
+                data-yorumid="<%= oyku._id%>"
+                 autocomplete="off" value="true"
+                >
+              </td>
+              <td style="text-align: center;">
+                <input type="radio" id="onaylamadim" 
+                class="onaylamadimBox" name="onay" 
+                data-yorumid="<%= oyku._id%>" 
+                autocomplete="off" value="false">
               </td>
               <td>
-                <input type="radio" id="onaylamadim" class="onaylamadimBox" name="onay" data-yorumid="<%= oyku._id%>" autocomplete="off" value="false">
+                <button data-yorumid="<%= oyku._id%>"  autocomplete="off" class="tabloButonu" onclick="onayladimOnay()">Gönder?</button>
               </td>
             </tr>
           <% }) %>
@@ -190,11 +203,16 @@
       .catch(err => console.log(err)); // Do something with the error
   }
 
-  function onayladim(e){
+  function onayladim(){
+    document.querySelector(`button[data-yorumid='${event.target.dataset.yorumid}']`).style.visibility = "visible";
+  }
+
+  function onayladimOnay(){
+    deger= document.querySelector('input[name="onay"]:checked').value;
     
     const someData = {
       title: "onaylama beyani",
-      onayladim : (e.target.truth && e.target.checked)
+      onayladim : deger
     }    
 
     const putMethod = {
@@ -204,8 +222,8 @@
       },
       body: JSON.stringify(someData)
     }
-    console.log(`/uyeSayfa/onayladim/${e.target.dataset.yorumid}`)
-    fetch(`/uyeSayfa/onayladim/${e.target.dataset.yorumid}`,putMethod)
+    console.log(`/uyeSayfa/onayladim/${event.target.dataset.yorumid}`)
+    fetch(`/uyeSayfa/onayladim/${event.target.dataset.yorumid}`,putMethod)
       .then(() =>location.reload())
       .catch(err => console.log(err)); // Do something with the error
   }

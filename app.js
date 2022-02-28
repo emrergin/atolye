@@ -95,11 +95,11 @@ app.use(function(req, res, next) {
   next();
 });
 // moderasyon
-// app.use(function (req, res, next) {  
-//   const haftalikModerasyon=require('./modules/haftalikModerasyon');
-//   haftalikModerasyon();
-//   next();
-// });
+app.use(function (req, res, next) {  
+  const haftalikModerasyon=require('./modules/haftalikModerasyon');
+  haftalikModerasyon();
+  next();
+});
 
 //Date functions
 app.use(function(req, res, next) {
