@@ -56,9 +56,9 @@
     <% break;
       case "yazmayacak":
       if (yazarlar.length===0){ %>
-      <div id="yazmaGostergesi" >Atölye bu hafta tatil.</div>
+        <div id="yazmaGostergesi" >Atölye bu hafta tatil.</div>
       <%}else{ %>
-      <div id="yazmaGostergesi" >Öykü yazmayı taahhüt etmediniz.</div>
+        <div id="yazmaGostergesi" >Öykü yazmayı taahhüt etmediniz.</div>
     <% }
     break;
     default:
@@ -69,13 +69,13 @@
 
 <% switch (currentUser.katilim) {
 case "yazacak": %>
-  <div class="uyeStatus">Bu hafta öykü yazacağınızı vaad ettiniz.</div>
+  <div class="uyeStatus" id="yazmaGostergesi2" >Bu hafta öykü yazacağınızı vaad ettiniz.</div>
 <% break;
   case "yazmayacak": %>
-<div  class="uyeStatus">Bu hafta öykü yazmayacakmışsınız.</div>
+<div  class="uyeStatus" id="yazmaGostergesi2" >Bu hafta öykü yazmayacakmışsınız.</div>
   <% break;
 case "yazdi": %>
-  <div class="uyeStatus">Bu haftaki öykünüzü yolladınız.</div>
+  <div class="uyeStatus" id="yazmaGostergesi2" >Bu haftaki öykünüzü yolladınız.</div>
 <% break;
 default:
 break; } %>    
