@@ -290,6 +290,9 @@ textarea{
   margin-bottom: 15px;
 }
 
+/* #oykuKutusu{
+  max-width:50%;
+} */
 
 /* #taahhutKutusu,#oykuKutusu{
   margin-bottom: 15px;
@@ -335,11 +338,17 @@ textarea{
   box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
 }
 
+#uyeSayfaContent{
+  max-width:50%;
+  margin-top:20px;
+}
+
 #yorumYuzdesiKutusu{
   box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
   padding: 2vmax;
   text-align: center; 
   margin-bottom: 15px;
+  margin-top:20px;
 }
 
 #yorumYuzdesiSayisi{
@@ -409,6 +418,10 @@ svg.about{
 
   #yorumYuzdesiKutusu{
     order:-1;
+  }
+
+  #uyeSayfaContent{
+    max-width:95%;
   }
 
   #uyeHeader{

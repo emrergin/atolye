@@ -16,7 +16,7 @@ const kullaniciSchema = new Schema({
   },
   aktif:{
     type: Boolean,
-    default: 'true',
+    default: true,
     required: true
   },
   sekil:{

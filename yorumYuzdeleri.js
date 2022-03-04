@@ -9,23 +9,24 @@ const Yorum = require('./models/yorum');
 
 const mongoose = require('mongoose');
 
-async function yorumYuzdeleri(){
-  const kontrolBaslangicTarihi = new Date();
-  kontrolBaslangicTarihi.setMonth(kontrolBaslangicTarihi.getMonth() - 1);
-
+async function Baglan(){
   await mongoose.connect(process.env.MONGOURL, { 
     useNewUrlParser: true, 
     useUnifiedTopology: true,
     useFindAndModify: false
   });
+}
 
-  const degerlendirilecekYorumlar=await Yorum.find({createdAt: {$gt: kontrolBaslangicTarihi}},
+async function yorumYuzdeleri(){
+  const kontrolBaslangicTarihi = new Date();
+  kontrolBaslangicTarihi.setMonth(kontrolBaslangicTarihi.getMonth() - 1);
+  // await Baglan();
+
+  let degerlendirilecekYorumlar=await Yorum.find({createdAt: {$gt: kontrolBaslangicTarihi}},
                                                   {yorumcu:1,yazarOnayi:1,yorumcuOnayi:1,_id:0});
-  // const uniqueYorumcular = [...new Set(degerlendirilecekYorumlar.map(item => item.yorumcu))]; 
-
-  // for (yorum of degerlendirilecekYorumlar)
+  
   const sonuc1= degerlendirilecekYorumlar.sort(compare).map(a=>{
-    if (a.yorumcuOnayi && a.yazarOnayi){
+    if (a.yorumcuOnayi && a.yazarOnayi!==false){
       return {yorumcu: a.yorumcu, deger: 1}
     }else{
       return {yorumcu: a.yorumcu, deger: 0}
@@ -57,10 +58,7 @@ async function yorumYuzdeleri(){
           console.log(err);
         });
     });  
-  }
- 
-
-  mongoose.disconnect();
+  } 
 
   function compare( a, b ) {
     if ( a.yorumcu < b.yorumcu ){
@@ -73,4 +71,19 @@ async function yorumYuzdeleri(){
   }
 }
 
-yorumYuzdeleri();
+async function yorumDeaktifTemizligi(){
+  // await Baglan();
+  let gidenler=await Kullanici.find({aktif: false},{_id:1});
+  if (gidenler.length){
+    gidenler=gidenler.map(a=>a._id.toString());
+    await Yorum.find({ yorumcu: { $in: gidenler}}).remove();
+    await Yorum.find({ yazar: { $in: gidenler}}).update( { $set: { yazarOnayi: true } } );
+  }
+}
+
+(async function (){
+  await Baglan();
+  await yorumDeaktifTemizligi();
+  await yorumYuzdeleri();
+  mongoose.disconnect();
+})();
