@@ -44,7 +44,7 @@
         <% yorumlar.forEach(oyku => { %>
           <tr >
             <td>
-              <a href=<%=oyku.link %>>
+              <a href=<%=oyku.link %> target="_blank">
                 <%= oyku.baslik %>
               </a>
             <td>
@@ -80,7 +80,7 @@
           <% onaylar.forEach(oyku => { %>
             <tr >
               <td>
-                <a href=<%=oyku.link %>>
+                <a href=<%=oyku.link %> target="_blank">
                   <%= oyku.baslik %>
                 </a>
               <td>
@@ -107,7 +107,7 @@
         </table>
       <%}%>
     <h2>Öyküleriniz</h2>
-    <p><a href="../yazar/<%=currentUser.gercekAd%>" class="visibleLink">Buradan</a> erişebilirsiniz.</p>
+    <p><a href="../yazar/<%=currentUser.gercekAd%>" class="visibleLink" target="_blank">Buradan</a> erişebilirsiniz.</p>
   </div>
     
   <%- include("./partials/footer.ejs") %>
