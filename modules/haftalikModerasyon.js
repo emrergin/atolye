@@ -20,10 +20,15 @@ module.exports = async function haftalikModerasyon(){
           await Kullanici.updateMany({katilim: "yazacak"},{  $set: { aktif: false }  });
           await yorumDeaktifTemizligi();
           await yorumYuzdeleri();
-          await yorumAta();             
-          await gorevYenile();  
-          await Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  });   
-          await Server.updateOne({}, {$set: { sonModerasyon:sonTarih.setDate(sonTarih.getDate() + eklenecekGun)} });          
+          await yorumAta();      
+          await Promise.all([yorumYuzdeleri(),
+                             gorevYenile(),
+                             Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  }),
+                             Server.updateOne({}, {$set: { sonModerasyon:sonTarih.setDate(sonTarih.getDate() + eklenecekGun)} })]);
+          // await yorumYuzdeleri();                 
+          // await gorevYenile();
+          // await Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  });   
+          // await Server.updateOne({}, {$set: { sonModerasyon:sonTarih.setDate(sonTarih.getDate() + eklenecekGun)} });          
       }
       // else{
       //   console.log(bugununTarihi+'-- moderasyon vakti gelmedi.');
@@ -169,7 +174,10 @@ module.exports = async function haftalikModerasyon(){
           yorumcuIsim: yorum.gercekAd,
         })
         await yYorum.save();
-      }   
+      }
+      oykuMatrisi.map((bitenOyku)=>{
+        tamamMatrisi.push(bitenOyku._id);
+      });   
       for await (bitenOyku of tamamMatrisi){
         // console.log(bitenOyku);
         await Oyku.updateOne({_id: bitenOyku}, {$set: { yorumAtamasi: true} }); 
