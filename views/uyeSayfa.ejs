@@ -15,7 +15,7 @@
       <%- include("./partials/uyeStatus.ejs") %> 
     </div>
       
-      
+    <% if (currentUser.sekil==='okurYazar'){%>
     <div id="yorumYuzdesiKutusu">
       <div id="yorumYuzdesiSayisi">
         <%=`%${Math.round(currentUser.yorumYuzdesi*1000)/10}`%>
@@ -24,9 +24,10 @@
         Yorum Yüzdesi
       </div>
     </div>
+    <%}%>
   </div>
 
-
+  <% if (currentUser.sekil==='okurYazar'){%>
   <div>
     <h2>Yorumlanacak Öyküler</h2>
     <% if (yorumlar.length===0){%>
@@ -105,7 +106,7 @@
             </tr>
           <% }) %>
         </table>
-      <%}%>
+      <%}}%>
     <h2>Öyküleriniz</h2>
     <p><a href="../yazar/<%=currentUser.gercekAd%>" class="visibleLink" target="_blank">Buradan</a> erişebilirsiniz.</p>
   </div>

@@ -175,6 +175,7 @@ module.exports = async function haftalikModerasyon(){
         })
         await yYorum.save();
       }
+      //gecici cozum--- hala yorumlarini tamamlamamis varsa, tamamla.
       oykuMatrisi.map((bitenOyku)=>{
         tamamMatrisi.push(bitenOyku._id);
       });   
