@@ -127,7 +127,6 @@ module.exports = async function haftalikModerasyon(){
         }
   
         oykuMatrisi=shuffle(oykuMatrisi.filter(i => i.yakYorumSayisi));
-        // yorumlayacaklar.sort((a, b) => parseFloat(b.yorumYuzdesi) - parseFloat(a.yorumYuzdesi));
         yorumlayacaklar=shuffle(yorumlayacaklar);
   
         // Yorum Dagitimi burada basliyor=====================
@@ -151,7 +150,6 @@ module.exports = async function haftalikModerasyon(){
           }
           
           oykuMatrisi.filter(i => i.yakYorumSayisi<=0).map((bitenOyku)=>{
-            // console.log(bitenOyku);
             tamamMatrisi.push(bitenOyku._id);
           });
           oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi>0).sort((a, b) => b.yakYorumSayisi-a.yakYorumSayisi);
@@ -175,14 +173,11 @@ module.exports = async function haftalikModerasyon(){
         })
         await yYorum.save();
       }
-      //gecici cozum--- hala yorumlarini tamamlamamis varsa, tamamla.
+      //hala yorumlari tamamlanmamis varsa, tamamla.
       oykuMatrisi.map((bitenOyku)=>{
         tamamMatrisi.push(bitenOyku._id);
       });   
-      for await (bitenOyku of tamamMatrisi){
-        // console.log(bitenOyku);
-        await Oyku.updateOne({_id: bitenOyku}, {$set: { yorumAtamasi: true} }); 
-      }
+      await Oyku.updateMany({_id:  { $in: tamamMatrisi}}, {$set: { yorumAtamasi: true} }); 
     }
   }
   
