@@ -126,8 +126,9 @@ module.exports = async function haftalikModerasyon(){
           oykuMatrisi.push(oObj);
         }
   
-        oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi);
-        yorumlayacaklar.sort((a, b) => parseFloat(b.yorumYuzdesi) - parseFloat(a.yorumYuzdesi));
+        oykuMatrisi=shuffle(oykuMatrisi.filter(i => i.yakYorumSayisi));
+        // yorumlayacaklar.sort((a, b) => parseFloat(b.yorumYuzdesi) - parseFloat(a.yorumYuzdesi));
+        yorumlayacaklar=shuffle(yorumlayacaklar);
   
         // Yorum Dagitimi burada basliyor=====================
         var yorumMatrisi=[];
@@ -135,7 +136,6 @@ module.exports = async function haftalikModerasyon(){
   
         for (yorumcu of yorumlayacaklar){
           let buKisininYorumlayabilecegiOykuler=oykuMatrisi.filter(i=> (i.yazarObje._id.toString() !== yorumcu._id.toString()));
-          buKisininYorumlayabilecegiOykuler=shuffle(buKisininYorumlayabilecegiOykuler);
           let secilenler=buKisininYorumlayabilecegiOykuler.slice(0, 3);
   
           for (secilenOyku of secilenler){
@@ -154,7 +154,7 @@ module.exports = async function haftalikModerasyon(){
             // console.log(bitenOyku);
             tamamMatrisi.push(bitenOyku._id);
           });
-          oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi>0);
+          oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi>0).sort((a, b) => b.yakYorumSayisi-a.yakYorumSayisi);
           //silinen oykuler diger indislerde sorun cikariyor
           for (let k = 0; k < oykuMatrisi.length ;k++) {
             oykuMatrisi[k].indis=k;
