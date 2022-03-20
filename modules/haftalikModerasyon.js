@@ -24,15 +24,8 @@ module.exports = async function haftalikModerasyon(){
           await Promise.all([yorumYuzdeleri(),
                              gorevYenile(),
                              Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  }),
-                             Server.updateOne({}, {$set: { sonModerasyon:sonTarih.setDate(sonTarih.getDate() + eklenecekGun)} })]);
-          // await yorumYuzdeleri();                 
-          // await gorevYenile();
-          // await Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  });   
-          // await Server.updateOne({}, {$set: { sonModerasyon:sonTarih.setDate(sonTarih.getDate() + eklenecekGun)} });          
+                             Server.updateOne({}, {$set: { sonModerasyon:sonTarih.setDate(sonTarih.getDate() + eklenecekGun)} })]);         
       }
-      // else{
-      //   console.log(bugununTarihi+'-- moderasyon vakti gelmedi.');
-      // }
     }
     catch (e) {
       console.log('caught', e);
@@ -177,7 +170,9 @@ module.exports = async function haftalikModerasyon(){
       oykuMatrisi.map((bitenOyku)=>{
         tamamMatrisi.push(bitenOyku._id);
       });   
-      await Oyku.updateMany({_id:  { $in: tamamMatrisi}}, {$set: { yorumAtamasi: true} }); 
+      for await (bitenOyku of tamamMatrisi){
+        await Oyku.updateOne({_id: bitenOyku}, {$set: { yorumAtamasi: true} }); 
+      }
     }
   }
   
