@@ -119,12 +119,15 @@ module.exports = async function haftalikModerasyon(){
           oykuMatrisi.push(oObj);
         }
   
-        oykuMatrisi=shuffle(oykuMatrisi.filter(i => i.yakYorumSayisi));
-        yorumlayacaklar=shuffle(yorumlayacaklar);
-  
         // Yorum Dagitimi burada basliyor=====================
         var yorumMatrisi=[];
         var tamamMatrisi=[];
+        
+        oykuMatrisi.filter(i => i.yakYorumSayisi<=0).map((bitenOyku)=>{
+          tamamMatrisi.push(bitenOyku._id);
+        });
+        oykuMatrisi=shuffle(oykuMatrisi.filter(i => i.yakYorumSayisi));
+        yorumlayacaklar=shuffle(yorumlayacaklar);
   
         for (yorumcu of yorumlayacaklar){
           let buKisininYorumlayabilecegiOykuler=oykuMatrisi.filter(i=> (i.yazarObje._id.toString() !== yorumcu._id.toString()));
@@ -139,22 +142,24 @@ module.exports = async function haftalikModerasyon(){
             yorumObje.gercekAd=yorumcu.gercekAd;
             yorumObje.yorumlanan=secilenOyku.yazarObje._id;
             yorumMatrisi.push(yorumObje);
-            oykuMatrisi[secilenOyku.indis].yakYorumSayisi-=1;
+            let indeks=oykuMatrisi.findIndex(a=>a.indis===secilenOyku.indis);
+            oykuMatrisi[indeks].yakYorumSayisi-=1;
           }
           
           oykuMatrisi.filter(i => i.yakYorumSayisi<=0).map((bitenOyku)=>{
             tamamMatrisi.push(bitenOyku._id);
           });
           oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi>0).sort((a, b) => b.yakYorumSayisi-a.yakYorumSayisi);
-          //silinen oykuler diger indislerde sorun cikariyor
-          for (let k = 0; k < oykuMatrisi.length ;k++) {
-            oykuMatrisi[k].indis=k;
-          }
   
           if (!oykuMatrisi.length){
             break;
           }
         }
+        //hala yorumlari tamamlanmamis varsa, tamamla.
+        oykuMatrisi.map((bitenOyku)=>{
+          tamamMatrisi.push(bitenOyku._id);
+        });          
+        
       }
       for await (yorum of yorumMatrisi){
         const yYorum= new Yorum({
@@ -166,10 +171,7 @@ module.exports = async function haftalikModerasyon(){
         })
         await yYorum.save();
       }
-      //hala yorumlari tamamlanmamis varsa, tamamla.
-      oykuMatrisi.map((bitenOyku)=>{
-        tamamMatrisi.push(bitenOyku._id);
-      });   
+ 
       for await (bitenOyku of tamamMatrisi){
         await Oyku.updateOne({_id: bitenOyku}, {$set: { yorumAtamasi: true} }); 
       }
