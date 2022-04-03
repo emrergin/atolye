@@ -17,14 +17,14 @@ module.exports = async function haftalikModerasyon(){
       const gunfark=(bugununTarihi-sonTarih)/1000/60/60/24;
       const eklenecekGun=7*Math.floor(gunfark/7);
       if (gunfark>=7){
+          await Server.updateOne({}, {$set: { sonModerasyon:sonTarih.setDate(sonTarih.getDate() + eklenecekGun)} });
           await Kullanici.updateMany({katilim: "yazacak"},{  $set: { aktif: false }  });
           await yorumDeaktifTemizligi();
           await yorumYuzdeleri();
           await yorumAta();      
           await Promise.all([yorumYuzdeleri(),
                              gorevYenile(),
-                             Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  }),
-                             Server.updateOne({}, {$set: { sonModerasyon:sonTarih.setDate(sonTarih.getDate() + eklenecekGun)} })]);         
+                             Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  })]);         
       }
     }
     catch (e) {

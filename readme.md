@@ -20,8 +20,7 @@ This is the project that made me start learning web development. A webapp that r
 
 ## To be implemented
 - Internal text editor
-- Internal comments
-- Comment checking and assigning.
+- Internal comment
 
 ## Sources
 - https://codepen.io/JiveDig/pen/jbdJXR
