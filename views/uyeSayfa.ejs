@@ -197,7 +197,6 @@
       },
       body: JSON.stringify(someData)
     }
-    console.log(`/uyeSayfa/yorumladim/${event.target.dataset.yorumid}`)
     fetch(`/uyeSayfa/yorumladim/${event.target.dataset.yorumid}`,putMethod)
       .then(() =>location.reload())
       .catch(err => console.log(err)); // Do something with the error
@@ -222,7 +221,6 @@
       },
       body: JSON.stringify(someData)
     }
-    console.log(`/uyeSayfa/onayladim/${event.target.dataset.yorumid}`)
     fetch(`/uyeSayfa/onayladim/${event.target.dataset.yorumid}`,putMethod)
       .then(() =>location.reload())
       .catch(err => console.log(err)); // Do something with the error

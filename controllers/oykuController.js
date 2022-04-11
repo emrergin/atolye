@@ -219,9 +219,4 @@ module.exports = {
   oyku_yeni,
   rastgele_oyku,
   oyku_gecici
-  // , 
-  // blog_details, 
-  // blog_create_get, 
-  // blog_create_post, 
-  // blog_delete
 }
