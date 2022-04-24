@@ -2,10 +2,7 @@
 require('dotenv').config();
 
 const Kullanici = require('./models/kullanici');
-// const Server = require('../models/server');
-// const Oyku = require('../models/oyku');
 const Yorum = require('./models/yorum');
-// const Kelime = require('../models/kelime');
 
 const mongoose = require('mongoose');
 
@@ -22,8 +19,8 @@ async function yorumYuzdeleri(){
   kontrolBaslangicTarihi.setMonth(kontrolBaslangicTarihi.getMonth() - 1);
   // await Baglan();
 
-  let degerlendirilecekYorumlar=await Yorum.find({createdAt: {$gt: kontrolBaslangicTarihi}},
-                                                  {yorumcu:1,yazarOnayi:1,yorumcuOnayi:1,_id:0});
+  let degerlendirilecekYorumlar=await Yorum.find({createdAt: {$gt: kontrolBaslangicTarihi}})
+											.select({yorumcu:1,yazarOnayi:1,yorumcuOnayi:1,_id:0}).exec();
   
   const sonuc1= degerlendirilecekYorumlar.sort(compare).map(a=>{
     if (a.yorumcuOnayi && a.yazarOnayi!==false){
@@ -34,7 +31,7 @@ async function yorumYuzdeleri(){
   });
   let sonuc2=[];
   for (satir of sonuc1){
-    if ((sonuc2.length)&& (sonuc2[sonuc2.length-1].yorumcu===satir.yorumcu)){
+    if ((sonuc2.length)&& (sonuc2[sonuc2.length-1].yorumcu.toString() === satir.yorumcu.toString())){
       sonuc2[sonuc2.length-1].deger+=satir.deger;
       sonuc2[sonuc2.length-1].sayac++;
     }
@@ -43,6 +40,7 @@ async function yorumYuzdeleri(){
       sonuc2.push(satir);
     }
   }
+  
   for (satir of sonuc2){
     satir.ortalama=satir.deger/satir.sayac;
   }

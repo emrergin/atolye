@@ -35,8 +35,8 @@ module.exports = async function haftalikModerasyon(){
     const kontrolBaslangicTarihi = new Date();
     kontrolBaslangicTarihi.setMonth(kontrolBaslangicTarihi.getMonth() - 1);
   
-    let degerlendirilecekYorumlar=await Yorum.find({createdAt: {$gt: kontrolBaslangicTarihi}},
-                                                    {yorumcu:1,yazarOnayi:1,yorumcuOnayi:1,_id:0});
+    let degerlendirilecekYorumlar=await Yorum.find({createdAt: {$gt: kontrolBaslangicTarihi}})
+                        .select({yorumcu:1,yazarOnayi:1,yorumcuOnayi:1,_id:0}).exec();
     
     const sonuc1= degerlendirilecekYorumlar.sort(compare).map(a=>{
       if (a.yorumcuOnayi && a.yazarOnayi!==false){
@@ -47,7 +47,7 @@ module.exports = async function haftalikModerasyon(){
     });
     let sonuc2=[];
     for (satir of sonuc1){
-      if ((sonuc2.length)&& (sonuc2[sonuc2.length-1].yorumcu===satir.yorumcu)){
+      if ((sonuc2.length)&& (sonuc2[sonuc2.length-1].yorumcu.toString() === satir.yorumcu.toString())){
         sonuc2[sonuc2.length-1].deger+=satir.deger;
         sonuc2[sonuc2.length-1].sayac++;
       }
@@ -56,6 +56,7 @@ module.exports = async function haftalikModerasyon(){
         sonuc2.push(satir);
       }
     }
+    
     for (satir of sonuc2){
       satir.ortalama=satir.deger/satir.sayac;
     }
