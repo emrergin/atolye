@@ -22,8 +22,24 @@ const oykulerKisa = (req, res) => {
     });
 }
 
+const haftaBilgisi = (req, res) => {
+  Oyku.find({},{ createdAt: 1,_id:0}).sort({ createdAt: -1 })
+    .then(result => {
+      result=result.map(a=>new Date(a.createdAt));
+      result=result.map(a=>new Date(a.setDate(a.getDate() - a.getDay())));
+      result=result.map(a=>a.toLocaleString("tr-TR", {year: 'numeric', month: 'numeric', day: 'numeric'}));
+      result= [...new Set(result)];
+      res.json(result.slice(0, -1));
+    })
+    .catch(err => {
+      console.log(err);
+    });
+}
+
+
 
 module.exports = {
   oykuler,
-  oykulerKisa
+  oykulerKisa,
+  haftaBilgisi
 }
