@@ -364,6 +364,11 @@ textarea{
   gap: 1vh;
 }
 
+.hakkinda{
+  max-inline-size: 70ch;
+  padding-left: 10ch;
+}
+
 #teknolojiler li{
   display: inline-flex;
   align-items: center;
@@ -417,6 +422,10 @@ svg.about{
     gap: 20px;
     margin-bottom:15px;
     align-items: flex-start;
+  }
+
+  .hakkinda{
+    padding-left: 0;
   }
 
 }
