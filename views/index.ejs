@@ -85,28 +85,41 @@
   let sira=1;
   let renkIndis=0;
 
-  const renkMatrisi=[`#ebf1f9`,`#d7d6ef`,`#c3d7ec`];
-
   const satirlar= document.querySelectorAll(`tr`);
-  satirlar.forEach((satir)=>{
-    if (satir.previousElementSibling!== null){
-      if (satir.previousElementSibling.children[2].textContent !== satir.children[2].textContent){
-        satir.style.backgroundColor=renkMatrisi[renkIndis%3];
+  const haftaDrop=document.getElementById("haftaSec");
+  const yazarDrop=document.getElementById("yazarSec");
+  satirlar.forEach((satir,index)=>{
+    if (haftaDrop.value!==`/` || yazarDrop.value!==`/`){
+      if (satir.previousElementSibling!== null){    
         renkIndis++;
+        renkIndis=(renkIndis-1)%3+1; 
+        satir.classList.add(`renk${renkIndis}`);
       }
-      else{
-        satir.style.backgroundColor=satir.previousElementSibling.style.backgroundColor;
+    }
+    else{
+      if (satir.previousElementSibling!== null){        
+        if (satir.previousElementSibling.children[2].textContent !== satir.children[2].textContent){
+          renkIndis++;
+          renkIndis=(renkIndis-1)%3+1;        
+        }        
+        satir.classList.add(`renk${renkIndis}`);
+        if (index%2===0){
+          satir.classList.add(`cift`);
+        }
       }
     }
   });
   
-  const siraDugme=document.getElementById(`haftaBaslik`);
-  const satirSayisi=document.getElementById("oykuTablosu").children[0].childElementCount-1;
-  if (satirSayisi>1){
-    document.getElementById(`sayiMetin`).textContent="Öykü Sayısı: "+satirSayisi;
-  }
   
-  function siralamaDegistir(){      
+  if (document.getElementById("oykuTablosu")){
+    const satirSayisi=document.getElementById("oykuTablosu").children[0].childElementCount-1;
+    if (satirSayisi>1){
+      document.getElementById(`sayiMetin`).textContent="Öykü Sayısı: "+satirSayisi;
+    }
+  }  
+  
+  function siralamaDegistir(){   
+    const siraDugme=document.getElementById(`haftaBaslik`);   
     if (sira===1){
       siraDugme.textContent="Hafta ▼";
     }else{

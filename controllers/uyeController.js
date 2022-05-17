@@ -101,7 +101,8 @@ const yetkiliSayfa = (req, res) => {
         .exec(callback);
       },
       yazarlar: function(callback) {
-        Kullanici.find({katilim: "yazacak"},{_id:0, gercekAd:1})
+        Kullanici.find({},{_id:0, gercekAd:1, yorumYuzdesi:1, sekil:1, katilim:1})
+        // Kullanici.find()
         .exec(callback);
       },
       },function(err, results) {
@@ -109,7 +110,8 @@ const yetkiliSayfa = (req, res) => {
       
         res.render('admin', { title: 'Yönetici Sayfası' ,
                               gorev:results.gorev.gorev,
-                              yazarlar: results.yazarlar.map(a => a.gercekAd).join(', ')});                             
+                              yazarlar: results.yazarlar
+                            });                             
       
       });
   }

@@ -1,5 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap');
 
+:root {
+  --renk1: #ebf1f9;
+  --renk2: #d7d6ef;
+  --renk3: #c3d7ec;
+  --renk1golge: #D0D5DC;
+  --renk2golge: #B9BAD0;
+  --renk3golge: #ADBED0;
+}
 
 *{
   box-sizing: border-box;
@@ -149,6 +157,7 @@ table{
 
 table td{
   padding: 1vw;
+  border-color: transparent;
 }
 
 
@@ -157,6 +166,7 @@ table th{
   background-color: #2c2c2c;
   color: #dcddde;
   font-size: 20px;
+  border-color: transparent;
 }
 
 table th:first-child{
@@ -167,20 +177,36 @@ table th:last-child{
   border-radius: 0 10px 0 0;
 }
 
-tr:nth-child(even):not(.yorumTablosu){
-  filter: brightness(90%);
+.renk1{
+  background-color: var(--renk1);
 }
 
-tr:nth-child(odd):hover{
-  filter: saturate(200%);
+.renk2{
+  background-color: var(--renk2);
+}
+.renk3{
+  background-color: var(--renk3);
 }
 
-tr:nth-child(even):hover{
-  filter: saturate(200%) brightness(90%);
+.renk1.cift{
+  background-color: var(--renk1golge);
+}
+.renk2.cift{
+  background-color: var(--renk2golge);
+}
+.renk3.cift{
+  background-color: var(--renk3golge);
 }
 
-tr:hover {
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+tr:hover{
+  filter: saturate(200%);  
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  transition: all .35s ease-in-out;
+}
+
+#oykuTablosu tr:hover> :first-child{
+  border-left: transparent 8px solid;
+  transition: all .25s ease-in-out;
 }
 
 #mainTableContainer{
@@ -435,5 +461,14 @@ svg.about{
     font-size: 0.7em;
   }
 
+}
+
+@media (min-width:1000px) { 
+  #oykuTablosu td:first-child {  
+      inline-size: 50ch;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 }
 

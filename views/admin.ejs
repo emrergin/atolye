@@ -4,11 +4,6 @@
 
 <body>
   <%- include("./partials/nav.ejs") %>
-  <%if (yazarlar.length){%>
-    <p> <b>Yazacaklar: </b> <%=yazarlar%>. </p>
-  <%}else{%>
-    <p>Bu hafta taahhüt eden yok.</p>
-  <%}%>
   <%if (mevcutMod==="Öykü Yazma"){%>
     <p>Şu an öykü yazma zamanı. Mevcut görev:<%=gorev%> </p>
   <%}else{%>
@@ -16,10 +11,26 @@
       <form action="/uyeSayfa/gorev" method="POST">
         <label for="gorev">Hafta Görevi</label>
         <textarea type="text" id="gorev" name="gorev" required><%=gorev%> </textarea>
-        <button>Gönder</button>
+        <button style="margin-inline:auto;">Gönder</button>
       </form>
     </div>
   <%}%>
-  <%- include("./partials/footer.ejs") %>
+    <% if (yazarlar.length > 0) { %>
+      <table style="margin-inline:auto;">
+        <% yazarlar.forEach(yazar => { %>
+          <tr>
+            <td><%=yazar.gercekAd %></td>
+            <% if (yazar.sekil === `okurYazar`) { %>
+              <td><%=`%${Math.round(yazar.yorumYuzdesi*1000)/10}`%></td> 
+            <% } else { %>  
+              <td>Yorumcu değil</td> 
+            <% } %>
+            <td><%=yazar.katilim %></td>
+            </tr>
+        <% }) %>
+      </table>
+    <% } %>
+
+    <%- include("./partials/footer.ejs") %>
 </body>
 </html>

@@ -15,7 +15,7 @@
       <%- include("./partials/uyeStatus.ejs") %> 
     </div>
       
-    <% if (currentUser.sekil==='okurYazar'){%>
+    <% if (currentUser.sekil=='okurYazar'){%>
     <div id="yorumYuzdesiKutusu">
       <div id="yorumYuzdesiSayisi">
         <%=`%${Math.round(currentUser.yorumYuzdesi*1000)/10}`%>
@@ -117,22 +117,20 @@
 
 
 <script defer>
-  const tarihMetni=document.getElementById(`tarihMetin`);    
-
-  // const gunler = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
+  const tarihMetni=document.getElementById(`tarihMetin`);  
 
   const bugununTarihi = new Date();
-  // let gun = gunler[bugununTarihi.getDay()];
-  // let gun = gunler[bugununTarihi.getMinutes()%7];
 
   tarihMetni.textContent= bugununTarihi.toLocaleString("tr-TR", {year: 'numeric', month: 'long', 
   day: 'numeric', weekday: 'long', hour: '2-digit', minute: '2-digit'});
 
-  const yorumYuzdeKutusu=document.getElementById("yorumYuzdesiSayisi");
   
-  var yorumYuzdesi = <%= currentUser.yorumYuzdesi%>; 
-  let yorumYuzdeKutusuDegerO=Math.max((Math.round(yorumYuzdesi*100)-60)/40,0);  
-  yorumYuzdeKutusu.style.color = `rgb(${200*(1-yorumYuzdeKutusuDegerO)}, ${200*(yorumYuzdeKutusuDegerO)}, 0)`;
+  const yorumYuzdeKutusu=document.getElementById("yorumYuzdesiSayisi");
+  if (yorumYuzdeKutusu){
+    var yorumYuzdesi = <%= currentUser.yorumYuzdesi%>; 
+    let yorumYuzdeKutusuDegerO=Math.max((Math.round(yorumYuzdesi*100)-60)/40,0);  
+    yorumYuzdeKutusu.style.color = `rgb(${200*(1-yorumYuzdeKutusuDegerO)}, ${200*(yorumYuzdeKutusuDegerO)}, 0)`;
+  }
 
   const onaycekbokslari = document.querySelectorAll('.onayladimBox');
 
