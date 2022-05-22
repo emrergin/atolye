@@ -28,7 +28,7 @@ const uyeMain = (req, res) => {
         .exec(callback);
       },
       yazarlar: function(callback) {
-        Kullanici.find({katilim: "yazacak"},{_id:0, gercekAd:1})
+        Kullanici.find({},{_id:0, gercekAd:1, katilim:1})
         .exec(callback);
       },
       yorumlar: function(callback) {
@@ -156,11 +156,30 @@ const gorevBelirleme = (req, res) => {
   }
 }
 
+const haftaTatili = (req, res) => {
+  if (req.user.admin){
+    Kullanici.updateMany({katilim: "yazacak"},{  $set: { katilim:"yazmayacak" }  })
+      .then(() => {
+        res.redirect(303,'/yetkili');
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+  else if(req.user){
+    res.redirect('/uyeSayfa');
+  }
+  else{
+    res.redirect('/uyeGirisi');
+  }
+}
+
 module.exports = {
   uyeMain,
   yazToggle,
   yetkiliSayfa,
   gorevBelirleme,
   yorumToggle1,
-  yorumToggle2
+  yorumToggle2,
+  haftaTatili
 }

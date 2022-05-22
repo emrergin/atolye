@@ -7,6 +7,9 @@
   <%if (mevcutMod==="Öykü Yazma"){%>
     <p>Şu an öykü yazma zamanı. Mevcut görev:<%=gorev%> </p>
   <%}else{%>
+    <% if (yazarlar.filter(a=>a.katilim==="yazacak").length < 2) { %>
+      <button onclick="tatilEt()">Haftayı Tatil Et.</button>
+    <% } %>
     <div class="create-blog content">
       <form action="/uyeSayfa/gorev" method="POST">
         <label for="gorev">Hafta Görevi</label>
@@ -33,4 +36,23 @@
 
     <%- include("./partials/footer.ejs") %>
 </body>
+
+
+<script defer> 
+
+  function tatilEt(){   
+
+    const putMethod = {
+      method: 'PUT', // Method itself
+      headers: {
+        'Content-type': 'application/json  ; charset=UTF-8' // Indicates the content 
+      }
+    }
+
+    fetch(`/uyeSayfa/haftaTatili`,putMethod)
+      // .then(() =>location.reload())
+      .catch(err => console.log(err)); // Do something with the error
+  }
+
+</script>
 </html>

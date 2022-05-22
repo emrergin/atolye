@@ -9,5 +9,6 @@ router.put('/yorumladim/:id', uyeController.yorumToggle1);
 router.put('/onayladim/:id', uyeController.yorumToggle2);
 router.get('/yetkili', uyeController.yetkiliSayfa);
 router.post('/gorev', uyeController.gorevBelirleme);
+router.put('/haftaTatili', uyeController.haftaTatili);
 
 module.exports = router;

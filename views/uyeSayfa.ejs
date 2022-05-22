@@ -128,7 +128,9 @@
   if (gorevKutu){
     gorevKutu.innerHTML=gorevKutu.textContent;
     var linkText = document.querySelector(`#gorevMetni a`);
-    linkText.style="text-decoration: underline;color:#5656A5;";
+    if (linkText){
+      linkText.style="text-decoration: underline;color:#5656A5;";
+    }    
   }
 
   const yorumYuzdeKutusu=document.getElementById("yorumYuzdesiSayisi");
