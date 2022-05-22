@@ -34,14 +34,12 @@
     </div>
   <%} %>
 
-  
-
   <%if (mevcutMod==="Öykü Yazma"){%>
     <% switch (currentUser.katilim) {
       case "yazacak": %>
     <div id="oykuKutusu">
       <h3>Bu Haftanın Görevi</h3>
-      <p><%= gorev%></p>
+      <p id="gorevMetni"><%= gorev%></p>
       
       <div class="create-blog content">
         <form action="/oykuler/" method="POST">
