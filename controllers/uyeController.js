@@ -115,7 +115,7 @@ const yetkiliSayfa = (req, res) => {
         .exec(callback);
       },
       yazarlar: function(callback) {
-        Kullanici.find({},{_id:0, gercekAd:1, yorumYuzdesi:1, sekil:1, katilim:1})
+        Kullanici.find({},{_id:0, gercekAd:1, yorumYuzdesi:1, sekil:1, katilim:1,aktif:1})
         // Kullanici.find()
         .exec(callback);
       },

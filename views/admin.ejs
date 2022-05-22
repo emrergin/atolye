@@ -8,21 +8,24 @@
     <p>Şu an öykü yazma zamanı. Mevcut görev:<%=gorev%> </p>
   <%}else{%>
     <% if (yazarlar.filter(a=>a.katilim==="yazacak").length < 2) { %>
-      <button onclick="tatilEt()">Haftayı Tatil Et.</button>
+      <button style="margin-inline: auto;display:block;" onclick="tatilEt()">Haftayı Tatil Et</button>
     <% } %>
     <div class="create-blog content">
       <form action="/uyeSayfa/gorev" method="POST">
         <label for="gorev">Hafta Görevi</label>
         <textarea type="text" id="gorev" name="gorev" required><%=gorev%> </textarea>
-        <button style="margin-inline:auto;">Gönder</button>
+        <button style="margin-inline:auto;display:block;">Gönder</button>
       </form>
     </div>
   <%}%>
     <% if (yazarlar.length > 0) { %>
       <table style="margin-inline:auto;">
         <% yazarlar.forEach(yazar => { %>
-          <tr>
-            <td><%=yazar.gercekAd %></td>
+        //eslint-disable-next-line
+          <tr style = "<%= !yazar.aktif ? 'text-decoration: line-through' : '' %>">
+            <td>            
+              <%=yazar.gercekAd %>
+            </td>
             <% if (yazar.sekil === `okurYazar`) { %>
               <td><%=`%${Math.round(yazar.yorumYuzdesi*1000)/10}`%></td> 
             <% } else { %>  
