@@ -133,6 +133,11 @@
     }    
   }
 
+  const tatilGostergesi=document.getElementById(`tatilGostergesiMetin`); 
+  if (tatilGostergesi) && (bugununTarihi.getDay()===1 || bugununTarihi.getDay()===2){
+    tatilGostergesi.textContent=`Taahhüt zamanını bekleyin.`;
+  }
+
   const yorumYuzdeKutusu=document.getElementById("yorumYuzdesiSayisi");
   if (yorumYuzdeKutusu){
     var yorumYuzdesi = <%= currentUser.yorumYuzdesi%>; 

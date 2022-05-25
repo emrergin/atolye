@@ -69,7 +69,7 @@
 
 <%if (mevcutMod!=="Öykü Yazma" && mevcutMod!=="Taahhüt"){%>
   <%if (yazarlar.filter(a=>a.katilim!=="yazmayacak").length === 0){%>
-    <div >Bu hafta tatil.</div>
+    <div id="tatilGostergesiMetin">Bu hafta tatil.</div>
   <% }else{ %>
     <% switch (currentUser.katilim) {
     case "yazacak": %>
