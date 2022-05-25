@@ -1,3 +1,4 @@
+<!-- htmllint preset="none" -->
 <!DOCTYPE html>
 <html lang="tr">
 <%- include("./partials/head.ejs") %>
@@ -10,7 +11,7 @@
     <% if (yazarlar.filter(a=>a.katilim==="yazacak").length < 2) { %>
       <button style="margin-inline: auto;display:block;" onclick="tatilEt()">Haftayı Tatil Et</button>
     <% } %>
-    <div class="create-blog content">
+    <div class="create-blog">
       <form action="/uyeSayfa/gorev" method="POST">
         <label for="gorev">Hafta Görevi</label>
         <textarea type="text" id="gorev" name="gorev" required><%=gorev%> </textarea>
@@ -21,7 +22,8 @@
     <% if (yazarlar.length > 0) { %>
       <table style="margin-inline:auto;">
         <% yazarlar.forEach(yazar => { %>    
-          <tr style = "<%= !yazar.aktif ? 'text-decoration: line-through' : '' %>">
+          <tr style = "text-decoration: 
+          <%= !yazar.aktif ?  'line-through' : 'none' %>">
             <td>            
               <%=yazar.gercekAd %>
             </td>
@@ -43,7 +45,8 @@
 <script defer> 
 
   function tatilEt(){   
-
+    let confirmAction = confirm("Haftayı tatil etmek istediğine emin misin?");
+    if (!confirmAction){return false;}
     const putMethod = {
       method: 'PUT', // Method itself
       headers: {

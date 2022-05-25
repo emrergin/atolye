@@ -66,18 +66,25 @@
 
 </div>
 
-<% switch (currentUser.katilim) {
-case "yazacak": %>
-  <div class="uyeStatus" id="yazmaGostergesi2" >Bu hafta öykü yazacağınızı vaad ettiniz.</div>
-<% break;
-  case "yazmayacak": %>
-<div  class="uyeStatus" id="yazmaGostergesi2" >Bu hafta öykü yazmayacakmışsınız.</div>
-  <% break;
-case "yazdi": %>
-  <div class="uyeStatus" id="yazmaGostergesi2" >Bu haftaki öykünüzü yolladınız.</div>
-<% break;
-default:
-break; } %>    
+
+<%if (mevcutMod!=="Öykü Yazma" && mevcutMod!=="Taahhüt"){%>
+  <%if (yazarlar.filter(a=>a.katilim!=="yazmayacak").length === 0){%>
+    <div >Bu hafta tatil.</div>
+  <% }else{ %>
+    <% switch (currentUser.katilim) {
+    case "yazacak": %>
+      <div class="uyeStatus" id="yazmaGostergesi2" >Bu hafta öykü yazacağınızı vaad ettiniz.</div>
+    <% break;
+      case "yazmayacak": %>
+    <div  class="uyeStatus" id="yazmaGostergesi2" >Bu hafta öykü yazmayacakmışsınız.</div>
+      <% break;
+    case "yazdi": %>
+      <div class="uyeStatus" id="yazmaGostergesi2" >Bu haftaki öykünüzü yolladınız.</div>
+    <% break;
+    default:
+    break; } %>   
+  <% } %> 
+<% } %> 
 
 <% if(!currentUser.aktif){%>
   <div class="uyeStatus">Atılan bir üyesiniz. Şu an bunu görüyorsanız sitemizin yapımı bitmemiş demektir.</div>
