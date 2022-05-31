@@ -1,4 +1,5 @@
 const Oyku = require('../models/oyku');
+const Kelime = require('../models/kelime');
 
 
 const oykuler = (req, res) => {
@@ -36,6 +37,22 @@ const haftaBilgisi = (req, res) => {
     });
 }
 
+// const kelimeGetir = (req, res) => {
+//   const adet = Math.min(decodeURI(req.params.adet),10);
+//   Kelime.aggregate(
+//     [ 
+//       { $sample: { size: +adet } } ,
+//       { $project: { kelime: 1,  _id: 0,} }
+//     ]
+//   )
+//   .then(result => {
+//     result=result.map(a=>a.kelime);
+//     res.json(result);
+//   })
+//   .catch(err => {
+//     console.log(err);
+//   });
+// }
 
 
 module.exports = {

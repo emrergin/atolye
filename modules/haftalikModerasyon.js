@@ -39,14 +39,11 @@ module.exports = async function haftalikModerasyon(){
                         .select({yorumcu:1,yazarOnayi:1,yorumcuOnayi:1,_id:0}).exec();
     
     const sonuc1= degerlendirilecekYorumlar.sort(compare).map(a=>{
-      if (a.yorumcuOnayi && a.yazarOnayi!==false){
-        return {yorumcu: a.yorumcu, deger: 1}
-      }else{
-        return {yorumcu: a.yorumcu, deger: 0}
-      }
+      return {yorumcu: a.yorumcu, deger: +(a.yorumcuOnayi && a.yazarOnayi!==false)}
     });
+
     let sonuc2=[];
-    for (satir of sonuc1){
+    for (let satir of sonuc1){
       if ((sonuc2.length)&& (sonuc2[sonuc2.length-1].yorumcu.toString() === satir.yorumcu.toString())){
         sonuc2[sonuc2.length-1].deger+=satir.deger;
         sonuc2[sonuc2.length-1].sayac++;
@@ -57,21 +54,14 @@ module.exports = async function haftalikModerasyon(){
       }
     }
     
-    for (satir of sonuc2){
+    for (let satir of sonuc2){
       satir.ortalama=satir.deger/satir.sayac;
     }
   
-    for (sonucSatiri of sonuc2){
-      await Kullanici.findById(sonucSatiri.yorumcu, function (err, doc) {
-        if (err){
-          console.log(err)
-        }
-        doc.yorumYuzdesi =sonucSatiri.ortalama;
-        doc.save()      
-          .catch(err => {
-            console.log(err);
-          });
-      });  
+    for (let sonucSatiri of sonuc2){
+      let doc = await Kullanici.findById(sonucSatiri.yorumcu);
+      doc.yorumYuzdesi =sonucSatiri.ortalama;
+      await doc.save();  
     } 
   
     function compare( a, b ) {

@@ -8,6 +8,6 @@ const router = express.Router();
 router.get('/oykuler', cors(), apiController.oykuler);
 router.get('/oykulerKisa', cors(), apiController.oykulerKisa);
 router.get('/haftaBilgisi', cors(), apiController.haftaBilgisi);
-// router.put('/yazcam', uyeController.yazToggle);
+// router.get('/kelimeGetir/:adet',cors(),apiController.kelimeGetir);
 
 module.exports = router;
