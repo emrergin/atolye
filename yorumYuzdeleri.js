@@ -42,9 +42,14 @@ async function yorumYuzdeleri(){
   }
 
   for (let sonucSatiri of sonuc2){
+    try{
       let doc = await Kullanici.findById(sonucSatiri.yorumcu);
       doc.yorumYuzdesi =sonucSatiri.ortalama;
       await doc.save();  
+    }
+    catch(e){
+      console.log(e);
+    }
   } 
 
   function compare( a, b ) {

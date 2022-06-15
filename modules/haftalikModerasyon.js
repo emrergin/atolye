@@ -59,9 +59,14 @@ module.exports = async function haftalikModerasyon(){
     }
   
     for (let sonucSatiri of sonuc2){
-      let doc = await Kullanici.findById(sonucSatiri.yorumcu);
-      doc.yorumYuzdesi =sonucSatiri.ortalama;
-      await doc.save();  
+      try{
+        let doc = await Kullanici.findById(sonucSatiri.yorumcu);
+        doc.yorumYuzdesi =sonucSatiri.ortalama;
+        await doc.save();  
+      }
+      catch(e){
+        console.log(e);
+      }
     } 
   
     function compare( a, b ) {
