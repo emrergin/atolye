@@ -8,9 +8,7 @@
   <%if (mevcutMod==="Öykü Yazma"){%>
     <p>Şu an öykü yazma zamanı. Mevcut görev:<%=gorev%> </p>
   <%}else{%>
-    <% if (yazarlar.filter(a=>a.katilim==="yazacak").length < 2) { %>
       <button style="margin-inline: auto;display:block;" onclick="tatilEt()">Haftayı Tatil Et</button>
-    <% } %>
     <div class="create-blog">
       <form action="/uyeSayfa/gorev" method="POST">
         <label for="gorev">Hafta Görevi</label>

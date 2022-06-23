@@ -169,14 +169,8 @@
       body: JSON.stringify(someData)
     }
 
-    // if (document.querySelector('input[name="katilim"]:checked').value==="yazacak"){
-    //   document.getElementById("yazmaGostergesi2").textContent="Bu hafta öykü yazacağınızı taahhüt ettiniz.";
-    // }else{
-    //   document.getElementById("yazmaGostergesi2").textContent="Bu hafta öykü yazmayacakmışsınız.";
-    // }
-
     fetch(`/uyeSayfa/yazcam`,putMethod)
-      // .then(() =>location.reload())
+      .then(() =>location.reload())
       .catch(err => console.log(err)); // Do something with the error
   }
 
