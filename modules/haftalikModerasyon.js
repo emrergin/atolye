@@ -58,7 +58,7 @@ module.exports = async function haftalikModerasyon(){
       satir.ortalama=satir.deger/satir.sayac;
     }
   
-    for (let sonucSatiri of sonuc2){
+    for await (let sonucSatiri of sonuc2){
       try{
         let doc = await Kullanici.findById(sonucSatiri.yorumcu);
         doc.yorumYuzdesi =sonucSatiri.ortalama;
@@ -145,7 +145,7 @@ module.exports = async function haftalikModerasyon(){
           oykuMatrisi.filter(i => i.yakYorumSayisi<=0).map((bitenOyku)=>{
             tamamMatrisi.push(bitenOyku._id);
           });
-          oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi>0).sort((a, b) => b.yakYorumSayisi-a.yakYorumSayisi);
+          oykuMatrisi=oykuMatrisi.filter(i => i.yakYorumSayisi>0).sort((a, b) => a.yakYorumSayisi-b.yakYorumSayisi);
   
           if (!oykuMatrisi.length){
             break;
