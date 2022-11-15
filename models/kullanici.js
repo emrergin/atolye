@@ -39,6 +39,9 @@ const kullaniciSchema = new Schema({
     type: Boolean,
     default: false
   },
+  taslaklar:{
+    type: [Schema.Types.Mixed]
+  }
 }, { timestamps: true });
 
 const Kullanici = mongoose.model('Kullanici',kullaniciSchema,'kullanicilar');

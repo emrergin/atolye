@@ -109,6 +109,36 @@
       <%}}%>
     <h2>Öyküleriniz</h2>
     <p><a href="../yazar/<%=currentUser.gercekAd%>" class="visibleLink" target="_blank">Buradan</a> erişebilirsiniz.</p>
+
+    <h2>Editörü Dene</h2>
+    <p>Bu editör henüz yapım aşamasında.</p>
+    <button onclick="yeniTaslak()">Yeni Öykü Oluştur</button>
+
+
+    <%if (currentUser.taslaklar.length>0){%>
+      <table class="yorumTablosu" rules="all">
+        <tr>
+          <th>
+            Başlık
+          </th> 
+          <th >
+            Sil
+          </th>
+        </tr>
+        <% currentUser.taslaklar.forEach(taslak => { %>
+          <tr >
+            <td>
+              <a href=<%="../editor/editor.html?draft="+taslak.id %> target="_blank">
+                <%= taslak.baslik %>
+              </a>
+            <td>
+              <button onclick="taslakSil()" data-draft-id=<%=taslak.id %>>Sil?</button>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    <%}%>
+
   </div>
     
   <%- include("./partials/footer.ejs") %>
@@ -222,6 +252,37 @@
       body: JSON.stringify(someData)
     }
     fetch(`/uyeSayfa/onayladim/${event.target.dataset.yorumid}`,putMethod)
+      .then(() =>location.reload())
+      .catch(err => console.log(err)); // Do something with the error
+  }
+
+  function yeniTaslak(){
+
+    const someData = {
+      content: null
+    }  
+
+    const putMethod = {
+      method: 'PUT', // Method itself
+      headers: {
+        'Content-type': 'application/json  ; charset=UTF-8' // Indicates the content 
+      },
+      body: JSON.stringify(someData)
+    }
+    fetch(`/uyeSayfa/yeniTaslak`,putMethod)
+      .then(() =>location.reload())
+      .catch(err => console.log(err)); // Do something with the error
+  }
+
+  function taslakSil(){
+    let param = event.target.getAttribute('data-draft-id');
+    const putMethod = {
+      method: 'DELETE', // Method itself
+      headers: {
+        'Content-type': 'application/json  ; charset=UTF-8' // Indicates the content 
+      }
+    }
+    fetch(`/uyeSayfa/yeniTaslak/${param}`,putMethod)
       .then(() =>location.reload())
       .catch(err => console.log(err)); // Do something with the error
   }

@@ -1,6 +1,7 @@
 const Kullanici = require('../models/kullanici');
 const Server = require('../models/server');
 const Yorum = require('../models/yorum');
+const Taslak = require('../models/taslak');
 const async = require(`async`);
 
 // UTILITIES===================================
@@ -174,6 +175,47 @@ const haftaTatili = (req, res) => {
   }
 }
 
+const yeniTaslak = (req, res) => {
+  if(req.user){
+    Kullanici.findById(req.user._id, function (err, doc) {
+      if (err){
+        console.log(err)
+      }
+
+      const taslak = new Taslak({...req.body,yazarObje: req.user._id});
+      taslak.save().then(()=>{
+        doc.taslaklar = [...doc.taslaklar,{id:taslak._id.toString(),baslik:taslak.baslik}];
+        doc.save()
+        .then(() => {
+          res.json(req.user);
+        })  
+      })   
+      
+      .catch(err => {
+        console.log(err);
+      });
+    });
+  }
+  else{
+    res.json("login error");
+  }
+}
+
+async function taslakSil(req,res){
+  const relatedDraft = await Taslak.findById(req.params.id);
+  if(req.user && req.user._id.toString()===relatedDraft.yazarObje.toString()){
+    
+    const user = await Kullanici.findById(req.user._id);
+    user.taslaklar = user.taslaklar.filter(a=>a.id!==req.params.id);
+    await user.save();
+    await relatedDraft.remove();
+    res.json("success");
+  }
+  else{
+    res.json("unauthorized");
+  }
+}
+
 module.exports = {
   uyeMain,
   yazToggle,
@@ -181,5 +223,7 @@ module.exports = {
   gorevBelirleme,
   yorumToggle1,
   yorumToggle2,
-  haftaTatili
+  haftaTatili,
+  yeniTaslak,
+  taslakSil
 }
