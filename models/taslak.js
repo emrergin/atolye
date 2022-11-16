@@ -3,12 +3,16 @@ const Schema = mongoose.Schema;
 
 const Kullanici = require('./kullanici');
 
-const defaultDraft = [{
-  type: "paragraph",
-  children: [
-    { text: "" },
+const defaultDraft = {
+  type: 'doc',
+  content: [
+    {
+      type: 'paragraph',
+      attrs: { dir: null, ignoreBidiAutoUpdate: null },
+      content: [{ type: 'text', text: '' }],
+    },
   ],
-}];
+};;
 
 function getCurrentDate(){      
   const d=new Date();
