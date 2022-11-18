@@ -47,10 +47,10 @@ async function draftUpdate(req,res){
   if(req.user){
     const relatedDraft = await Taslak.findById(req.params.id);
     if(!relatedDraft){
-      res.json(404,"draft does not exist.");
+      res.status(404).json("draft does not exist.");
     }
     if(relatedDraft.yazarObje.toString()!==req.user._id.toString()){
-      res.json(401,`unauthorized`);
+      res.status(401).json(`unauthorized`);
     }
     relatedDraft.baslik = req.body.baslik;
     relatedDraft.icerik = req.body.icerik;
@@ -65,7 +65,7 @@ async function draftUpdate(req,res){
     res.json(relatedDraft);
   }
   else{
-    res.json(401,`unauthorized`);
+    res.status(401).json(`unauthorized`);
   }  
 }
 

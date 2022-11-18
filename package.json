@@ -1,9 +1,6 @@
 {
   "name": "atolye",
   "version": "1.0.0",
-  "engines": {
-    "node": "16.13.1"
-  },
   "description": "literature workshop",
   "main": "app.js",
   "scripts": {
@@ -33,7 +30,7 @@
     "memorystore": "^1.6.7",
     "mongoose": "^5.13.14",
     "morgan": "^1.10.0",
-    "passport": "^0.5.2",
+    "passport": "^0.6.0",
     "passport-local": "^1.0.0"
   }
 }
