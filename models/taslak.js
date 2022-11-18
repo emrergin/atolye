@@ -9,10 +9,10 @@ const defaultDraft = {
     {
       type: 'paragraph',
       attrs: { dir: null, ignoreBidiAutoUpdate: null },
-      content: [{ type: 'text', text: '' }],
+      content: [{ type: 'text', text: '...' }],
     },
   ],
-};;
+};
 
 function getCurrentDate(){      
   const d=new Date();

@@ -38,47 +38,35 @@ const haftaBilgisi = (req, res) => {
     });
 }
 
-const sessionInfo = (req,res) =>{
-  res.json(req.user);
-}
-
-// const storiesWithPagination = (req,res) =>{
-//   const sayfa = req.params.sayfa.slice(5)||1;
-//   const pageSize=25;
-//   Oyku.find({},{ hafta: 1, yazar: 1, baslik:1, link:1}).sort({ createdAt: -1 })
-//     .then(result => {
-//       result = result.slice((sayfa-1)*pageSize,sayfa*pageSize);
-//       res.json(result);
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// }
-
 async function draftCall(req,res){
   const relatedDraft = await Taslak.findById(req.params.id);
   res.json(relatedDraft);
 }
 
 async function draftUpdate(req,res){
-  const relatedDraft = await Taslak.findById(req.params.draftId);
-  if(!relatedDraft){
-    res.json("draft does not exist.");
+  if(req.user){
+    const relatedDraft = await Taslak.findById(req.params.id);
+    if(!relatedDraft){
+      res.json(404,"draft does not exist.");
+    }
+    if(relatedDraft.yazarObje.toString()!==req.user._id.toString()){
+      res.json(401,`unauthorized`);
+    }
+    relatedDraft.baslik = req.body.baslik;
+    relatedDraft.icerik = req.body.icerik;
+    await relatedDraft.save();
+  
+    const relatedUser = await Kullanici.findById(req.user._id);
+    const indexOfDraft = relatedUser.taslaklar.findIndex(a=>a.id===req.params.id);
+    relatedUser.taslaklar[indexOfDraft].baslik=req.body.baslik;
+    relatedUser.markModified('taslaklar');
+    await relatedUser.save();
+  
+    res.json(relatedDraft);
   }
-  if(relatedDraft.yazarObje.toString()!==req.params.userId || !req.params.userId){
-    res.json(`unauthorized`);
-  }
-  relatedDraft.baslik = req.body.baslik;
-  relatedDraft.icerik = req.body.icerik;
-  await relatedDraft.save();
-
-  const relatedUser = await Kullanici.findById(req.params.userId);
-  const indexOfDraft = relatedUser.taslaklar.findIndex(a=>a.id===req.params.draftId);
-  relatedUser.taslaklar[indexOfDraft].baslik=req.body.baslik;
-  relatedUser.markModified('taslaklar');
-  await relatedUser.save();
-
-  res.json(relatedDraft);
+  else{
+    res.json(401,`unauthorized`);
+  }  
 }
 
 
@@ -87,7 +75,6 @@ module.exports = {
   oykuler,
   oykulerKisa,
   haftaBilgisi,
-  sessionInfo,
   draftCall,
   draftUpdate
 }
