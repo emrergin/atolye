@@ -64,7 +64,8 @@ passport.deserializeUser(function(id, done) {
 app.use(session({
   store: MongoStore.create({ mongoUrl: process.env.MONGOURL }),
   autoRemove: 'interval',
-  autoRemoveInterval: 240 ,
+  autoRemoveInterval: 240,
+  ttl: 24 * 60 * 60,
   secret: process.env.SECRET, 
   resave: false, 
   saveUninitialized: true 
@@ -126,9 +127,11 @@ app.use(function(req, res, next) {
 });
 
 // routes
-app.get("/uyeCikisi", (req, res) => {
-  req.logout();
-  res.redirect("/");
+app.get("/uyeCikisi", (req, res,next) => {
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/');
+  });
 });
 
 app.get('/uyeGirisi', (req, res) => {
