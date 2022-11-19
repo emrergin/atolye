@@ -1,12 +1,12 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');
 const oykuRoutes = require('./routes/oykuRoutes');
 const uyeRoutes = require('./routes/uyeRoutes');
 const apiRoutes = require('./routes/apiRoutes');
 
 const session = require("express-session");
-const MemoryStore = require('memorystore')(session)
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
@@ -60,11 +60,11 @@ passport.deserializeUser(function(id, done) {
     done(err, user);
   });
 });
+
 app.use(session({
-  cookie: { maxAge: 86400000 },
-  store: new MemoryStore({
-    checkPeriod: 86400000 // prune expired entries every 24h
-  }),
+  store: MongoStore.create({ mongoUrl: process.env.MONGOURL }),
+  autoRemove: 'interval',
+  autoRemoveInterval: 240 ,
   secret: process.env.SECRET, 
   resave: false, 
   saveUninitialized: true 
@@ -107,8 +107,6 @@ app.use(function(req, res, next) {
   const d=new Date();
   d.setHours(d.getHours() + 3);
   let mevcutMod="";
-  // let modcounter=d.getMinutes()%7;
-
   let modcounter=d.getDay();
 
   switch (modcounter) {
