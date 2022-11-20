@@ -2,7 +2,6 @@ const Kullanici = require('../models/kullanici');
 const Server = require('../models/server');
 const Yorum = require('../models/yorum');
 const Taslak = require('../models/taslak');
-const async = require(`async`);
 
 // UTILITIES===================================
 var wrapURLs = function (text, new_window) {
@@ -18,38 +17,24 @@ var wrapURLs = function (text, new_window) {
 
 // ===================================
 
-const uyeMain = (req, res) => {
+async function uyeMain(req,res){
   if (!res.locals.currentUser){
     res.redirect('/oykuler');
   }
   else{
-    async.parallel({
-      gorev: function(callback) {
-        Server.findOne()
-        .exec(callback);
-      },
-      yazarlar: function(callback) {
-        Kullanici.find({},{_id:0, gercekAd:1, katilim:1})
-        .exec(callback);
-      },
-      yorumlar: function(callback) {
-        Yorum.find({yorumcu: res.locals.currentUser._id, yorumcuOnayi: false},{yorumcuOnayi:1,baslik:1,link:1})
-        .exec(callback);
-      },
-      onaylar: function(callback) {
-        Yorum.find({yazar: res.locals.currentUser._id, yorumcuOnayi: true, yazarOnayi:null},{yazarOnayi:1,baslik:1,link:1, yorumcuIsim:1})
-        .exec(callback);
-      },
-    },function(err, results) {
-      if (err) { return next(err); }
+    const [server,yazarlar,yorumlar,onaylar]=  await Promise.all([
+      Server.findOne().exec(),
+      Kullanici.find({},{_id:0, gercekAd:1, katilim:1}).exec(),
+      Yorum.find({yorumcu: res.locals.currentUser._id, yorumcuOnayi: false},{yorumcuOnayi:1,baslik:1,link:1}).exec(),
+      Yorum.find({yazar: res.locals.currentUser._id, yorumcuOnayi: true, yazarOnayi:null},{yazarOnayi:1,baslik:1,link:1, yorumcuIsim:1}).exec()
+    ]);
 
       res.render('uyeSayfa', {title: 'Üye Anasayfa' ,
-                              gorev: wrapURLs(results.gorev.gorev), 
-                              yazarlar: results.yazarlar, 
-                              yorumlar: results.yorumlar,
-                              onaylar: results.onaylar});
+                              gorev: wrapURLs(server.gorev), 
+                              yazarlar, 
+                              yorumlar,
+                              onaylar});
 
-    });
   } 
 };
 
@@ -105,29 +90,21 @@ const yorumToggle2 = (req,res)=>{
   });
 }
 
-const yetkiliSayfa = (req, res) => {
+async function yetkiliSayfa(req, res) {
   if (!res.locals.currentUser || !res.locals.currentUser.admin){
     res.redirect('/oykuler');
   }
   else{
-    async.parallel({
-      gorev: function(callback) {
-        Server.findOne()
-        .exec(callback);
-      },
-      yazarlar: function(callback) {
-        Kullanici.find({aktif: true},{_id:0, gercekAd:1, yorumYuzdesi:1, sekil:1, katilim:1,aktif:1})
-        .exec(callback);
-      },
-      },function(err, results) {
-        if (err) { return next(err); }
+    const [server,yazarlar]= await Promise.all([
+        Server.findOne().exec(),
+        Kullanici.find({aktif: true},{_id:0, gercekAd:1, yorumYuzdesi:1, sekil:1, katilim:1,aktif:1}).exec()
+    ]);
       
         res.render('admin', { title: 'Yönetici Sayfası' ,
-                              gorev:results.gorev.gorev,
-                              yazarlar: results.yazarlar
+                              gorev:server.gorev,
+                              yazarlar
                             });                             
       
-      });
   }
 }
 

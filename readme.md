@@ -11,6 +11,7 @@ This is the project that made me start learning web development. A webapp that r
 - **HTML 5**
 - **CSS 3**
 - [MongoDB](https://www.mongodb.com/)
+- Text editor is written with **Typescript**, **React** and [Remirror](https://remirror.io/).
 
 ## Features
 - Automatic weekly writing tasks that can be overridden by admin input.
@@ -19,8 +20,9 @@ This is the project that made me start learning web development. A webapp that r
 - So far, comments and stories are dealt externally with Google Docs.
 
 ## To be implemented
-- Internal text editor
-- Internal comment
+- Internal comments.
+- Story voting.
+- Automatic PDF generation that includes best stories.
 
 ## Sources
 - https://codepen.io/JiveDig/pen/jbdJXR
@@ -29,8 +31,7 @@ This is the project that made me start learning web development. A webapp that r
     - https://game-icons.net/1x1/delapouite/pencil.html
     - https://game-icons.net/1x1/delapouite/choice.html
 - https://heropatterns.com/
-- (Not yet implemented) https://www.smashingmagazine.com/2021/05/building-wysiwyg-editor-javascript-slatejs/
-	- https://github.com/shalabhvyas/wysiwyg-editor
+- https://gist.github.com/ht2/ba661bf40a1fa6cb289c
 
 ## What I learned
 - Back-end is hard.
@@ -42,4 +43,6 @@ This is the project that made me start learning web development. A webapp that r
 - Javascript Regex does not well behave with all unicode characters, and it does not have an equivalent expression to `\p{L}`.
 - Modifying parts of array may not trigger any save with mongoose, so `markModified` may be needed.
 - Mongoose schema middleware triggers in each save, not only the first.
+- [Mongoose queries are not promises](https://mongoosejs.com/docs/promises.html#queries-are-not-promises).
+- This project is the first project of mine that required `Promise.all`.
 

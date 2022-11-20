@@ -8,6 +8,5 @@ async function getStories(searchObject){
 }
 
 module.exports = {
-    getStories,
-    getRandomStory
+    getStories
 }
