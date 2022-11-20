@@ -18,7 +18,9 @@ var compression = require('compression');
 var helmet = require('helmet');
 
 // express app
+require('express-async-errors')
 const app = express();
+app.use(compression());
 
 // connect to mongodb & listen for requests
 
