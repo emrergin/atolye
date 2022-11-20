@@ -117,7 +117,6 @@ const yetkiliSayfa = (req, res) => {
       },
       yazarlar: function(callback) {
         Kullanici.find({aktif: true},{_id:0, gercekAd:1, yorumYuzdesi:1, sekil:1, katilim:1,aktif:1})
-        // Kullanici.find()
         .exec(callback);
       },
       },function(err, results) {

@@ -2,40 +2,28 @@ const Oyku = require('../models/oyku');
 const Taslak = require('../models/taslak');
 const Kullanici = require('../models/kullanici');
 
+const databaseAccessers = require('../controllers/databaseAccessers');
 
-const oykuler = (req, res) => {
-  Oyku.find({},{ hafta: 1, yazar: 1, baslik:1, link:1}).sort({ createdAt: -1 })
-    .then(result => {
-      res.json(result);
-    })
-    .catch(err => {
-      console.log(err);
-    });
+
+
+async function oykuler(req,res){
+  const oykuler = await databaseAccessers.getStories({});
+  res.json(oykuler);
 }
 
-const oykulerKisa = (req, res) => {
-  Oyku.find({},{ hafta: 1, yazar: 1, baslik:1, link:1,_id:0}).sort({ createdAt: -1 })
-    .then(result => {
-      result=result.map(a=>[`Hafta ${a.hafta}`, a.yazar, a.baslik, a.link]);
-      res.json(result);
-    })
-    .catch(err => {
-      console.log(err);
-    });
+async function oykulerKisa(req,res){
+  let oykuler = await databaseAccessers.getStories({});
+  oykuler=oykuler.map(a=>[`Hafta ${a.hafta}`, a.yazar, a.baslik, a.link]);
+  res.json(oykuler);
 }
 
-const haftaBilgisi = (req, res) => {
-  Oyku.find({},{ createdAt: 1,_id:0}).sort({ createdAt: -1 })
-    .then(result => {
-      result=result.map(a=>new Date(a.createdAt));
-      result=result.map(a=>new Date(a.setDate(a.getDate() - a.getDay())));
-      result=result.map(a=>a.toLocaleString("tr-TR", {year: 'numeric', month: 'numeric', day: 'numeric'}));
-      result= [...new Set(result)];
-      res.json(result.slice(0, -1));
-    })
-    .catch(err => {
-      console.log(err);
-    });
+async function haftaBilgisi(req,res){
+  const oykuler = await databaseAccessers.getStories({});
+  const tarihler = oykuler.map(a=>new Date(a.createdAt));
+  const pazarTarihleri = tarihler.map(a=>new Date(a.setDate(a.getDate() - a.getDay())));
+  const tarihMetinleri = pazarTarihleri.map(a=>a.toLocaleString("tr-TR", {year: 'numeric', month: 'numeric', day: 'numeric'}));
+  const ozgunTarihler = [...new Set(tarihMetinleri)];
+  res.json(ozgunTarihler.slice(0, -1));
 }
 
 async function draftCall(req,res){
@@ -69,6 +57,23 @@ async function draftUpdate(req,res){
   }  
 }
 
+async function storiesWithPagination(req,res){
+  const totalNumberOfStories = await Oyku.countDocuments();
+  const perPage = 10;
+  let sayfa = req.params.sayfa||1;
+  sayfa = Math.min(sayfa,Math.floor(totalNumberOfStories/perPage));
+
+  Oyku
+    .find({},{ hafta: 1, yazar: 1, baslik:1, link:1})
+    .limit(perPage)
+    .skip(perPage * (sayfa-1))
+    .sort({ createdAt: -1 })
+    .exec(function (err, oykuler) {
+      if (err) { return next(err); }
+      res.json(oykuler);
+    });
+}
+
 
 
 module.exports = {
@@ -76,5 +81,6 @@ module.exports = {
   oykulerKisa,
   haftaBilgisi,
   draftCall,
-  draftUpdate
+  draftUpdate,
+  storiesWithPagination
 }

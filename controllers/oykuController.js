@@ -1,6 +1,9 @@
 const Oyku = require('../models/oyku');
 const Kullanici = require('../models/kullanici');
-const async = require(`async`);
+
+const databaseAccessers = require('../controllers/databaseAccessers');
+
+
 
 // utilities==========================
 async function haftaBul(){
@@ -19,144 +22,6 @@ async function haftaBul(){
   }
 }
 
-//controllers ==============================================
-
-const oyku_index = (req, res,next) => {
-  async.parallel({
-      oykuler: function(callback) {
-        Oyku.find().sort({ _id: -1  })
-        .exec(callback);
-      },
-      yazarlar: function(callback) {
-        Oyku.distinct("yazar")
-        .exec(callback);
-      },
-      haftalar: function(callback){
-        Oyku.distinct("hafta")
-        .exec(callback);
-      }
-  }, function(err, results) {
-      if (err) { return next(err); }
-      if (results.oykuler==null) { // No results.
-          var err = new Error('Böyle bir öykü yok.');
-          err.status = 404;
-          return next(err);
-      }
-      // Successful, so render.
-      siraliYazarlar=results.yazarlar.sort(function (a, b) {
-        return a.localeCompare(b);
-      });
-      res.render('index', { title: 'Bütün Öyküler',
-                         oykuler: results.oykuler, 
-                         haftalar: results.haftalar, 
-                         yazarlar:siraliYazarlar,
-                         buHafta:`/`, buYazar:`/`} );
-  });
-};
-
-const hafta_index = (req, res,next) => {
-  const hafta = req.params.hafta;
-  async.parallel({
-      oykuler: function(callback) {
-        Oyku.find({"hafta": hafta}).sort({ _id: -1 })
-        .exec(callback);
-      },
-      yazarlar: function(callback) {
-        Oyku.distinct("yazar")
-        .exec(callback);
-      },
-      haftalar: function(callback){
-        Oyku.distinct("hafta")
-        .exec(callback);
-      }
-  }, function(err, results) {
-      if (err) { return next(err); }
-      if (results.oykuler==null) { // No results.
-          var err = new Error('Hafta Bulunamadı.');
-          err.status = 404;
-          return next(err);
-      }
-      // Successful, so render.
-      siraliYazarlar=results.yazarlar.sort(function (a, b) {
-        return a.localeCompare(b);
-      });
-      res.render('index', { title: `Hafta ${hafta}`, 
-                            oykuler: results.oykuler, 
-                            haftalar: results.haftalar, 
-                            yazarlar:siraliYazarlar, 
-                            buYazar:`/`, buHafta:hafta} );
-  });
-};
-
-
-const yazar_index = (req, res,next) => {
-  const yazar = decodeURI(req.params.yazar);
-  async.parallel({
-      oykuler: function(callback) {
-        Oyku.find({"yazar": yazar}).sort({ _id: -1 })
-        .exec(callback);
-      },
-      yazarlar: function(callback) {
-        Oyku.distinct("yazar")
-        .exec(callback);
-      },
-      haftalar: function(callback){
-        Oyku.distinct("hafta")
-        .exec(callback);
-      }
-  }, function(err, results) {
-      if (err) { return next(err); }
-      if (results.oykuler==null) { // No results.
-          var err = new Error('Böyle Bir Yazar Yok.');
-          err.status = 404;
-          return next(err);
-      }
-      // Successful, so render.
-      siraliYazarlar=results.yazarlar.sort(function (a, b) {
-        return a.localeCompare(b);
-      });
-      res.render('index', { title: `${yazar}`, 
-                            oykuler: results.oykuler, 
-                            haftalar: results.haftalar, 
-                            yazarlar:siraliYazarlar, 
-                            buHafta:`/`, buYazar:yazar,
-                            mesaj: 'Böyle bir yazar yok yahut bu yazar henüz bir öykü yazmamış.'} );
-  });
-};
-
-const rastgele_oyku = (req, res,next) => {
-  async.parallel({
-      oykuler: function(callback) {
-        Oyku.aggregate([{ $sample: { size: 1 } }])
-        .exec(callback);
-      },
-      yazarlar: function(callback) {
-        Oyku.distinct("yazar")
-        .exec(callback);
-      },
-      haftalar: function(callback){
-        Oyku.distinct("hafta")
-        .exec(callback);
-      }
-  }, function(err, results) {
-      if (err) { return next(err); }
-      if (results.oykuler==null) { // No results.
-          var err = new Error('Bir Şeyler Ters Gitti.');
-          err.status = 404;
-          return next(err);
-      }
-      // Successful, so render.
-      siraliYazarlar=results.yazarlar.sort(function (a, b) {
-        return a.localeCompare(b);
-      });
-      res.render('index', { title: "Rastgele Öykü",
-                           oykuler: results.oykuler, 
-                           haftalar: results.haftalar, 
-                           yazarlar:siraliYazarlar,
-                           buHafta:`/`, buYazar:`/`} );
-  });
-};
-
 function capitalize([firstLetter, ...rest]) {
   return [firstLetter.toLocaleUpperCase('tr'), ...rest].join('');
 }
@@ -164,6 +29,63 @@ function capitalize([firstLetter, ...rest]) {
 function titleCase(baslik){
   return baslik.split(/\s+/).map(capitalize).join(' ');
 }
+
+function orderedUniqueAuthors(stories){
+  return [...new Set(stories.map(a=>a.yazar))].sort(function (a, b) {
+    return a.localeCompare(b);
+  });
+}
+
+//controllers ==============================================
+
+async function oyku_index (req,res){
+  const oykuler = await databaseAccessers.getStories({});
+  const yazarlar = orderedUniqueAuthors(oykuler);
+  const haftalar = [...new Set(oykuler.map(a=>a.hafta))];
+  res.render('index', { title: 'Bütün Öyküler',
+                         oykuler, 
+                         haftalar, 
+                         yazarlar,
+                         buHafta:`/`, buYazar:`/`} );
+}
+
+async function hafta_index (req,res){
+  const hafta = req.params.hafta;
+  const oykuler = await databaseAccessers.getStories({hafta});
+  const yazarlar = orderedUniqueAuthors(oykuler);
+  const haftalar = [...new Set(oykuler.map(a=>a.hafta))];
+  res.render('index', { title: `Hafta ${hafta}`, 
+      oykuler, 
+      haftalar, 
+      yazarlar, 
+      buYazar:`/`, buHafta:hafta,
+      mesaj: 'Atölyemizin böyle bir haftası yok. Henüz.'} );
+}
+
+async function yazar_index (req,res){
+  const yazar = decodeURI(req.params.yazar);
+  const oykuler = await databaseAccessers.getStories({yazar});
+  const yazarlar = orderedUniqueAuthors(oykuler);
+  const haftalar = [...new Set(oykuler.map(a=>a.hafta))];
+  res.render('index', { title: `${yazar}`, 
+    oykuler, 
+    haftalar, 
+    yazarlar, 
+    buHafta:`/`, buYazar:yazar,
+    mesaj: 'Böyle bir yazar yok yahut bu yazar henüz bir öykü yazmamış.'} );
+}
+
+async function rastgele_oyku (req,res){
+  const oykuler = await databaseAccessers.getStories({});
+  const yazarlar = orderedUniqueAuthors(oykuler);
+  const haftalar = [...new Set(oykuler.map(a=>a.hafta))];
+  res.render('index', { title: "Rastgele Öykü",
+  oykuler: oykuler[Math.floor(Math.random()*oykuler.length)],
+  haftalar, 
+  yazarlar,
+  buHafta:`/`, buYazar:`/`} );
+}
+
 
 const oyku_yeni = (req, res) => {
   if (req.user){
@@ -196,27 +118,10 @@ const oyku_yeni = (req, res) => {
   }
 }
 
-const oyku_gecici = (req, res) => {
-  if (req.user){
-    const oyku = new Oyku(req.body);
-    oyku.save()
-      .then(() => {
-        res.redirect('/oykuler');
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-  else{
-    res.redirect('/uyeGirisi');
-  }
-}
-
 module.exports = {
   oyku_index,
   hafta_index,
   yazar_index,
   oyku_yeni,
-  rastgele_oyku,
-  oyku_gecici
+  rastgele_oyku
 }

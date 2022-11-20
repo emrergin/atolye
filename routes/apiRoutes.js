@@ -5,6 +5,7 @@ var cors = require('cors')
 
 const router = express.Router();
 
+router.get('/oykuler/sayfa/:sayfa', cors(), apiController.storiesWithPagination);
 router.get('/oykuler', cors(), apiController.oykuler);
 router.get('/oykulerKisa', cors(), apiController.oykulerKisa);
 router.get('/haftaBilgisi', cors(), apiController.haftaBilgisi);
