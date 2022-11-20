@@ -80,7 +80,7 @@ async function rastgele_oyku (req,res){
   const yazarlar = orderedUniqueAuthors(oykuler);
   const haftalar = [...new Set(oykuler.map(a=>a.hafta))];
   res.render('index', { title: "Rastgele Öykü",
-  oykuler: oykuler[Math.floor(Math.random()*oykuler.length)],
+  oykuler: [oykuler[Math.floor(Math.random()*oykuler.length)]],
   haftalar, 
   yazarlar,
   buHafta:`/`, buYazar:`/`} );

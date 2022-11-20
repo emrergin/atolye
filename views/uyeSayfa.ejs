@@ -17,7 +17,7 @@
       
     <% if (currentUser.sekil=='okurYazar'){%>
     <div id="yorumYuzdesiKutusu">
-      <div id="yorumYuzdesiSayisi">
+      <div id="yorumYuzdesiSayisi" data-yuzde=<%=currentUser.yorumYuzdesi%>>
         <%=`%${Math.round(currentUser.yorumYuzdesi*1000)/10}`%>
       </div>
       <div>
@@ -49,8 +49,8 @@
                 <%= oyku.baslik %>
               </a>
             <td>
-              <input type="checkbox" class="yorumladimBox" data-yorumid="<%= oyku._id%>" autocomplete="off" onchange="yorumladim()">
-              <button data-yorumid="<%= oyku._id%>" autocomplete="off" class="tabloButonu" onclick="yorumladimOnay()">Gönder?</button>
+              <input type="checkbox" class="yorumladimBox" data-yorumid="<%= oyku._id%>" autocomplete="off">
+              <button data-yorumid="<%= oyku._id%>" autocomplete="off" class="tabloButonu yorumOnay">Gönder?</button>
             </td>
           </tr>
         <% }) %>
@@ -101,7 +101,7 @@
                 autocomplete="off" value="false">
               </td>
               <td>
-                <button data-yorumid="<%= oyku._id%>"  autocomplete="off" class="tabloButonu" onclick="onayladimOnay()">Gönder?</button>
+                <button data-yorumid="<%= oyku._id%>"  autocomplete="off" class="tabloButonu onayOnay">Gönder?</button>
               </td>
             </tr>
           <% }) %>
@@ -112,7 +112,7 @@
 
     <h2>Editörü Dene</h2>
     <p>Bu editör henüz yapım aşamasında.</p>
-    <button onclick="yeniTaslak()">Yeni Öykü Oluştur</button>
+    <button id="newDraft">Yeni Öykü Oluştur</button>
 
 
     <%if (currentUser.taslaklar.length>0){%>
@@ -132,7 +132,7 @@
                 <%= taslak.baslik %>
               </a>
             <td>
-              <button onclick="taslakSil()" data-draft-id=<%=taslak.id %>>Sil?</button>
+              <button class="deleteDraft" data-draft-id=<%=taslak.id %>>Sil?</button>
             </td>
           </tr>
         <% }) %>
@@ -144,6 +144,5 @@
   <%- include("./partials/footer.ejs") %>
 
 </body>
-<%- include("./uyeSayfaScript.ejs") %>
-
+<script defer src="/scripts/uyeSayfa.js"></script>
 </html>

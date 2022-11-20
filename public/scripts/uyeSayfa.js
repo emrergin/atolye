@@ -1,5 +1,3 @@
-
-<script defer>
 const tarihMetni=document.getElementById(`tarihMetin`);  
 
 const bugununTarihi = new Date();
@@ -18,7 +16,7 @@ if (gorevKutu){
 
 const yorumYuzdeKutusu=document.getElementById("yorumYuzdesiSayisi");
 if (yorumYuzdeKutusu){
-    var yorumYuzdesi = <%= currentUser.yorumYuzdesi%>; 
+    const yorumYuzdesi = yorumYuzdeKutusu.dataset.yuzde;
     let yorumYuzdeKutusuDegerO=Math.max((Math.round(yorumYuzdesi*100)-60)/40,0);  
     yorumYuzdeKutusu.style.color = `rgb(${200*(1-yorumYuzdeKutusuDegerO)}, ${200*(yorumYuzdeKutusuDegerO)}, 0)`;
 }
@@ -140,4 +138,23 @@ function taslakSil(){
     .catch(err => console.log(err)); // Do something with the error
 }
 
-</script>
+//hydrate uyeStatus
+document.getElementById("radio-one")?.addEventListener("change", yazcam);
+document.getElementById("radio-two")?.addEventListener("change", yazcam);
+
+document.querySelectorAll('.yorumladimBox').forEach(box=>{
+    box.addEventListener("change",yorumladim);
+})
+
+document.querySelectorAll('.onayOnay').forEach(box=>{
+    box.addEventListener("click",onayladimOnay);
+})
+
+document.querySelectorAll('.yorumOnay').forEach(box=>{
+    box.addEventListener("click",yorumladimOnay);
+})
+
+document.getElementById("newDraft").addEventListener("click",yeniTaslak); 
+document.querySelectorAll('.deleteDraft').forEach(button=>{
+    button.addEventListener("click",taslakSil);
+})

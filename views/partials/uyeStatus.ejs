@@ -18,10 +18,10 @@
     <div id="taahhutKutusu">
       Bu hafta öykü yazacak mısınız?
       <form class="switch-field" id="taahhutDugmesi">
-        <input type="radio" id="radio-one" name="katilim" value="yazacak" onchange="yazcam()"
+        <input type="radio" id="radio-one" name="katilim" value="yazacak"
         <% if (currentUser.katilim==="yazacak"){%> checked <%} %>/> 
         <label for="radio-one">Evet</label>
-        <input type="radio" id="radio-two" name="katilim" value="yazmayacak" onchange="yazcam()"
+        <input type="radio" id="radio-two" name="katilim" value="yazmayacak"
         <% if (currentUser.katilim==="yazmayacak"){%> checked <%} %>/> 
         <label for="radio-two">Hayır</label>
       </form>

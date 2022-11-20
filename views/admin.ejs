@@ -8,7 +8,7 @@
   <%if (mevcutMod==="Öykü Yazma"){%>
     <p>Şu an öykü yazma zamanı. Mevcut görev:<%=gorev%> </p>
   <%}else{%>
-      <button style="margin-inline: auto;display:block;" onclick="tatilEt()">Haftayı Tatil Et</button>
+      <button style="margin-inline: auto;display:block;" id="vacationButton">Haftayı Tatil Et</button>
     <div class="create-blog">
       <form action="/uyeSayfa/gorev" method="POST">
         <label for="gorev">Hafta Görevi</label>
@@ -40,22 +40,9 @@
 </body>
 
 
-<script defer> 
+<script src="/scripts/admin.js" defer> 
 
-  function tatilEt(){   
-    let confirmAction = confirm("Haftayı tatil etmek istediğine emin misin?");
-    if (!confirmAction){return false;}
-    const putMethod = {
-      method: 'PUT', // Method itself
-      headers: {
-        'Content-type': 'application/json  ; charset=UTF-8' // Indicates the content 
-      }
-    }
 
-    fetch(`/uyeSayfa/haftaTatili`,putMethod)
-      // .then(() =>location.reload())
-      .catch(err => console.log(err)); // Do something with the error
-  }
 
 </script>
 </html>

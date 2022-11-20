@@ -5,9 +5,8 @@
 
 <body>
   <%- include("./partials/nav.ejs") %>
-  <!-- <p> <%=buHafta %></p> -->
   <div id="filtreler">
-    <select id="haftaSec" autocomplete="off" onChange="window.location.href=this.value">
+    <select id="haftaSec" autocomplete="off">
         <option value="/">Hafta Seç</option>
         <% if (haftalar.length > 0) { %>
           <% haftalar.forEach(hafta => { %>
@@ -19,7 +18,7 @@
           <% }) %>
         <% } %>
     </select>
-    <select id="yazarSec" autocomplete="off" onChange="window.location.href=this.value">
+    <select id="yazarSec" autocomplete="off">
         <option value="/">Yazar Seç</option>
         <% if (yazarlar.length > 0) { %>
           <% yazarlar.forEach(yazar => { %>
@@ -31,7 +30,7 @@
           <% }) %>
         <% } %>
     </select>
-    <button onclick="location.href='/rastgele';" >Rastgele!</button>
+    <button id="randomButton">Rastgele!</button>
   </div>
   <p id="sayiMetin"></p>
   <div class="blogs content" id="mainTableContainer">
@@ -44,7 +43,7 @@
         <th>
           Yazar
         </th>
-        <th id="haftaBaslik" onclick="siralamaDegistir()">
+        <th id="haftaBaslik">
           Hafta ▲
         </th>
       </tr>
@@ -81,64 +80,5 @@
   <%- include("./partials/footer.ejs") %>
 </body>
 
-<script defer>
-  let sira=1;
-  let renkIndis=0;
-
-  const satirlar= document.querySelectorAll(`tr`);
-  const haftaDrop=document.getElementById("haftaSec");
-  const yazarDrop=document.getElementById("yazarSec");
-  satirlar.forEach((satir,index)=>{
-    if (haftaDrop.value!==`/` || yazarDrop.value!==`/`){
-      if (satir.previousElementSibling!== null){    
-        renkIndis++;
-        renkIndis=(renkIndis-1)%3+1; 
-        satir.classList.add(`renk${renkIndis}`);
-      }
-    }
-    else{
-      if (satir.previousElementSibling!== null){        
-        if (satir.previousElementSibling.children[2].textContent !== satir.children[2].textContent){
-          renkIndis++;
-          renkIndis=(renkIndis-1)%3+1;        
-        }        
-        satir.classList.add(`renk${renkIndis}`);
-        if (index%2===0){
-          satir.classList.add(`cift`);
-        }
-      }
-    }
-  });
-  
-  
-  if (document.getElementById("oykuTablosu")){
-    const satirSayisi=document.getElementById("oykuTablosu").children[0].childElementCount-1;
-    if (satirSayisi>1){
-      document.getElementById(`sayiMetin`).textContent="Öykü Sayısı: "+satirSayisi;
-    }
-  }  
-  
-  function siralamaDegistir(){   
-    const siraDugme=document.getElementById(`haftaBaslik`);   
-    if (sira===1){
-      siraDugme.textContent="Hafta ▼";
-    }else{
-      siraDugme.textContent="Hafta ▲";
-    } 
-    sira=-sira;
-    reverseTable();
-  }  
-  
-  function reverseTable() {
-    var table = document.getElementById("oykuTablosu");
-    var trContent = [];
-    for (let i = 1; i < table.rows.length; i++) {
-      trContent.push(table.rows[i].innerHTML);
-    }
-    trContent.reverse();
-    for (let i = 1; i < table.rows.length; i++) {
-      table.rows[i].innerHTML = trContent[i-1];
-    }
-  }
-  </script>
+<script src="/scripts/mainPage.js" defer> </script>
 </html>

@@ -82,10 +82,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(compression());
-app.use(helmet({
-  //buranin incelenmesi lazim.
-  contentSecurityPolicy: false,
-}));
+app.use(helmet());
 
 app.post(
   "/uyeGirisi",
@@ -148,12 +145,6 @@ app.get('/', (req, res) => {
 app.get('/hakkinda', (req, res) => {
   res.render('about', { title: 'Hakkında'});
 });
-
-
-app.get('/geciciEkle', (req, res) => {
-  res.render('create', { title: 'GeciciGiris'});
-});
-
 
 // subroutes
 app.use('/uyeSayfa', uyeRoutes);
