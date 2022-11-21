@@ -30,18 +30,12 @@ function titleCase(baslik){
   return baslik.split(/\s+/).map(capitalize).join(' ');
 }
 
-function orderedUniqueAuthors(stories){
-  return [...new Set(stories.map(a=>a.yazar))].sort(function (a, b) {
-    return a.localeCompare(b);
-  });
-}
+
 
 //controllers ==============================================
 
 async function oyku_index (req,res){
-  const oykuler = await databaseAccessers.getStories({});
-  const yazarlar = orderedUniqueAuthors(oykuler);
-  const haftalar = [...new Set(oykuler.map(a=>a.hafta))];
+  const [oykuler,yazarlar,haftalar] = await databaseAccessers.getStoriesExtra({});
   res.render('index', { title: 'Bütün Öyküler',
                          oykuler, 
                          haftalar, 
@@ -51,9 +45,7 @@ async function oyku_index (req,res){
 
 async function hafta_index (req,res){
   const hafta = req.params.hafta;
-  const oykuler = await databaseAccessers.getStories({hafta});
-  const yazarlar = orderedUniqueAuthors(oykuler);
-  const haftalar = [...new Set(oykuler.map(a=>a.hafta))];
+  const [oykuler,yazarlar,haftalar] = await databaseAccessers.getStoriesExtra({hafta});
   res.render('index', { title: `Hafta ${hafta}`, 
       oykuler, 
       haftalar, 
@@ -64,9 +56,7 @@ async function hafta_index (req,res){
 
 async function yazar_index (req,res){
   const yazar = decodeURI(req.params.yazar);
-  const oykuler = await databaseAccessers.getStories({yazar});
-  const yazarlar = orderedUniqueAuthors(oykuler);
-  const haftalar = [...new Set(oykuler.map(a=>a.hafta))];
+  const [oykuler,yazarlar,haftalar] = await databaseAccessers.getStoriesExtra({yazar});
   res.render('index', { title: `${yazar}`, 
     oykuler, 
     haftalar, 
@@ -76,14 +66,13 @@ async function yazar_index (req,res){
 }
 
 async function rastgele_oyku (req,res){
-  const oykuler = await databaseAccessers.getStories({});
-  const yazarlar = orderedUniqueAuthors(oykuler);
-  const haftalar = [...new Set(oykuler.map(a=>a.hafta))];
+  const [oykuler,yazarlar,haftalar] = await databaseAccessers.getStoriesExtra({});
   res.render('index', { title: "Rastgele Öykü",
-  oykuler: [oykuler[Math.floor(Math.random()*oykuler.length)]],
-  haftalar, 
-  yazarlar,
-  buHafta:`/`, buYazar:`/`} );
+    oykuler: [oykuler[Math.floor(Math.random()*oykuler.length)]],
+    haftalar, 
+    yazarlar,
+    buHafta:`/`, buYazar:`/`} 
+  );
 }
 
 

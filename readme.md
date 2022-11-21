@@ -45,4 +45,5 @@ This is the project that made me start learning web development. A webapp that r
 - Mongoose schema middleware triggers in each save, not only the first.
 - [Mongoose queries are not promises](https://mongoosejs.com/docs/promises.html#queries-are-not-promises).
 - This project is the first project of mine that required `Promise.all`.
+- I learned about `lean` in **Mongoose** for better query performance.
 

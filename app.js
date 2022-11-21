@@ -95,12 +95,6 @@ app.use(function(req, res, next) {
   res.locals.currentUser = req.user;
   next();
 });
-// moderasyon
-app.use(function (req, res, next) {  
-  const haftalikModerasyon=require('./modules/haftalikModerasyon');
-  haftalikModerasyon();
-  next();
-});
 
 //Date functions
 app.use(function(req, res, next) {
@@ -144,6 +138,13 @@ app.get('/', (req, res) => {
 
 app.get('/hakkinda', (req, res) => {
   res.render('about', { title: 'Hakkında'});
+});
+
+// moderasyon
+app.get('/cronCall', (req, res)=> {  
+  const haftalikModerasyon=require('./modules/haftalikModerasyon');
+  haftalikModerasyon();
+  res.json("ok");
 });
 
 // subroutes
