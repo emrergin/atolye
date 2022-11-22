@@ -40,55 +40,29 @@ async function uyeMain(req,res){
 
 
 
-const yazToggle = (req,res)=>{
-  Kullanici.findById(req.user._id, function (err, doc) {
-    if (err){
-      console.log(err)
-    }
-    doc.katilim = req.body.katilim;
-    doc.save()      
-      .then(() => {
-        res.redirect(303,'/uyeSayfa/');
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  });
+async function yazToggle(req,res){
+  const userToUpdate = await Kullanici.findById(req.user._id);
+  userToUpdate.katilim = req.body.katilim;
+  await userToUpdate.save();
+  res.redirect(303,'/uyeSayfa/');
 }
 
-const yorumToggle1 = (req,res)=>{
+async function yorumToggle1(req,res){
   const id = req.params.id;
-  Yorum.findById(id, function (err, doc) {
-    if (err){
-      console.log(err)
-    }
-    doc.yorumcuOnayi = req.body.yorumladim;
-    doc.save()      
-      .then(() => {
-        res.redirect(303,'/uyeSayfa/');
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  });
+  const commentToUpdate = await Yorum.findById(id);
+  commentToUpdate.yorumcuOnayi = req.body.yorumladim;
+  await commentToUpdate.save();
+  res.redirect(303,'/uyeSayfa/');
 }
 
-const yorumToggle2 = (req,res)=>{
+async function yorumToggle2(req,res){
   const id = req.params.id;
-  Yorum.findById(id, function (err, doc) {
-    if (err){
-      console.log(err)
-    }
-    doc.yazarOnayi = req.body.onayladim;
-    doc.save()      
-      .then(() => {
-        res.redirect(303,'/uyeSayfa/');
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  });
+  const commentToUpdate = await Yorum.findById(id);
+  commentToUpdate.yazarOnayi = req.body.onayladim;
+  await commentToUpdate.save();
+  res.redirect(303,'/uyeSayfa/');
 }
+
 
 async function yetkiliSayfa(req, res) {
   if (!res.locals.currentUser || !res.locals.currentUser.admin){
@@ -108,22 +82,12 @@ async function yetkiliSayfa(req, res) {
   }
 }
 
-
-const gorevBelirleme = (req, res) => {
+async function gorevBelirleme(req,res){
   if (req.user.admin){
-    Server.findOne({},function (err, doc) {
-        if (err){
-          console.log(err)
-        }
-        doc.gorev = req.body.gorev;
-        doc.save()      
-          .then(() => {
-            res.redirect(303,'./yetkili');
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      });
+    const server = await Server.findOne({});
+    server.gorev = req.body.gorev;
+    await server.save();
+    res.redirect(303,'./yetkili');
   }
   else if(req.user){
     res.redirect('/uyeSayfa');
@@ -133,15 +97,10 @@ const gorevBelirleme = (req, res) => {
   }
 }
 
-const haftaTatili = (req, res) => {
+async function haftaTatili(req,res){
   if (req.user.admin){
-    Kullanici.updateMany({katilim: "yazacak"},{  $set: { katilim:"yazmayacak" }  })
-      .then(() => {
-        res.redirect(303,'/yetkili');
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    await Kullanici.updateMany({katilim: "yazacak"},{  $set: { katilim:"yazmayacak" }  });
+    res.redirect(303,'/yetkili');
   }
   else if(req.user){
     res.redirect('/uyeSayfa');
@@ -151,33 +110,21 @@ const haftaTatili = (req, res) => {
   }
 }
 
-const yeniTaslak = (req, res) => {
+async function newDraft(req,res){
   if(req.user){
-    Kullanici.findById(req.user._id, function (err, doc) {
-      if (err){
-        console.log(err)
-      }
-
-      const taslak = new Taslak({...req.body,yazarObje: req.user._id});
-      taslak.save().then(()=>{
-        doc.taslaklar = [...doc.taslaklar,{id:taslak._id.toString(),baslik:taslak.baslik}];
-        doc.save()
-        .then(() => {
-          res.json(req.user);
-        })  
-      })   
-      
-      .catch(err => {
-        console.log(err);
-      });
-    });
+    const userToUpdate = await Kullanici.findById(req.user._id);
+    const draft = new Taslak({...req.body,yazarObje: req.user._id});
+    await draft.save();
+    userToUpdate.taslaklar = [...userToUpdate.taslaklar, {id:draft._id.toString(),baslik:draft.baslik}];
+    await userToUpdate.save();
+    res.json(req.user);
   }
   else{
     res.json("login error");
   }
 }
 
-async function taslakSil(req,res){
+async function deleteDraft(req,res){
   const relatedDraft = await Taslak.findById(req.params.id);
   if(req.user && req.user._id.toString()===relatedDraft.yazarObje.toString()){
     
@@ -200,6 +147,6 @@ module.exports = {
   yorumToggle1,
   yorumToggle2,
   haftaTatili,
-  yeniTaslak,
-  taslakSil
+  newDraft,
+  deleteDraft
 }

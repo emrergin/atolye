@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="tr">
+<%- include("./partials/head.ejs") %>
+
+
+<body>
+  <%- include("./partials/nav.ejs") %>
+  <%- include("./partials/filters.ejs") %>
+
+  <div class="card-gallery">
+  <% oykuler.forEach(oyku => { %>
+  <a href=<%=oyku.link %> target="_blank">
+    <div class="story-card">
+      <h2><%= oyku.baslik %></h2>
+      <h3><%= oyku.yazar %></h3> 
+    </div>
+  </a>
+  <% }) %>
+  </div>
+
+  <div id="pagination"></div>
+  <%- include("./partials/footer.ejs") %>
+</body>
+
+<script src="/scripts/mainPage2.js" defer> </script>
+</html>

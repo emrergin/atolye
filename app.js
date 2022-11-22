@@ -77,7 +77,6 @@ app.use(passport.session());
 
 // middleware & static files====================
 app.use(express.static('public'));
-app.use('/editor', express.static('editor'))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('dev'));

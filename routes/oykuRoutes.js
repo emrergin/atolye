@@ -1,12 +1,12 @@
 const express = require('express');
-const oykuController = require('../controllers/oykuController');
+const storyController = require('../controllers/oykuController');
 
 const router = express.Router();
 
-router.get('/oykuler', oykuController.oyku_index);
-router.get('/hafta/:hafta', oykuController.hafta_index);
-router.get('/yazar/:yazar', oykuController.yazar_index);
-router.get('/rastgele', oykuController.rastgele_oyku);
-router.post('/oykuler/', oykuController.oyku_yeni);
+router.get('/oykuler', storyController.storyIndex);
+router.get('/hafta/:hafta', storyController.weekIndex);
+router.get('/yazar/:yazar', storyController.authorIndex);
+router.get('/rastgele', storyController.randomStory);
+router.post('/oykuler/', storyController.newStory);
 
 module.exports = router;

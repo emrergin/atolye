@@ -6,7 +6,7 @@ const databaseAccessers = require('../controllers/databaseAccessers');
 
 
 // utilities==========================
-async function haftaBul(){
+async function weekFind(){
   try{
     const sonOyku=await Oyku.find().sort({ _id: -1 }).limit(1);
     let yeniHafta=sonOyku[0].hafta;
@@ -34,7 +34,7 @@ function titleCase(baslik){
 
 //controllers ==============================================
 
-async function oyku_index (req,res){
+async function storyIndex (req,res){
   const [oykuler,yazarlar,haftalar] = await databaseAccessers.getStoriesExtra({});
   res.render('index', { title: 'Bütün Öyküler',
                          oykuler, 
@@ -43,7 +43,16 @@ async function oyku_index (req,res){
                          buHafta:`/`, buYazar:`/`} );
 }
 
-async function hafta_index (req,res){
+// async function storyIndex (req,res){
+//   const [oykuler,yazarlar,haftalar] = await databaseAccessers.getStoriesExtra({});
+//   res.render('index2', { title: 'Bütün Öyküler',
+//                          oykuler: oykuler.slice(70,80), 
+//                          haftalar, 
+//                          yazarlar,
+//                          buHafta:`/`, buYazar:`/`} );
+// }
+
+async function weekIndex (req,res){
   const hafta = req.params.hafta;
   const [oykuler,yazarlar,haftalar] = await databaseAccessers.getStoriesExtra({hafta});
   res.render('index', { title: `Hafta ${hafta}`, 
@@ -54,7 +63,7 @@ async function hafta_index (req,res){
       mesaj: 'Atölyemizin böyle bir haftası yok. Henüz.'} );
 }
 
-async function yazar_index (req,res){
+async function authorIndex (req,res){
   const yazar = decodeURI(req.params.yazar);
   const [oykuler,yazarlar,haftalar] = await databaseAccessers.getStoriesExtra({yazar});
   res.render('index', { title: `${yazar}`, 
@@ -65,7 +74,7 @@ async function yazar_index (req,res){
     mesaj: 'Böyle bir yazar yok yahut bu yazar henüz bir öykü yazmamış.'} );
 }
 
-async function rastgele_oyku (req,res){
+async function randomStory (req,res){
   const [oykuler,yazarlar,haftalar] = await databaseAccessers.getStoriesExtra({});
   res.render('index', { title: "Rastgele Öykü",
     oykuler: [oykuler[Math.floor(Math.random()*oykuler.length)]],
@@ -76,31 +85,22 @@ async function rastgele_oyku (req,res){
 }
 
 
-const oyku_yeni = (req, res) => {
+async function newStory(req,res){
   if (req.user){
-    let oykuHukmu = req.user.sekil==="okurYazar"? false : true;    
-    haftaBul()
-      .then(result =>{
-        const oyku = new Oyku({
-          hafta: result,
-          yazar: req.user.gercekAd,
-            //sadece ilk harfler buyuk
-          baslik: titleCase(req.body.baslik.toLocaleLowerCase('tr')), 
-          link: req.body.link,
-          yazarObje: req.user._id,
-          yorumAtamasi: oykuHukmu
-        });
-        oyku.save()
-          .then(() => {    
-             Kullanici.findOneAndUpdate({_id: req.user.id},{katilim: "yazdi"})
-              .then(() => {
-                res.redirect('/uyeSayfa');
-              });         
-          });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    let oykuHukmu = req.user.sekil==="okurYazar"? false : true;
+    const week = await weekFind();    
+    const story = new Oyku({
+      hafta: week,
+      yazar: req.user.gercekAd,
+        //sadece ilk harfler buyuk
+      baslik: titleCase(req.body.baslik.toLocaleLowerCase('tr')), 
+      link: req.body.link,
+      yazarObje: req.user._id,
+      yorumAtamasi: oykuHukmu
+    });
+    await story.save();  
+    await Kullanici.findOneAndUpdate({_id: req.user.id},{katilim: "yazdi"});
+      res.redirect('/uyeSayfa');  
   }
   else{
     res.redirect('/uyeGirisi');
@@ -108,9 +108,9 @@ const oyku_yeni = (req, res) => {
 }
 
 module.exports = {
-  oyku_index,
-  hafta_index,
-  yazar_index,
-  oyku_yeni,
-  rastgele_oyku
+  storyIndex,
+  weekIndex,
+  authorIndex,
+  newStory,
+  randomStory
 }
