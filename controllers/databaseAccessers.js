@@ -11,7 +11,7 @@ function orderedUniqueAuthors(stories){
 
 
 async function getStories(searchObject){
-    const oykuler= await Oyku.find(searchObject,{ hafta: 1, yazar: 1, baslik:1, link:1}).sort({ createdAt: -1 });
+    const oykuler= await Oyku.find(searchObject,{ hafta: 1, yazar: 1, baslik:1, link:1, createdAt:1}).lean().sort({ createdAt: -1 });
     return oykuler;
 }
 
@@ -21,7 +21,7 @@ async function getStoriesExtra(searchObject){
     if (searchObject.hafta || searchObject.yazar){
         [oykuler, oykulerTum] = await Promise.all([
             Oyku.find(searchObject,{ hafta: 1, yazar: 1, baslik:1, link:1}).lean().sort({ createdAt: -1 }),
-            Oyku.find({},{ hafta: 1, yazar: 1, baslik:1, link:1}).lean().sort({ createdAt: -1 })
+            Oyku.find({},{ hafta: 1, yazar: 1}).lean().sort({ createdAt: -1 })
         ]);
         yazarlar = orderedUniqueAuthors(oykulerTum);
         haftalar = [...new Set(oykulerTum.map(a=>a.hafta))];
