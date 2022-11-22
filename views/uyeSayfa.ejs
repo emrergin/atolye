@@ -128,7 +128,7 @@
         <% currentUser.taslaklar.forEach(taslak => { %>
           <tr >
             <td>
-              <a href=<%="../editor/editor.html?draft="+taslak.id %> target="_blank">
+              <a href=<%="../editor/editor.html?draft="+taslak.id+"&mode=edit" %> target="_blank">
                 <%= taslak.baslik %>
               </a>
             <td>
