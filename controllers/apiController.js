@@ -18,12 +18,8 @@ async function oykulerKisa(req,res){
 }
 
 async function haftaBilgisi(req,res){
-  const oykuler = await databaseAccessers.getStories({});
-  const tarihler = oykuler.map(a=>new Date(a.createdAt));
-  const pazarTarihleri = tarihler.map(a=>new Date(a.setDate(a.getDate() - a.getDay())));
-  const tarihMetinleri = pazarTarihleri.map(a=>a.toLocaleString("tr-TR", {year: 'numeric', month: 'numeric', day: 'numeric'}));
-  const ozgunTarihler = [...new Set(tarihMetinleri)];
-  res.json(ozgunTarihler.slice(0, -1));
+  const haftalar = await databaseAccessers.getWeeks({});
+  res.json(haftalar);
 }
 
 async function draftCall(req,res){
