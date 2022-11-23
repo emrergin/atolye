@@ -21,7 +21,7 @@ async function getWeeks(){
 
     const tarihMetinleri = pazarTarihleri.map(a=>a.toLocaleString("tr-TR", {year: 'numeric', month: 'numeric', day: 'numeric'}));
     const tarihKumesi = [...new Set(tarihMetinleri)];
-    return tarihKumesi;
+    return tarihKumesi.slice(0,1);
 
     function getLastDayOfWeek(date) {
         return (new Date(date.setDate(date.getDate() - date.getDay() +7)));
@@ -37,7 +37,7 @@ async function getStoriesExtra(searchObject){
             Oyku.find({},{ hafta: 1, yazar: 1}).lean()
         ]);
         yazarlar = orderedUniqueAuthors(oykulerTum);
-        haftalar = [...new Set(oykulerTum.map(a=>a.hafta))].slice(0,1);
+        haftalar = [...new Set(oykulerTum.map(a=>a.hafta))];
     }
     else{
         oykuler = await Oyku.find(searchObject,{ hafta: 1, yazar: 1, baslik:1, link:1}).lean().sort({ createdAt: -1 });
