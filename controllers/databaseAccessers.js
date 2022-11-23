@@ -37,7 +37,7 @@ async function getStoriesExtra(searchObject){
             Oyku.find({},{ hafta: 1, yazar: 1}).lean()
         ]);
         yazarlar = orderedUniqueAuthors(oykulerTum);
-        haftalar = [...new Set(oykulerTum.map(a=>a.hafta))];
+        haftalar = [...new Set(oykulerTum.map(a=>a.hafta))].slice(0,1);
     }
     else{
         oykuler = await Oyku.find(searchObject,{ hafta: 1, yazar: 1, baslik:1, link:1}).lean().sort({ createdAt: -1 });

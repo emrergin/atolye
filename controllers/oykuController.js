@@ -100,7 +100,7 @@ async function newStory(req,res){
     });
     await story.save();  
     await Kullanici.findOneAndUpdate({_id: req.user.id},{katilim: "yazdi"});
-      res.redirect('/uyeSayfa');  
+    res.redirect('/uyeSayfa');  
   }
   else{
     res.redirect('/uyeGirisi');
