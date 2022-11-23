@@ -1,4 +1,5 @@
 const Oyku = require('../models/oyku');
+const endOfWeek = require('date-fns/endOfWeek');
 // const Taslak = require('../models/taslak');
 // const Kullanici = require('../models/kullanici');
 
@@ -16,16 +17,11 @@ async function getStories(searchObject){
 }
 
 async function getWeeks(){
-    const tarihler = await Oyku.find({},{createdAt :1, _id:0}).lean();
-    const pazarTarihleri = tarihler.map(a=>getLastDayOfWeek(a.createdAt));
-
+    const tarihler = await Oyku.find({hafta: { $gt: 71}},{createdAt :1, _id:0}).lean();
+    const pazarTarihleri = tarihler.map(a=>endOfWeek(new Date(a.createdAt), {weekStartsOn: 1}));
     const tarihMetinleri = pazarTarihleri.map(a=>a.toLocaleString("tr-TR", {year: 'numeric', month: 'numeric', day: 'numeric'}));
     const tarihKumesi = [...new Set(tarihMetinleri)];
-    return tarihKumesi.slice(1);
-
-    function getLastDayOfWeek(date) {
-        return (new Date(date.setDate(date.getDate() - date.getDay() +7)));
-    }    
+    return tarihKumesi;
 }
 
 async function getStoriesExtra(searchObject){
