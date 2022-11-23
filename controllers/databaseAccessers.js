@@ -21,7 +21,7 @@ async function getWeeks(){
 
     const tarihMetinleri = pazarTarihleri.map(a=>a.toLocaleString("tr-TR", {year: 'numeric', month: 'numeric', day: 'numeric'}));
     const tarihKumesi = [...new Set(tarihMetinleri)];
-    return tarihKumesi.slice(0,1);
+    return tarihKumesi.slice(1);
 
     function getLastDayOfWeek(date) {
         return (new Date(date.setDate(date.getDate() - date.getDay() +7)));
