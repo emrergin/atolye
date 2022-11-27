@@ -35,9 +35,13 @@ function openRandom(){
 }
 
 function weekNavigation(e){
-    if(e.target !== e.currentTarget) return;
+    const weekInput = document.getElementById("weekInput");
+    if(e.target !== e.currentTarget || !weekInput.checkValidity())
+    {
+        return;
+    }
     // console.log(document.getElementById("weekInput").value);
-    window.location.href="/hafta/"+document.getElementById("weekInput").value;
+    window.location.href="/hafta/"+weekInput.value;
 }
 
 

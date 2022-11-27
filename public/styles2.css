@@ -69,7 +69,7 @@ h1.above-pattern{
     flex-basis: 0;
     flex-grow: 999;
     /* ↓ Wrap when the elements are of equal width */
-    min-inline-size: 50%;
+    min-inline-size: 66%;
 }
 
 .side-bar .dugme{
@@ -97,8 +97,28 @@ h1.above-pattern{
     position:absolute;
     right: 15px;
     top: 50%;
+    font-size:1em;
     transform: translateY(-50%);
 }
+
+.dugme>input:invalid{
+    color:red;
+    animation: shake 500ms;
+    outline: 1px red solid;
+}
+
+@keyframes shake{
+    25%{
+        transform: translate(4px,-50%);
+    }
+    50%{
+        transform: translate(-4px,-50%);
+    }
+    75%{
+        transform: translate(4px,-50%);
+    }
+}
+
 
 .side-bar>input, #authorInput{
     margin-bottom: 0.2ch;
