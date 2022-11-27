@@ -21,12 +21,10 @@ body{
 *{
     box-sizing: border-box;
     /* outline: 2px red solid; */
-    font-family: 'Corben', cursive;
-
 }
 
 h1{
-    font-size: min(13vw, 6rem);
+    font-size: min(15vw, 6rem);
     text-align: center;
     margin: 60px auto 10px;
 }
@@ -39,7 +37,7 @@ h1{
 
 h1.above-pattern{    
     background-color: rgba(255, 255, 255, 0.35);
-    font-family: 'Rammetto One', cursive;
+
 }
 
 #sloganMetni.above-pattern{
@@ -98,7 +96,8 @@ h1.above-pattern{
 .dugme>input{
     position:absolute;
     right: 15px;
-    bottom: 12px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .side-bar>input, #authorInput{
@@ -181,7 +180,6 @@ h3{
   
 .story-card>h2, .story-card>h3{
     color: #0f0a3c;
-    /* transition: all 0.5s ease-in; */
 }
   
 .story-card>h2{
