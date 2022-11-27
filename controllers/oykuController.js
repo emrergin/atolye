@@ -34,54 +34,46 @@ function titleCase(baslik){
 
 //controllers ==============================================
 
-async function storyIndex (req,res){
-  const [oykuler,yazarlar,haftalar] = await databaseAccessers.getStoriesExtra({});
-  res.render('index', { title: 'Bütün Öyküler',
+
+async function storyWithPages (req,res){
+  const page = req.params.sayfa||1;
+  const [oykuler,sonHafta,yazarlar,sayi,sayfa]=await databaseAccessers.getStoriesWithPaginationExtra({},page);
+  res.render('index2', { title: 'Bütün Öyküler',
                          oykuler, 
-                         haftalar, 
+                         sonHafta, 
                          yazarlar,
-                         buHafta:`/`, buYazar:`/`} );
+                         sayi,
+                         sayfa,
+                         buHafta:`/`,
+                         paginationLink: "oykuler"} );
 }
 
-// async function storyIndex (req,res){
-//   const [oykuler,yazarlar,haftalar] = await databaseAccessers.getStoriesExtra({});
-//   res.render('index2', { title: 'Bütün Öyküler',
-//                          oykuler: oykuler.slice(70,80), 
-//                          haftalar, 
-//                          yazarlar,
-//                          buHafta:`/`, buYazar:`/`} );
-// }
-
-async function weekIndex (req,res){
+async function weekWithPages (req,res){
+  const page = req.params.sayfa||1;
   const hafta = req.params.hafta;
-  const [oykuler,yazarlar,haftalar] = await databaseAccessers.getStoriesExtra({hafta});
-  res.render('index', { title: `Hafta ${hafta}`, 
-      oykuler, 
-      haftalar, 
-      yazarlar, 
-      buYazar:`/`, buHafta:hafta,
-      mesaj: 'Atölyemizin böyle bir haftası yok. Henüz.'} );
+  const [oykuler,sonHafta,yazarlar,sayi,sayfa]=await databaseAccessers.getStoriesWithPaginationExtra({hafta},page);
+  res.render('index2', { title: `Hafta ${hafta}`,
+                         oykuler, 
+                         sonHafta, 
+                         yazarlar,
+                         sayi,
+                         sayfa,
+                         buHafta:`/`,
+                         paginationLink: "hafta/"+hafta} );
 }
 
-async function authorIndex (req,res){
+async function authorWithPages (req,res){
+  const page = req.params.sayfa||1;
   const yazar = decodeURI(req.params.yazar);
-  const [oykuler,yazarlar,haftalar] = await databaseAccessers.getStoriesExtra({yazar});
-  res.render('index', { title: `${yazar}`, 
-    oykuler, 
-    haftalar, 
-    yazarlar, 
-    buHafta:`/`, buYazar:yazar,
-    mesaj: 'Böyle bir yazar yok yahut bu yazar henüz bir öykü yazmamış.'} );
-}
-
-async function randomStory (req,res){
-  const [oykuler,yazarlar,haftalar] = await databaseAccessers.getStoriesExtra({});
-  res.render('index', { title: "Rastgele Öykü",
-    oykuler: [oykuler[Math.floor(Math.random()*oykuler.length)]],
-    haftalar, 
-    yazarlar,
-    buHafta:`/`, buYazar:`/`} 
-  );
+  const [oykuler,sonHafta,yazarlar,sayi,sayfa]=await databaseAccessers.getStoriesWithPaginationExtra({yazar},page);
+  res.render('index2', { title: `${yazar} Öyküleri`,
+                         oykuler, 
+                         sonHafta, 
+                         yazarlar,
+                         sayi,
+                         sayfa,
+                         buHafta:`/`,
+                        paginationLink: "yazar/"+yazar} );
 }
 
 
@@ -108,9 +100,8 @@ async function newStory(req,res){
 }
 
 module.exports = {
-  storyIndex,
-  weekIndex,
-  authorIndex,
+  storyWithPages,
   newStory,
-  randomStory
+  authorWithPages,
+  weekWithPages
 }

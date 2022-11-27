@@ -11,5 +11,6 @@ router.get('/oykulerKisa', cors(), apiController.oykulerKisa);
 router.get('/haftaBilgisi', cors(), apiController.haftaBilgisi);
 router.get('/taslak/:id', cors(), apiController.draftCall);
 router.put('/taslak/:id', cors(), apiController.draftUpdate);
+router.get('/rastgele', cors(), apiController.randomStory);
 
 module.exports = router;

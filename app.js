@@ -132,7 +132,7 @@ app.get('/uyeGirisi', (req, res) => {
 
 
 app.get('/', (req, res) => {
-  res.redirect('/oykuler');
+  res.redirect('/oykuler/');
 });
 
 app.get('/hakkinda', (req, res) => {

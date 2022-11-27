@@ -412,43 +412,7 @@ svg.about{
   text-decoration:underline;
 }
 
-/* index2============ */
-.story-card{
-  padding-left:2ch;
-  width: 350px;
-  height: 200px;
-  border: 0.5px #777777 solid;
-  border-radius:9px;
-  background-color: #ffffff;
-}
 
-.card-gallery>a:hover h2,.card-gallery>a:hover h3{
-  color:#66e01f;
-}
-
-.story-card>h2, .story-card>h3{
-  color: #0f0a3c;
-  transition: all 0.5s ease-in;
-}
-
-.story-card>h2{
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;  
-  overflow: hidden;
-}
-/* *{
-  outline: 2px red solid;
-} */
-
-.card-gallery{
-  display:flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  gap: 10px;
-  margin-inline: auto;
-  width: min(710px ,98vw );
-}
 
 /* body{
   background: linear-gradient(90deg, #0f0a3c, #002a6a, #004b90, #006ca4, #008ca3, #00ab8b, #00c861, #66e01f);

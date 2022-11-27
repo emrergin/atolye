@@ -15,7 +15,6 @@
     <ul id="ul-solUstLinkler">     
       <% if (currentUser){ %>
         <% if (title!=="Üye Anasayfa"){%><li><a href="/uyeSayfa">Üye Sayfası</a></li><%}%>
-        <%# <li><a href="/geciciEkle">Yeni Ekle</a></li> %>
         <li><a href="/uyeCikisi">Üye Çıkışı</a></li>
           <% if (title!=="Yönetici Sayfası" && currentUser.admin){%><li><a href="/uyeSayfa/yetkili">Yönetici</a></li><%}%>
       <% } else { %>

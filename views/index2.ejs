@@ -1,26 +1,57 @@
 <!DOCTYPE html>
-<html lang="tr">
-<%- include("./partials/head.ejs") %>
 
+<html lang="tr">
+<%- include("./partials/head2.ejs") %>
 
 <body>
-  <%- include("./partials/nav.ejs") %>
-  <%- include("./partials/filters.ejs") %>
+  <a href="/"><h1  class="above-pattern">Kâğıtsızlar</h1></a>
+  <div id="sloganMetni" class="above-pattern">Kâğıtlar ithal, imlecimiz bizimdir.</div>
+  <div class="main-container">
+  <div class="with-sidebar">
+    <div class="side-bar">
+      <div class="dropdown">
+        <div class="dugme" id="yazarDugme">Yazar Seç</div>  
+        <div id="myDropdown" class="dropdown-content">
+          <input type="text" placeholder="Yazar ara..." id="authorInput"/>
+          <% yazarlar.forEach(yazar => { %>
+              <a href= "/yazar/<%=yazar %>"%>><%= yazar %></a>
+          <% }) %>
+          <div id="more-text">...</div>
+        </div>
+      </div>
+      <div class="dugme" id="weekButton">Hafta Seç<input id="weekInput" type="number" step="1" min="1" max="<%=sonHafta %>" size="3" value="<%=sonHafta %>"></input></div>
+      
+      <div class="dugme" id="randomButton">Rastgele!</div>
+      <a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSc3vr3NGEC1OFFiatyxXu7ADC8I-yBu0PtR-63InehXIEkLYg/viewform?usp=sf_link"><div class="dugme">Üye Ol!</div></a> 
 
-  <div class="card-gallery">
-  <% oykuler.forEach(oyku => { %>
-  <a href=<%=oyku.link %> target="_blank">
-    <div class="story-card">
-      <h2><%= oyku.baslik %></h2>
-      <h3><%= oyku.yazar %></h3> 
+        
+      <% if (currentUser){ %>
+        <% if (title!=="Üye Anasayfa"){%><div><a href="/uyeSayfa">Üye Sayfası</a></div><%}%>
+        <a href="/uyeCikisi"><div class="dugme">Üye Çıkışı</div></a>
+          <% if (title!=="Yönetici Sayfası" && currentUser.admin){%><div class="dugme"><a href="/uyeSayfa/yetkili">Yönetici</a></div><%}%>
+      <% } else { %>
+        <% if (title!=="Üye Girişi"){%> <a href="/uyeGirisi"><div class="dugme">Üye Girişi</div></a><%}%>
+      <% } %>
+      <% if (title!=="Hakkında"){%><a href="/hakkinda"><div class="dugme">Hakkında</div></a><%}%>
     </div>
-  </a>
-  <% }) %>
+    <div class="card-gallery">
+    <% oykuler.forEach(oyku => { %>
+    <a href=<%=oyku.link %> target="_blank">
+      <div class="story-card">
+        <h2><%= oyku.baslik %></h2>
+        <h3><%= oyku.yazar %></h3> 
+        <div class="renk <%=["renk1","renk2","renk3","renk4","renk5"][Math.floor(Math.random() * 5)] %>"></div>
+      </div>
+
+    </a>
+    <% }) %>
+    </div>
   </div>
 
-  <div id="pagination"></div>
+  <%- include("./partials/pagination.ejs") %>  
   <%- include("./partials/footer.ejs") %>
 </body>
 
 <script src="/scripts/mainPage2.js" defer> </script>
+
 </html>

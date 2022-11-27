@@ -24,27 +24,49 @@ async function getWeeks(){
     return tarihKumesi;
 }
 
-async function getStoriesExtra(searchObject){
-    let yazarlar,haftalar,oykuler,oykulerTum;
+// async function getStoriesExtra(searchObject){
+//     let yazarlar,haftalar,oykuler,oykulerTum,len;
     
-    if (searchObject.hafta || searchObject.yazar){
-        [oykuler, oykulerTum] = await Promise.all([
-            Oyku.find(searchObject,{ hafta: 1, yazar: 1, baslik:1, link:1}).lean().sort({ createdAt: -1 }),
-            Oyku.find({},{ hafta: 1, yazar: 1}).lean()
-        ]);
-        yazarlar = orderedUniqueAuthors(oykulerTum);
-        haftalar = [...new Set(oykulerTum.map(a=>a.hafta))];
-    }
-    else{
-        oykuler = await Oyku.find(searchObject,{ hafta: 1, yazar: 1, baslik:1, link:1}).lean().sort({ createdAt: -1 });
-        yazarlar = orderedUniqueAuthors(oykuler);
-        haftalar = [...new Set(oykuler.map(a=>a.hafta))];
-    }
-    return [oykuler,yazarlar,haftalar];
+//     if (searchObject.hafta || searchObject.yazar){
+//         [oykuler, oykulerTum] = await Promise.all([
+//             Oyku.find(searchObject,{ hafta: 1, yazar: 1, baslik:1, link:1}).lean().sort({ createdAt: -1 }),
+//             Oyku.find({},{ hafta: 1, yazar: 1}).lean()
+//         ]);
+//         yazarlar = orderedUniqueAuthors(oykulerTum);
+//         haftalar = oykulerTum[0].hafta;
+//         len=oykulerTum.length;
+//     }
+//     else{
+//         oykuler = await Oyku.find(searchObject,{ hafta: 1, yazar: 1, baslik:1, link:1}).lean().sort({ createdAt: -1 });
+//         yazarlar = orderedUniqueAuthors(oykuler);
+//         haftalar = oykuler[0].hafta;
+//         len=oykuler.length;
+//     }
+//     return [oykuler,yazarlar,haftalar,len];
+// }
+
+async function getStoriesWithPaginationExtra(fullQuery,sayfa){
+    const perPage = 12;
+    const totalNumberOfStories = await Oyku.countDocuments(fullQuery);
+    const pageToGet = Math.min(sayfa,Math.ceil(totalNumberOfStories/perPage));
+  
+    const [oykuler, sonOyku, yazarlar]=await Promise.all([
+        Oyku.find(fullQuery,{ hafta: 1, yazar: 1, baslik:1, link:1})
+            .limit(perPage)
+            .skip(perPage * (pageToGet-1))
+            .sort({ createdAt: -1 }), 
+        Oyku.find().sort({ _id: -1 }).limit(1),
+        Oyku.find({}).distinct("yazar")
+    ]);
+
+    return [oykuler, sonOyku[0].hafta, yazarlar, totalNumberOfStories, pageToGet ];
 }
+
+
 
 module.exports = {
     getStories,
     getWeeks,
-    getStoriesExtra
+    // getStoriesExtra,
+    getStoriesWithPaginationExtra
 }

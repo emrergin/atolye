@@ -1,15 +1,14 @@
 <div id="filtreler">
     <select id="haftaSec" autocomplete="off">
         <option value="/">Hafta Seç</option>
-        <% if (haftalar.length > 0) { %>
-          <% haftalar.forEach(hafta => { %>
+          <% const allWeeks = [...Array(haftalar).keys()] %>
+          <% allWeeks.forEach(hafta => { %>
             <% if (buHafta==hafta){ %>
               <option value= "/hafta/<%=hafta %>" selected %>><%= hafta %></option>
             <% } else {%>
               <option value= "/hafta/<%=hafta %>" %>><%= hafta %></option>
             <% } %>
           <% }) %>
-        <% } %>
     </select>
     <select id="yazarSec" autocomplete="off">
         <option value="/">Yazar Seç</option>

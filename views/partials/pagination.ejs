@@ -1,0 +1,25 @@
+<div id="pagination">
+    <%if (Math.ceil(sayi/12)>1){ %> 
+      <% let allPages = [...Array(Math.ceil(sayi/12)).keys()];
+        allPages=allPages.map(a=> {
+          if(a<4 || Math.ceil(sayi/12)-a<4 || Math.abs(sayfa-1-a)<3){return a;}
+          else if(a<sayfa){return "less";}
+          else{return "more";}
+        });
+        allPages=[...new Set(allPages)];    
+      %>
+      <% if (sayfa>2){ %>    
+        <a class="dugme" href="/<%=paginationLink%>/sayfa/<%=sayfa-1 %>"><</a>
+      <% }%>
+      <% allPages.forEach(page => { %>
+            <%if (page!=="less" && page!=="more"){ %>
+            <a class="dugme <%=page+1===sayfa? "current":""%>" href="/<%=paginationLink%>/sayfa/<%=page+1 %>"><%=page+1%></a>
+            <%}else{ %>
+            <div class="dugme">...</div>
+            <% }%>
+          <% }) %>
+      <% if (Math.ceil(sayi/12)>sayfa){ %>    
+        <a class="dugme" href="/<%=paginationLink%>/sayfa/<%=sayfa+1 %>">></a>
+      <% }%>    
+    <%} %>
+</div>

@@ -70,6 +70,10 @@ async function storiesWithPagination(req,res){
     });
 }
 
+async function randomStory(req,res){
+  const rastgeleOyku = await Oyku.aggregate([{ $sample: { size: 1 } }]);
+  res.json(rastgeleOyku[0].link);
+}
 
 
 module.exports = {
@@ -78,5 +82,6 @@ module.exports = {
   haftaBilgisi,
   draftCall,
   draftUpdate,
-  storiesWithPagination
+  storiesWithPagination,
+  randomStory
 }
