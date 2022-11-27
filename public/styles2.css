@@ -21,10 +21,12 @@ body{
 *{
     box-sizing: border-box;
     /* outline: 2px red solid; */
+    font-family: 'Corben', cursive;
+
 }
 
 h1{
-    font-size: min(15vw, 6rem);
+    font-size: min(13vw, 6rem);
     text-align: center;
     margin: 60px auto 10px;
 }
@@ -37,6 +39,7 @@ h1{
 
 h1.above-pattern{    
     background-color: rgba(255, 255, 255, 0.35);
+    font-family: 'Rammetto One', cursive;
 }
 
 #sloganMetni.above-pattern{
@@ -44,7 +47,6 @@ h1.above-pattern{
 }
 
 .main-container{
-
     width: min(990px ,98vw );
     margin-inline:auto;
 }
@@ -98,14 +100,6 @@ h1.above-pattern{
     right: 15px;
     bottom: 12px;
 }
-
-/* #weekButton{
-    position:absolute;
-    left:0px;
-    height:100%;
-    width:60%;
-    background-color:red; 
-} */
 
 .side-bar>input, #authorInput{
     margin-bottom: 0.2ch;
