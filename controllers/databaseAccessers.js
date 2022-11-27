@@ -4,11 +4,11 @@ const endOfWeek = require('date-fns/endOfWeek');
 // const Kullanici = require('../models/kullanici');
 
 // utilities==========================
-function orderedUniqueAuthors(stories){
-    return [...new Set(stories.map(a=>a.yazar))].sort(function (a, b) {
-      return a.localeCompare(b);
-    });
-}
+// function orderedUniqueAuthors(stories){
+//     return [...new Set(stories.map(a=>a.yazar))].sort(function (a, b) {
+//       return a.localeCompare(b);
+//     });
+// }
 
 
 async function getStories(searchObject){
@@ -24,26 +24,6 @@ async function getWeeks(){
     return tarihKumesi;
 }
 
-// async function getStoriesExtra(searchObject){
-//     let yazarlar,haftalar,oykuler,oykulerTum,len;
-    
-//     if (searchObject.hafta || searchObject.yazar){
-//         [oykuler, oykulerTum] = await Promise.all([
-//             Oyku.find(searchObject,{ hafta: 1, yazar: 1, baslik:1, link:1}).lean().sort({ createdAt: -1 }),
-//             Oyku.find({},{ hafta: 1, yazar: 1}).lean()
-//         ]);
-//         yazarlar = orderedUniqueAuthors(oykulerTum);
-//         haftalar = oykulerTum[0].hafta;
-//         len=oykulerTum.length;
-//     }
-//     else{
-//         oykuler = await Oyku.find(searchObject,{ hafta: 1, yazar: 1, baslik:1, link:1}).lean().sort({ createdAt: -1 });
-//         yazarlar = orderedUniqueAuthors(oykuler);
-//         haftalar = oykuler[0].hafta;
-//         len=oykuler.length;
-//     }
-//     return [oykuler,yazarlar,haftalar,len];
-// }
 
 async function getStoriesWithPaginationExtra(fullQuery,sayfa){
     const perPage = 12;
@@ -53,7 +33,7 @@ async function getStoriesWithPaginationExtra(fullQuery,sayfa){
     const [oykuler, sonOyku, yazarlar]=await Promise.all([
         Oyku.find(fullQuery,{ hafta: 1, yazar: 1, baslik:1, link:1})
             .limit(perPage)
-            .skip(perPage * (pageToGet-1))
+            .skip(Math.max(0,perPage * (pageToGet-1)))
             .sort({ createdAt: -1 }), 
         Oyku.find().sort({ _id: -1 }).limit(1),
         Oyku.find({}).distinct("yazar")
@@ -67,6 +47,5 @@ async function getStoriesWithPaginationExtra(fullQuery,sayfa){
 module.exports = {
     getStories,
     getWeeks,
-    // getStoriesExtra,
     getStoriesWithPaginationExtra
 }

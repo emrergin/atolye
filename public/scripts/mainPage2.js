@@ -36,7 +36,7 @@ function openRandom(){
 
 function weekNavigation(e){
     const weekInput = document.getElementById("weekInput");
-    if(e.target !== e.currentTarget || !weekInput.checkValidity())
+    if(e.target !== e.currentTarget || !weekInput.checkValidity()|| weekInput.value==="")
     {
         return;
     }

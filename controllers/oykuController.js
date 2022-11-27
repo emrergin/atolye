@@ -44,7 +44,7 @@ async function storyWithPages (req,res){
                          yazarlar,
                          sayi,
                          sayfa,
-                         buHafta:`/`,
+                         buHafta:"",
                          paginationLink: "oykuler"} );
 }
 
@@ -58,7 +58,7 @@ async function weekWithPages (req,res){
                          yazarlar,
                          sayi,
                          sayfa,
-                         buHafta:`/`,
+                         buHafta:hafta,
                          paginationLink: "hafta/"+hafta} );
 }
 
@@ -72,7 +72,7 @@ async function authorWithPages (req,res){
                          yazarlar,
                          sayi,
                          sayfa,
-                         buHafta:`/`,
+                         buHafta:"",
                         paginationLink: "yazar/"+yazar} );
 }
 
