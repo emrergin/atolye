@@ -8,6 +8,9 @@ const serverSchema = new Schema({
   },
   gorev: {
     type: String,
+  },
+  hafta:{
+    type: Number
   }
 });
 

@@ -64,13 +64,13 @@ passport.deserializeUser(function(id, done) {
 });
 
 app.use(session({
-  store: MongoStore.create({ mongoUrl: process.env.MONGOURL }),
+  store: MongoStore.create({ mongoUrl: process.env.MONGOURL , touchAfter: 24 * 3600}),
   autoRemove: 'interval',
   autoRemoveInterval: 240,
   ttl: 24 * 60 * 60,
   secret: process.env.SECRET, 
   resave: false, 
-  saveUninitialized: true 
+  saveUninitialized: false 
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -140,10 +140,10 @@ app.get('/hakkinda', (req, res) => {
 });
 
 // moderasyon
-app.get('/cronCall', (req, res)=> {  
+app.get('/cronCall', async (req, res)=> {  
   const haftalikModerasyon=require('./modules/haftalikModerasyon');
-  haftalikModerasyon();
-  res.json("ok");
+  const week= await haftalikModerasyon();
+  res.json(`moderation for week ${week} is complete.`);
 });
 
 // subroutes

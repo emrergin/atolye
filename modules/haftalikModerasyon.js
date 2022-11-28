@@ -1,8 +1,3 @@
-// require('dotenv').config({path: '../.env'});
-// require('dotenv').config();
-
-// connect to mongodb & listen for requests
-
 const Kullanici = require('../models/kullanici');
 const Server = require('../models/server');
 const Oyku = require('../models/oyku');
@@ -10,63 +5,49 @@ const Yorum = require('../models/yorum');
 const Kelime = require('../models/kelime');
 
 module.exports = async function haftalikModerasyon(){
-    try{
-      const moderasyonVerisi=await Server.findOne();
-      let sonTarih=moderasyonVerisi.sonModerasyon;
-      const bugununTarihi = new Date();
-      const gunfark=(bugununTarihi-sonTarih)/1000/60/60/24;
-      const eklenecekGun=7*Math.floor(gunfark/7);
-      if (gunfark>=7){
-          await Server.updateOne({}, {$set: { sonModerasyon:sonTarih.setDate(sonTarih.getDate() + eklenecekGun)} });
-          await Kullanici.updateMany({katilim: "yazacak"},{  $set: { aktif: false }  });
-          await yorumDeaktifTemizligi();
-          await yorumYuzdeleri();
-          await yorumAta();      
-          await Promise.all([yorumYuzdeleri(),
-                             gorevYenile(),
-                             Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  })]);         
-      }
-    }
-    catch (e) {
-      console.log('caught', e);
-    }
+  const moderasyonVerisi=await Server.findOne();
+  const lastWeek = moderasyonVerisi.hafta;
+
+  const storyFromFourWeeksAgo = await Oyku.findOne({hafta:lastWeek-3});
+  const relatedDate = storyFromFourWeeksAgo.createdAt;
+  await Server.updateOne({},{$set:{hafta:moderasyonVerisi.hafta+1}});
+  await Kullanici.updateMany({katilim: "yazacak"},{  $set: { aktif: false }  });
+  await yorumDeaktifTemizligi();
+  await yorumYuzdeleri(relatedDate);
+  await yorumAta();      
+  await Promise.all([yorumYuzdeleri(),
+                    gorevYenile(),
+                    Kullanici.updateMany({katilim: "yazdi"},{  $set: { katilim:"yazmayacak" }  })]);
+  return lastWeek;        
+     
   
-  async function yorumYuzdeleri(){
-    const kontrolBaslangicTarihi = new Date();
-    kontrolBaslangicTarihi.setMonth(kontrolBaslangicTarihi.getMonth() - 1);
-  
-    let degerlendirilecekYorumlar=await Yorum.find({createdAt: {$gt: kontrolBaslangicTarihi}})
-                        .select({yorumcu:1,yazarOnayi:1,yorumcuOnayi:1,_id:0}).exec();
+  async function yorumYuzdeleri(relatedDate){  
+    let degerlendirilecekYorumlar=await Yorum.find({createdAt: {$gt: relatedDate}},{yorumcu:1,yazarOnayi:1,yorumcuOnayi:1,_id:0});
     
-    const sonuc1= degerlendirilecekYorumlar.sort(compare).map(a=>{
+    degerlendirilecekYorumlar= degerlendirilecekYorumlar.sort(compare).map(a=>{
       return {yorumcu: a.yorumcu, deger: +(a.yorumcuOnayi && a.yazarOnayi!==false)}
     });
 
-    let sonuc2=[];
-    for (let satir of sonuc1){
-      if ((sonuc2.length)&& (sonuc2[sonuc2.length-1].yorumcu.toString() === satir.yorumcu.toString())){
-        sonuc2[sonuc2.length-1].deger+=satir.deger;
-        sonuc2[sonuc2.length-1].sayac++;
+    const sonuc=[];
+    for (let satir of degerlendirilecekYorumlar){
+      if ((sonuc.length)&& (sonuc[sonuc.length-1].yorumcu.toString() === satir.yorumcu.toString())){
+        sonuc[sonuc.length-1].deger+=satir.deger;
+        sonuc[sonuc.length-1].sayac++;
       }
       else{
         satir.sayac=1;
-        sonuc2.push(satir);
+        sonuc.push(satir);
       }
     }
     
-    for (let satir of sonuc2){
+    for (let satir of sonuc){
       satir.ortalama=satir.deger/satir.sayac;
     }
   
-    for await (let sonucSatiri of sonuc2){
-      try{
-        let doc = await Kullanici.findById(sonucSatiri.yorumcu);
-        doc.yorumYuzdesi =sonucSatiri.ortalama;
-        await doc.save();  
-      }
-      catch(e){
-        console.log(e);
-      }
+    for await (let sonucSatiri of sonuc){
+      let doc = await Kullanici.findById(sonucSatiri.yorumcu);
+      doc.yorumYuzdesi =sonucSatiri.ortalama;
+      await doc.save();  
     } 
   
     function compare( a, b ) {
@@ -84,8 +65,9 @@ module.exports = async function haftalikModerasyon(){
     let gidenler=await Kullanici.find({aktif: false},{_id:1});
     if (gidenler.length){
       gidenler=gidenler.map(a=>a._id.toString());
-      await Yorum.find({ yorumcu: { $in: gidenler}}).remove();
-      await Yorum.find({ yazar: { $in: gidenler}}).update( { $set: { yazarOnayi: true } } );
+      await Yorum.deleteMany({ yorumcu: { $in: gidenler}});
+      // await Yorum.deleteMany({createdAt: {$lt: relatedDate}});
+      await Yorum.updateMany({ yazar: { $in: gidenler}}, { $set: { yazarOnayi: true } } );
     }
   }
   
@@ -96,7 +78,7 @@ module.exports = async function haftalikModerasyon(){
     if (yorumlanacaklar.length && (yorumlayacaklar.length>1))
     {
       let topAgirlik=0;
-      for (oyku of yorumlanacaklar){
+      for (let oyku of yorumlanacaklar){
         topAgirlik+=parseFloat(oyku.yazarObje.yorumYuzdesi);
       }
       if (topAgirlik!==0){

@@ -40,8 +40,14 @@ function weekNavigation(e){
     {
         return;
     }
-    // console.log(document.getElementById("weekInput").value);
     window.location.href="/hafta/"+weekInput.value;
+}
+
+function getWeek(e){
+    if(e.key==="Enter"){
+        e.preventDefault();
+        document.getElementById("weekButton").click();
+    }
 }
 
 
@@ -49,3 +55,4 @@ document.getElementById("authorInput").addEventListener("keyup",filterFunction);
 document.getElementById("yazarDugme").addEventListener("click",myFunction);
 document.getElementById("randomButton").addEventListener("click",openRandom);
 document.getElementById("weekButton").addEventListener("click",weekNavigation);
+document.getElementById("weekInput").addEventListener("keypress",getWeek);
