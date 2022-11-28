@@ -64,10 +64,12 @@ passport.deserializeUser(function(id, done) {
 });
 
 app.use(session({
-  store: MongoStore.create({ mongoUrl: process.env.MONGOURL , touchAfter: 24 * 3600}),
-  autoRemove: 'interval',
-  autoRemoveInterval: 240,
-  ttl: 24 * 60 * 60,
+  store: MongoStore.create({ 
+    mongoUrl: process.env.MONGOURL , 
+    touchAfter: 24 * 3600,
+    autoRemove: 'interval',
+    autoRemoveInterval: 60 * 24
+  }),  
   secret: process.env.SECRET, 
   resave: false, 
   saveUninitialized: false 
