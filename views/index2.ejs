@@ -26,7 +26,7 @@
 
         
       <% if (currentUser){ %>
-        <% if (title!=="Üye Anasayfa"){%><div><a href="/uyeSayfa">Üye Sayfası</a></div><%}%>
+        <% if (title!=="Üye Anasayfa"){%><div class="dugme"><a href="/uyeSayfa">Üye Sayfası</a></div><%}%>
         <a href="/uyeCikisi"><div class="dugme">Üye Çıkışı</div></a>
           <% if (title!=="Yönetici Sayfası" && currentUser.admin){%><div class="dugme"><a href="/uyeSayfa/yetkili">Yönetici</a></div><%}%>
       <% } else { %>

@@ -51,7 +51,7 @@ h1.above-pattern{
 
 .with-sidebar {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap-reverse;
     /* ↓ The default value is the first point on the modular scale */
     gap: 3rem;
     justify-content: space-between;
@@ -195,7 +195,8 @@ h3{
     transition: 0.3s;
     overflow: hidden;
     position: relative;
-    transition: top ease 0.5s;
+    top: 0px;
+    transition: top ease 0.5s, box-shadow ease 0.5s;
 }
   
 .story-card>h2, .story-card>h3{
