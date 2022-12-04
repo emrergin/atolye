@@ -139,14 +139,18 @@ h1.above-pattern{
     background-repeat: no-repeat;
     background-size: 24px;
     font-size: 16px;
-    padding: 10px 20px 12px 36px;
+    padding: 10px 20px 10px 36px;
 }
 
-#myDropdown>a,#myDropdown>div{
-    padding-left: 3ch;
+#myDropdown>a{
+    padding-inline: 2ch;
     padding-block:.75ch;
-    border: 1px #222 solid;
-    border-radius: 2px;
+    border-left: 1px #222 solid;
+    border-bottom: 1px #222 solid;
+    border-right: 1px rgb(73, 73, 73) solid;
+    border-top: 1px rgb(73, 73, 73) solid;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
 .dropdown{
@@ -157,6 +161,7 @@ h1.above-pattern{
     display: none;
     position: absolute;
     overflow: auto;
+    width: min(990px ,98vw );
     background-color: #f6f6f6;
     border: 1px solid #ddd;
     z-index: 1;
@@ -165,10 +170,13 @@ h1.above-pattern{
 .dropdown-content a {
     text-decoration: none;
     display: block;
-  }
-  
+}  
 
-.show {display:block;}
+.show {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+}
 
 .side-bar .dugme:hover{
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
@@ -181,8 +189,6 @@ h2{
 h3{
     font-size:0.90rem;
 }
-
-
 
 .story-card{
     padding:2ch 1ch 1ch 1.5ch;
@@ -222,6 +228,18 @@ h3{
     gap: 30px;
     align-items: flex-start;
     /* margin-inline: auto; */
+}
+
+.message-box{
+    background-color: #ffffff;
+    max-width:90vw;
+    /* margin-bottom: 0.2ch; */
+    padding:2ch;
+    border: 0.25px #777777 solid;
+    border-radius:6px;
+    margin-inline:auto;
+    /* cursor: pointer; */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
 .renk1{

@@ -45,6 +45,7 @@ async function storyWithPages (req,res){
                          sayi,
                          sayfa,
                          buHafta:"",
+                         message: "Bir hata oldu.",
                          paginationLink: "oykuler"} );
 }
 
@@ -59,6 +60,7 @@ async function weekWithPages (req,res){
                          sayi,
                          sayfa,
                          buHafta:hafta,
+                         message: "Böyle bir hafta yok. Henüz.",
                          paginationLink: "hafta/"+hafta} );
 }
 
@@ -73,7 +75,8 @@ async function authorWithPages (req,res){
                          sayi,
                          sayfa,
                          buHafta:"",
-                        paginationLink: "yazar/"+yazar} );
+                         message: "Aramızda böyle bir yazar yok. Henüz.",
+                         paginationLink: "yazar/"+yazar} );
 }
 
 

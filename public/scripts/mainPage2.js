@@ -1,5 +1,6 @@
 function myFunction() {
     document.getElementById("myDropdown").classList.toggle("show");
+    document.getElementById("authorInput").focus();
     filterFunction() ;
 }
   
@@ -18,14 +19,14 @@ function filterFunction() {
             allAuthorLinks[i].style.display = "none";
         }
     }
-    
-    gosterilecekler.slice(0,10).forEach(a=>a.style.display = "");
-    if(gosterilecekler.length>10){
-        document.getElementById("more-text").style.display="";
-    }
-    else{
-        document.getElementById("more-text").style.display="none";
-    }    
+    gosterilecekler.forEach(a=>a.style.display = "");
+    // gosterilecekler.slice(0,10).forEach(a=>a.style.display = "");
+    // if(gosterilecekler.length>10){
+    //     document.getElementById("more-text").style.display="";
+    // }
+    // else{
+    //     document.getElementById("more-text").style.display="none";
+    // }    
 }
 
 function openRandom(){

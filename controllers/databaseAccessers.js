@@ -39,7 +39,9 @@ async function getStoriesWithPaginationExtra(fullQuery,sayfa){
         Oyku.find({}).distinct("yazar")
     ]);
 
-    return [oykuler, sonOyku[0].hafta, yazarlar, totalNumberOfStories, pageToGet ];
+    return [oykuler, sonOyku[0].hafta, yazarlar.sort(function (a, b) {
+        return a.localeCompare(b);
+      }), totalNumberOfStories, pageToGet ];
 }
 
 
