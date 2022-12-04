@@ -34,6 +34,7 @@ This is the project that made me start learning web development. A webapp that r
 - https://gist.github.com/ht2/ba661bf40a1fa6cb289c
 - https://stackoverflow.com/questions/5210376/how-to-get-first-and-last-day-of-the-current-week-in-javascript
 - https://www.w3schools.com/howto/howto_js_filter_dropdown.asp
+- https://venngage.com/blog/pastel-color-palettes/
 
 ## What I learned
 - Back-end is hard.
