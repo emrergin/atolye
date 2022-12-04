@@ -19,14 +19,15 @@ function filterFunction() {
             allAuthorLinks[i].style.display = "none";
         }
     }
-    gosterilecekler.forEach(a=>a.style.display = "");
-    // gosterilecekler.slice(0,10).forEach(a=>a.style.display = "");
-    // if(gosterilecekler.length>10){
-    //     document.getElementById("more-text").style.display="";
-    // }
-    // else{
-    //     document.getElementById("more-text").style.display="none";
-    // }    
+    // gosterilecekler.forEach(a=>a.style.display = "");
+    gosterilecekler.slice(0,10).forEach(a=>a.style.display = "");
+    if(gosterilecekler.length>10){
+        document.getElementById("more-text").style.display="";
+        document.getElementById("more-text").textContent=`... ve ${gosterilecekler.length-10} yazar daha.`;
+    }
+    else{
+        document.getElementById("more-text").style.display="none";
+    }    
 }
 
 function openRandom(){

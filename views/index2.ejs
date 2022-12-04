@@ -14,9 +14,9 @@
         <div id="myDropdown" class="dropdown-content">
           <input type="text" placeholder="Yazar ara..." id="authorInput"/>
           <% yazarlar.forEach(yazar => { %>
-              <a class="<%=["renk1","renk2","renk3","renk4","renk5"][Math.floor(Math.random() * 5)] %>" href= "/yazar/<%=yazar %>"%>><%= yazar %></a>
+              <a href= "/yazar/<%=yazar %>"%>><%= yazar %></a>
           <% }) %>
-          <!-- <div id="more-text">...</div> -->
+          <div id="more-text">...</div>
         </div>
       </div>
       <div class="dugme" id="weekButton">Hafta Seç<input id="weekInput" type="number" step="1" min="1" max="<%=sonHafta %>" size="3" value="<%=buHafta %>" placeholder="1-<%=sonHafta %>"></input></div>
