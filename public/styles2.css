@@ -8,14 +8,11 @@ body{
 }
 
 :root {
-    --renk1: #c2788b;
-    --renk2: #DCDBEB;
-    --renk3: #ccd6e5;
-    --renk4:#d7c3ac;
-    --renk5: #D5A6C2;
-    --renk1golge: #D0D5DC;
-    --renk2golge: #B9BAD0;
-    --renk3golge: #ADBED0;
+    --renk1: #d4b6ab;
+    --renk2: #b1a0b7;
+    --renk3: #aec7c3;
+    --renk4:#dad4b2;
+    --renk5: #acb3db;
 }
 
 *{
@@ -147,8 +144,8 @@ h1.above-pattern{
     padding-block:.75ch;
     border-left: 1px #222 solid;
     border-bottom: 1px #222 solid;
-    border-right: 1px rgb(73, 73, 73) solid;
-    border-top: 1px rgb(73, 73, 73) solid;
+    border-right: 1px rgb(112, 111, 111) solid;
+    border-top: 1px rgb(112, 111, 111) solid;
     border-radius: 5px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
