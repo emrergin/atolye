@@ -37,7 +37,7 @@
     <% if (oykuler.length>0){ %>
       <div class="card-gallery">    
       <% oykuler.forEach(oyku => { %>
-      <a href=<%=oyku.link %> target="_blank">
+      <a href=<%=oyku.link.replace("/edit","/preview") %> target="_blank">
         <div class="story-card">
           <h2><%= oyku.baslik %></h2>
           <h3><%= oyku.yazar %></h3> 
