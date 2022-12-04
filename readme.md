@@ -49,4 +49,6 @@ This is the project that made me start learning web development. A webapp that r
 - [Mongoose queries are not promises](https://mongoosejs.com/docs/promises.html#queries-are-not-promises).
 - This project is the first project of mine that required `Promise.all`.
 - I learned about `lean` in **Mongoose** for better query performance.
+- For `justfiy-content:stretch` working, you need to assign `flex-grow` property.
+- Do not fetch the localhost using https, if you don't want to get an SSL error.
 

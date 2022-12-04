@@ -176,6 +176,10 @@ h1.above-pattern{
     flex-grow: 1;
 }
 
+#myDropdown{
+    box-shadow: 0 9px 4px -4px rgb(61, 60, 60),4px 0px 4px -4px rgb(61, 60, 60),-4px 0px 4px -4px rgb(61, 60, 60);
+}
+
 #myDropdown::after {
     content: "";
     flex: auto;

@@ -23,8 +23,11 @@ async function haftaBilgisi(req,res){
 }
 
 async function draftCall(req,res){
-  const relatedDraft = await Taslak.findById(req.params.id);
-  res.json(relatedDraft);
+  const relatedDraft = await Taslak.findById(req.params.id).lean();
+  const relatedAuthor = await Kullanici.findById(relatedDraft.yazarObje).lean();
+  // console.log({...relatedDraft,author:relatedAuthor})
+  // res.json("ok")
+  res.json({...relatedDraft,author:relatedAuthor.gercekAd});
 }
 
 async function draftUpdate(req,res){
