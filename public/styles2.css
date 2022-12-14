@@ -25,6 +25,7 @@ h1{
     font-size: min(15vw, 6rem);
     text-align: center;
     margin: 60px auto 10px;
+    font-family: 'Abril Fatface', cursive;
 }
 
 #sloganMetni{
