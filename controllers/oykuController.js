@@ -1,9 +1,12 @@
-import Oyku from '../models/oyku';
-import { findOneAndUpdate } from '../models/kullanici';
-import Server from '../models/server';
+// import Oyku from '../models/oyku';
+// import { findOneAndUpdate } from '../models/kullanici';
 
-import { getStoriesWithPaginationExtra } from '../controllers/databaseAccessers';
+// import { getStoriesWithPaginationExtra } from '../controllers/databaseAccessers';
 
+const Oyku = require('../models/oyku');
+const Server = require('../models/server');
+const {findOneAndUpdate} = require('../models/kullanici');
+const {getStoriesWithPaginationExtra} = require('../controllers/databaseAccessers')
 
 
 // utilities==========================
