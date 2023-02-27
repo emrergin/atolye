@@ -1,15 +1,5 @@
 const Oyku = require('../models/oyku');
 const endOfWeek = require('date-fns/endOfWeek');
-// const Taslak = require('../models/taslak');
-// const Kullanici = require('../models/kullanici');
-
-// utilities==========================
-// function orderedUniqueAuthors(stories){
-//     return [...new Set(stories.map(a=>a.yazar))].sort(function (a, b) {
-//       return a.localeCompare(b);
-//     });
-// }
-
 
 async function getStories(searchObject){
     const oykuler= await Oyku.find(searchObject,{ hafta: 1, yazar: 1, baslik:1, link: 1}).lean().sort({ createdAt: -1 });

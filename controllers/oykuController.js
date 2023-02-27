@@ -1,25 +1,16 @@
-const Oyku = require('../models/oyku');
-const Kullanici = require('../models/kullanici');
+import Oyku from '../models/oyku';
+import { findOneAndUpdate } from '../models/kullanici';
+import Server from '../models/server';
 
-const databaseAccessers = require('../controllers/databaseAccessers');
+import { getStoriesWithPaginationExtra } from '../controllers/databaseAccessers';
 
 
 
 // utilities==========================
 async function weekFind(){
-  try{
-    const sonOyku=await Oyku.find().sort({ _id: -1 }).limit(1);
-    let yeniHafta=sonOyku[0].hafta;
-    const bugununTarihi = new Date();
-    const gunfark=(bugununTarihi-sonOyku[0].createdAt)/1000/60/60/24;
-    if (gunfark>4){
-      yeniHafta+=1;
-    }
-    return yeniHafta;
-  }
-  catch (e) {
-    console.log('caught', e);
-  }
+  const moderasyonVerisi=await Server.findOne();
+  const lastWeek = moderasyonVerisi.hafta;
+  return lastWeek;  
 }
 
 function capitalize([firstLetter, ...rest]) {
@@ -37,7 +28,7 @@ function titleCase(baslik){
 
 async function storyWithPages (req,res){
   const page = req.params.sayfa||1;
-  const [oykuler,sonHafta,yazarlar,sayi,sayfa]=await databaseAccessers.getStoriesWithPaginationExtra({},page);
+  const [oykuler,sonHafta,yazarlar,sayi,sayfa]=await getStoriesWithPaginationExtra({},page);
   res.render('index2', { title: 'Bütün Öyküler',
                          oykuler, 
                          sonHafta, 
@@ -52,7 +43,7 @@ async function storyWithPages (req,res){
 async function weekWithPages (req,res){
   const page = req.params.sayfa||1;
   const hafta = req.params.hafta;
-  const [oykuler,sonHafta,yazarlar,sayi,sayfa]=await databaseAccessers.getStoriesWithPaginationExtra({hafta},page);
+  const [oykuler,sonHafta,yazarlar,sayi,sayfa]=await getStoriesWithPaginationExtra({hafta},page);
   res.render('index2', { title: `Hafta ${hafta}`,
                          oykuler, 
                          sonHafta, 
@@ -67,7 +58,7 @@ async function weekWithPages (req,res){
 async function authorWithPages (req,res){
   const page = req.params.sayfa||1;
   const yazar = decodeURI(req.params.yazar);
-  const [oykuler,sonHafta,yazarlar,sayi,sayfa]=await databaseAccessers.getStoriesWithPaginationExtra({yazar},page);
+  const [oykuler,sonHafta,yazarlar,sayi,sayfa]=await getStoriesWithPaginationExtra({yazar},page);
   res.render('index2', { title: `${yazar} Öyküleri`,
                          oykuler, 
                          sonHafta, 
@@ -94,7 +85,7 @@ async function newStory(req,res){
       yorumAtamasi: oykuHukmu
     });
     await story.save();  
-    await Kullanici.findOneAndUpdate({_id: req.user.id},{katilim: "yazdi"});
+    await findOneAndUpdate({_id: req.user.id},{katilim: "yazdi"});
     res.redirect('/uyeSayfa');  
   }
   else{
@@ -102,7 +93,7 @@ async function newStory(req,res){
   }
 }
 
-module.exports = {
+export default {
   storyWithPages,
   newStory,
   authorWithPages,
