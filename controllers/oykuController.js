@@ -96,7 +96,7 @@ async function newStory(req,res){
   }
 }
 
-export default {
+module.exports = {
   storyWithPages,
   newStory,
   authorWithPages,
