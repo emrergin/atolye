@@ -39,6 +39,16 @@ const kullaniciSchema = new Schema({
     type: Boolean,
     default: false
   },
+  // borc:{
+  //   type: Number,
+  //   default: 0
+  // },
+  // aylikborc:{
+  //   type: Number,
+  // },
+  // sonOdeme: {
+  //   type: Date,
+  // },
   taslaklar:{
     type: [Schema.Types.Mixed]
   }

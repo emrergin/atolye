@@ -38,14 +38,14 @@ app.set('view engine', 'ejs');
 // kullanicilar vs.
 passport.use(
   new LocalStrategy((username, password, done) => {    
-    Kullanici.findOne({ username: username }, (err, user) => {
+    Kullanici.findOne({ username: username.trim() }, (err, user) => {
       if (err) { 
         return done(err);
       }
       if (!user) {
         return done(null, false, { message: "Kullanıcı adı yanlış." });
       }
-      if (user.password !== password) {
+      if (user.password.trim() !== password) {
         return done(null, false, { message: "Parola yanlış." });
       }
       return done(null, user);
