@@ -9,8 +9,11 @@ module.exports = async function haftalikModerasyon(){
   const lastWeek = moderasyonVerisi.hafta;
 
   const storyFromFourWeeksAgo = await Oyku.findOne({hafta:lastWeek-3});
+  const storyFromLastWeek = await Oyku.findOne({hafta:lastWeek});
   const relatedDate = storyFromFourWeeksAgo.createdAt;
-  await Server.updateOne({},{$set:{hafta:moderasyonVerisi.hafta+1}});
+  if(storyFromLastWeek){
+    await Server.updateOne({},{$set:{hafta:moderasyonVerisi.hafta+1}});
+  }
   await Kullanici.updateMany({katilim: "yazacak"},{  $set: { aktif: false }  });
   await yorumDeaktifTemizligi();
   await yorumYuzdeleri(relatedDate);
