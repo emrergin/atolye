@@ -5,7 +5,8 @@
 
 const Oyku = require('../models/oyku');
 const Server = require('../models/server');
-const {findOneAndUpdate} = require('../models/kullanici');
+const Kullanici = require('../models/kullanici');
+// const {findOneAndUpdate} = require('../models/kullanici');
 const {getStoriesWithPaginationExtra} = require('../controllers/databaseAccessers')
 
 
@@ -88,7 +89,7 @@ async function newStory(req,res){
       yorumAtamasi: oykuHukmu
     });
     await story.save();  
-    await findOneAndUpdate({_id: req.user.id},{katilim: "yazdi"});
+    await Kullanici.findOneAndUpdate({_id: req.user.id},{katilim: "yazdi"});
     res.redirect('/uyeSayfa');  
   }
   else{
