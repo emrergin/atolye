@@ -116,6 +116,7 @@ app.use(function(req, res, next) {
     case 1:
     case 2:
       mevcutMod='Taahhüt Öncesi';
+      break;
     default:
       mevcutMod="Taahhüt Sonrası";
   }
