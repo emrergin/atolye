@@ -79,7 +79,7 @@ async function newStory(req,res){
       hafta: week,
       yazar: req.user.gercekAd,
         //sadece ilk harfler buyuk
-      baslik: titleCase(req.body.baslik.toLocaleLowerCase('tr')), 
+      baslik: titleCase(req.body.baslik.toLocaleLowerCase('tr').trim()), 
       link: req.body.link,
       yazarObje: req.user._id,
       yorumAtamasi: oykuHukmu

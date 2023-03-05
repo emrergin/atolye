@@ -73,7 +73,7 @@
 
 <%if (mevcutMod!=="Öykü Yazma" && mevcutMod!=="Taahhüt"){%>
   <%if (yazarlar.filter(a=>a.katilim!=="yazmayacak").length === 0){
-    if (new Date().getDay()===1 || new Date().getDay()===2){%>
+    if (mevcutMod==='Taahhüt Öncesi'){%>
       <div>Taahhüt zamanını bekleyin.</div>
     <% }else{ %>
       <div>Bu hafta tatil.</div>

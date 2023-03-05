@@ -113,8 +113,11 @@ app.use(function(req, res, next) {
     case 3:
       mevcutMod="Taahhüt";
       break;
+    case 1:
+    case 2:
+      mevcutMod='Taahhüt Öncesi';
     default:
-      mevcutMod="-";
+      mevcutMod="Taahhüt Sonrası";
   }
   app.locals.mevcutMod = mevcutMod;
   next();
