@@ -87,34 +87,27 @@ module.exports = async function haftalikModerasyon(){
       if (topAgirlik!==0){
         let toplamYorumSayisi=yorumlayacaklar.length*3;
   
-        let oykuMatrisi=[];
-        for (let j = 0; j < yorumlanacaklar.length ;j++) {
-          let oObj={};
-          oObj._id=yorumlanacaklar[j]._id;
-          oObj.baslik= yorumlanacaklar[j].baslik;
-          oObj.link=yorumlanacaklar[j].link;
-          oObj.yazarObje=yorumlanacaklar[j].yazarObje;
-          let agirlik=parseFloat(yorumlanacaklar[j].yazarObje.yorumYuzdesi)/topAgirlik;
-          oObj.yakYorumSayisi=Math.min(Math.floor(toplamYorumSayisi*agirlik),yorumlayacaklar.length-1);
-          oObj.indis=j;
-          oykuMatrisi.push(oObj);
-        }
+        // let oykuMatrisi=[];
+        let oykuMatrisi = yorumlanacaklar.map((oyku,index)=>{
+          let agirlik=parseFloat(oyku.yazarObje.yorumYuzdesi)/topAgirlik;
+          return ({...a,yakYorumSayisi: Math.max(Math.floor(toplamYorumSayisi*agirlik),yorumlayacaklar.length-1), indis: index});
+        })
   
         // Yorum Dagitimi burada basliyor=====================
         var yorumMatrisi=[];
         var tamamMatrisi=[];
         
-        oykuMatrisi.filter(i => i.yakYorumSayisi<=0).map((bitenOyku)=>{
+        oykuMatrisi.filter(i => i.yakYorumSayisi<=0).forEach((bitenOyku)=>{
           tamamMatrisi.push(bitenOyku._id);
         });
-        oykuMatrisi=shuffle(oykuMatrisi.filter(i => i.yakYorumSayisi));
+        oykuMatrisi=shuffle(oykuMatrisi.filter(i => i.yakYorumSayisi>0));
         yorumlayacaklar=shuffle(yorumlayacaklar);
   
-        for (yorumcu of yorumlayacaklar){
+        for (let yorumcu of yorumlayacaklar){
           let buKisininYorumlayabilecegiOykuler=oykuMatrisi.filter(i=> (i.yazarObje._id.toString() !== yorumcu._id.toString()));
           let secilenler=buKisininYorumlayabilecegiOykuler.slice(0, 3);
   
-          for (secilenOyku of secilenler){
+          for (let secilenOyku of secilenler){
 
             let yorumObje={};
             yorumObje.baslik=secilenOyku.baslik;
@@ -142,7 +135,7 @@ module.exports = async function haftalikModerasyon(){
         });          
         
       }
-      for await (yorum of yorumMatrisi){
+      for await (let yorum of yorumMatrisi){
         const yYorum= new Yorum({
           baslik: yorum.baslik,
           link: yorum.link,

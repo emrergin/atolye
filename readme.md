@@ -36,6 +36,11 @@ This is the project that made me start learning web development. A webapp that r
 - https://www.w3schools.com/howto/howto_js_filter_dropdown.asp
 - https://venngage.com/blog/pastel-color-palettes/
 
+### About Comment Assignments
+- [Fair Allocation of Indivisible Goods to Asymmetric Agents](https://jair.org/index.php/jair/article/view/11291/26464)
+    - Not applicable, here, but still interesting.
+- https://en.wikipedia.org/wiki/Round-robin_scheduling
+
 ## What I learned
 - Back-end is hard.
 - An HTML form can not have a put action. See: https://stackoverflow.com/questions/8054165/using-put-method-in-html-form
