@@ -130,7 +130,7 @@ module.exports = async function haftalikModerasyon(){
           }
         }
         //hala yorumlari tamamlanmamis varsa, tamamla.
-        oykuMatrisi.map((bitenOyku)=>{
+        oykuMatrisi.forEach((bitenOyku)=>{
           tamamMatrisi.push(bitenOyku._id);
         });          
         
@@ -155,7 +155,7 @@ module.exports = async function haftalikModerasyon(){
   async function gorevYenile(){
     try{
       const yazanlar=await Kullanici.find({katilim: "yazdi"}); 
-      if (yazanlar.length){
+      if (yazanlar.length>0){
         const yeniKelimeler= await Kelime.aggregate(
           [ 
             { $sample: { size: 3 } } ,
