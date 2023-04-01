@@ -82,7 +82,7 @@ module.exports = async function haftalikModerasyon(){
     {
       let topAgirlik=0;
       for (let oyku of yorumlanacaklar){
-        topAgirlik+=parseFloat(oyku.yazarObje.yorumYuzdesi);
+        topAgirlik+=parseFloat(oyku.yazarObje.yorumYuzdesi)**1.5;
       }
       if (topAgirlik!==0){
         let toplamYorumSayisi=yorumlayacaklar.length*3;
