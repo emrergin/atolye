@@ -75,7 +75,7 @@ module.exports = async function haftalikModerasyon(){
   }
   
   async function yorumAta(){
-    let yorumlanacaklar= await Oyku.find({ yorumAtamasi: false },{yazarObje:1,baslik:1,link: 1}).populate('yazarObje','yorumYuzdesi');
+    let yorumlanacaklar= await Oyku.find({ yorumAtamasi: false },{yazarObje:1,baslik:1,link: 1}).populate('yazarObje','yorumYuzdesi').lean();
     let yorumlayacaklar= await Kullanici.find({ aktif: true, sekil: "okurYazar"},{_id:1,yorumYuzdesi:1, gercekAd:1});
 
     if (yorumlanacaklar.length && (yorumlayacaklar.length>1))
@@ -104,6 +104,7 @@ module.exports = async function haftalikModerasyon(){
         yorumlayacaklar=shuffle(yorumlayacaklar);
   
         for (let yorumcu of yorumlayacaklar){
+          console.log(oykuMatrisi[0])
           let buKisininYorumlayabilecegiOykuler=oykuMatrisi.filter(i=> (i.yazarObje._id.toString() !== yorumcu._id.toString()));
           let secilenler=buKisininYorumlayabilecegiOykuler.slice(0, 3);
   
