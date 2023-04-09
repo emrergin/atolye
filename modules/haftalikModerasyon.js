@@ -90,7 +90,7 @@ module.exports = async function haftalikModerasyon(){
         // let oykuMatrisi=[];
         let oykuMatrisi = yorumlanacaklar.map((oyku,index)=>{
           let agirlik=parseFloat(oyku.yazarObje.yorumYuzdesi)**1.5/topAgirlik;
-          return ({...a,yakYorumSayisi: Math.min(Math.ceil(toplamYorumSayisi*agirlik),yorumlayacaklar.length-1), indis: index});
+          return ({...oyku,yakYorumSayisi: Math.min(Math.ceil(toplamYorumSayisi*agirlik),yorumlayacaklar.length-1), indis: index});
         })
   
         // Yorum Dagitimi burada basliyor=====================
