@@ -104,7 +104,6 @@ module.exports = async function haftalikModerasyon(){
         yorumlayacaklar=shuffle(yorumlayacaklar);
   
         for (let yorumcu of yorumlayacaklar){
-          console.log(oykuMatrisi[0])
           let buKisininYorumlayabilecegiOykuler=oykuMatrisi.filter(i=> (i.yazarObje._id.toString() !== yorumcu._id.toString()));
           let secilenler=buKisininYorumlayabilecegiOykuler.slice(0, 3);
   

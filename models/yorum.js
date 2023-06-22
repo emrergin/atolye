@@ -27,9 +27,13 @@ const yorumSchema = new Schema({
     type: Boolean,
   },
   yorumcuIsim: {
-  type: String,
-  required: true,
+    type: String,
+    required: true,
   },
+  rating:{
+    type:Number  
+  }
+
 }, { timestamps: true });
 
 const Yorum = mongoose.model('Yorum',yorumSchema,'yorumlar');
