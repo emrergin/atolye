@@ -12,7 +12,12 @@ module.exports = async function haftalikModerasyon() {
   const storyFromLastWeek = await Oyku.findOne({ hafta: lastWeek });
   const relatedDate = storyFromFourWeeksAgo.createdAt;
   if (storyFromLastWeek) {
-    await Server.updateOne({}, { $set: { hafta: moderasyonVerisi.hafta + 1 } });
+    await Server.updateOne(
+      {},
+      { $set: { hafta: moderasyonVerisi.hafta + 1, break: false } }
+    );
+  } else {
+    await Server.updateOne({}, { $set: { break: false } });
   }
   await Kullanici.updateMany(
     { katilim: "yazacak" },
