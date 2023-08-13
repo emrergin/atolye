@@ -13,7 +13,7 @@ const WEEKDAYS = [
 ];
 
 async function dailyModeration(req, res) {
-  if (req.get(headerName) !== process.env.MODERATOR_CODE) {
+  if (req.get("x-cyclic") !== process.env.MODERATOR_CODE) {
     res.status(403).send("Unauthorized");
   }
   const d = new Date();
