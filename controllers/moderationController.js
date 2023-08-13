@@ -23,9 +23,9 @@ async function dailyModeration(req, res) {
   d.setHours(d.getHours() + 3);
   const day = d.getDay();
   if (day === 1) {
-    weeklyModeration(req, res);
+    await weeklyModeration(req, res);
   } else if (day === 4) {
-    vacationCheck(req, res);
+    await vacationCheck(req, res);
   } else {
     res.json(`day is ${WEEKDAYS[day]}`);
   }
