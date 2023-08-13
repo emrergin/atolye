@@ -13,23 +13,26 @@ const WEEKDAYS = [
 ];
 
 async function dailyModeration(req, res) {
-  if (req.get("x-cyclic") !== `"${process.env.MODERATOR_CODE}"`) {
+  if (
+    req.get("x-cyclic") !== `"${process.env.MODERATOR_CODE}"` ||
+    req.get("x-cyclic") !== process.env.MODERATOR_CODE
+  ) {
     return res.status(403).send("Unauthorized");
   }
   const d = new Date();
   d.setHours(d.getHours() + 3);
   const day = d.getDay();
   if (day === 1) {
-    weeklyModeration();
+    weeklyModeration(req, res);
   } else if (day === 4) {
-    vacationCheck();
+    vacationCheck(req, res);
   } else {
     res.json(`day is ${WEEKDAYS[day]}`);
   }
 }
 
 async function weeklyModeration(req, res) {
-  const haftalikModerasyon = require("./modules/haftalikModerasyon");
+  const haftalikModerasyon = require("../modules/haftalikModerasyon");
   const week = await haftalikModerasyon();
   res.json(`moderation for week ${week} is complete.`);
 }
