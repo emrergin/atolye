@@ -1,4 +1,5 @@
 const Kullanici = require("../models/kullanici");
+require("dotenv").config();
 
 const LIMIT_TO_VACATION = 1;
 const WEEKDAYS = [
@@ -12,6 +13,9 @@ const WEEKDAYS = [
 ];
 
 async function dailyModeration(req, res) {
+  if (req.get(headerName) !== process.env.MODERATOR_CODE) {
+    res.status(403).send("Unauthorized");
+  }
   const d = new Date();
   d.setHours(d.getHours() + 3);
   const day = d.getDay();
