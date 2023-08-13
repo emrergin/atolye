@@ -108,3 +108,4 @@ requests
 #utility files
 utility*.js
 utility*.txt
+/downloads

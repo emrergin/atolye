@@ -13,6 +13,7 @@ const WEEKDAYS = [
 
 async function dailyModeration(req, res) {
   const d = new Date();
+  d.setHours(d.getHours() + 3);
   const day = d.getDay();
   if (day === 1) {
     weeklyModeration();
