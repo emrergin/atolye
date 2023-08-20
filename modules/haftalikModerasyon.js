@@ -9,8 +9,10 @@ module.exports = async function haftalikModerasyon() {
   const lastWeek = moderasyonVerisi.hafta;
 
   const storyFromFourWeeksAgo = await Oyku.findOne({ hafta: lastWeek - 3 });
+  const storyFromTwelveWeeksAgo = await Oyku.findOne({ hafta: lastWeek - 11 });
   const storyFromLastWeek = await Oyku.findOne({ hafta: lastWeek });
   const relatedDate = storyFromFourWeeksAgo.createdAt;
+  const relatedDateForOldComments = storyFromTwelveWeeksAgo.createdAt;
   if (storyFromLastWeek) {
     await Server.updateOne(
       {},
@@ -23,7 +25,11 @@ module.exports = async function haftalikModerasyon() {
     { katilim: "yazacak" },
     { $set: { aktif: false, katilim: "yazmayacak" } }
   );
-  await yorumDeaktifTemizligi();
+  await Promise.all([
+    yorumDeaktifTemizligi(),
+    eskiYorumTemizligi(relatedDateForOldComments),
+  ]);
+
   await yorumYuzdeleri(relatedDate);
   await yorumAta();
   await Promise.all([
@@ -91,12 +97,18 @@ module.exports = async function haftalikModerasyon() {
     if (gidenler.length) {
       gidenler = gidenler.map((a) => a._id.toString());
       await Yorum.deleteMany({ yorumcu: { $in: gidenler } });
-      // await Yorum.deleteMany({createdAt: {$lt: relatedDate}});
       await Yorum.updateMany(
         { yazar: { $in: gidenler } },
         { $set: { yazarOnayi: true } }
       );
     }
+  }
+
+  async function eskiYorumTemizligi(relatedDate) {
+    await Yorum.deleteMany({
+      createdAt: { $lt: relatedDate },
+      yorumcuOnayi: false,
+    });
   }
 
   async function yorumAta() {
@@ -119,7 +131,6 @@ module.exports = async function haftalikModerasyon() {
       if (topAgirlik !== 0) {
         let toplamYorumSayisi = yorumlayacaklar.length * 3;
 
-        // let oykuMatrisi=[];
         let oykuMatrisi = yorumlanacaklar.map((oyku, index) => {
           let agirlik =
             parseFloat(oyku.yazarObje.yorumYuzdesi) ** 1.5 / topAgirlik;
