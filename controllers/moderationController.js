@@ -49,7 +49,9 @@ async function vacationCheck(req, res) {
   if (numberOfParticipants <= LIMIT_TO_VACATION) {
     res.json(`no story will be written this week.`);
   } else {
-    res.json(`no need for a vacation`);
+    res.json(
+      `${numberOfParticipants} persons are writing. No need for a vacation`
+    );
   }
 }
 
