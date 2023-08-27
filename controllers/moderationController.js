@@ -84,9 +84,7 @@ async function storyFetcher(req, res) {
 
 async function fetchStory(downloadLink) {
   const downloadResponse = await fetch(
-    downloadLink
-      .replace("/edit", "/export?format=txt")
-      .replace("?usp=sharing", "")
+    downloadLink.replace(/\/edit.*/, "/export?format=txt")
   );
   const blob = await downloadResponse.text();
   var regex = /^\[a\][\S\s]*$/gm;
