@@ -24,6 +24,8 @@ async function dailyModeration(req, res) {
   const day = d.getDay();
   if (day === 1) {
     await weeklyModeration(req, res);
+  } else if (day === 2) {
+    await storyFetcher(req, res);
   } else if (day === 4) {
     await vacationCheck(req, res);
   } else {
@@ -53,6 +55,31 @@ async function vacationCheck(req, res) {
       `${numberOfParticipants} persons are writing. No need for a vacation`
     );
   }
+}
+
+async function storyFetcher(req, res) {
+  const activeAuthors = (await Kullanici.find({ aktif: true }).lean()).map(
+    (a) => ({
+      ad: a.gercekAd,
+      yazarObje: new mongoose.Types.ObjectId(a._id),
+    })
+  );
+
+  for (let author of activeAuthors) {
+    const storiesByThisAuthor = await Oyku.find({
+      yazarObje: author.yazarObje,
+      metin: { $exists: false },
+    });
+    for (let story of storiesByThisAuthor) {
+      const textOfStory = await fetchStory(story.link);
+      story.metin = textOfStory;
+      const length = textOfStory.split(/\s+/).length;
+      story.uzunluk = length;
+      await story.save();
+    }
+  }
+
+  res.json("story texts update is complete.");
 }
 
 module.exports = {
