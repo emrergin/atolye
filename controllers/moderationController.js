@@ -82,6 +82,28 @@ async function storyFetcher(req, res) {
   res.json("story texts update is complete.");
 }
 
+async function fetchStory(downloadLink) {
+  const downloadResponse = await fetch(
+    downloadLink
+      .replace("/edit", "/export?format=txt")
+      .replace("?usp=sharing", "")
+  );
+  const blob = await downloadResponse.text();
+  var regex = /^\[a\][\S\s]*$/gm;
+
+  let cleanedParagraphs = blob.replace(regex, "");
+  const textExceptCommentMarkers = cleanedParagraphs
+    .replace(/\[[a-zA-Z]{1,2}\]/g, "")
+    .trim();
+  cleanedParagraphs = textExceptCommentMarkers
+    .split("\n")
+    .map((a) => a.trim())
+    .join("\n");
+
+  return cleanedParagraphs;
+}
+
 module.exports = {
   dailyModeration,
+  fetchStory,
 };
