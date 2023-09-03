@@ -2,147 +2,119 @@
 <html lang="tr">
 <%- include("./partials/head.ejs") %>
 
-<body>
-  <%- include("./partials/nav.ejs") %>
+  <body>
+    <%- include("./partials/nav.ejs") %>
 
-  <div id="uyeHeader">
-    <h1>Üye Sayfası</h1>
-    <p id="tarihMetin"></p>
-  </div>
-  
-  <div id="uyeSayfaMain">    
-    <div id="uyeSayfaContent">   
-      <%- include("./partials/uyeStatus.ejs") %> 
-    </div>
-      
-    <% if (currentUser.sekil=='okurYazar'){%>
-    <div id="yorumYuzdesiKutusu">
-      <div id="yorumYuzdesiSayisi" data-yuzde=<%=currentUser.yorumYuzdesi%>>
-        <%=`%${Math.round(currentUser.yorumYuzdesi*1000)/10}`%>
+      <div id="uyeHeader">
+        <h1>Üye Sayfası</h1>
+        <p id="tarihMetin"></p>
       </div>
-      <div>
-        Yorum Yüzdesi
+
+      <div id="uyeSayfaMain">
+        <div id="uyeSayfaContent">
+          <%- include("./partials/uyeStatus.ejs") %>
+        </div>
+
+        <% if (currentUser.sekil=='okurYazar' ){%>
+          <div id="yorumYuzdesiKutusu">
+            <div id="yorumYuzdesiSayisi" data-yuzde=<%=currentUser.yorumYuzdesi%>>
+              <%=`%${Math.round(currentUser.yorumYuzdesi*1000) /10}`%>
+            </div>
+            <div>
+              Yorum Yüzdesi
+            </div>
+          </div>
+          <%}%>
       </div>
-    </div>
-    <%}%>
-  </div>
 
-  <% if (currentUser.sekil==='okurYazar'){%>
-  <div>
-    <h2>Yorumlanacak Öyküler</h2>
-    <% if (yorumlar.length===0){%>
-    <p>Şu an yorumlamanız gereken öykü bulunmamaktadır.</p>
-    <%}else{%>
-      <table class="yorumTablosu" rules="all">
-        <tr>
-          <th>
-            Öykü
-          </th> 
-          <th>
-            Yorum?
-          </th>
-        </tr>
-        <% yorumlar.forEach(oyku => { %>
-          <tr >
-            <td>
-              <a href=<%=oyku.link %> target="_blank">
-                <%= oyku.baslik %>
-              </a>
-            <td>
-              <input type="checkbox" class="yorumladimBox" data-yorumid="<%= oyku._id%>" autocomplete="off">
-              <button data-yorumid="<%= oyku._id%>" autocomplete="off" class="tabloButonu yorumOnay">Gönder?</button>
-            </td>
-          </tr>
-        <% }) %>
-      </table>
-    <%}%>
-    <h2>Onayınızı Bekleyen Yorumlar</h2>
-    <% if (onaylar.length===0){%>
-      <p>Şu an onaylamanız gereken yorum bulunmamaktadır.</p>
-      <%}else{%>
-        <table class="yorumTablosu" rules="all">
-          <tr>
-            <th>
-              Öykü
-            </th> 
-            <th>
-              Yorumcu
-            </th> 
-            <th>
-              Yeterli
-            </th>
-            <th>
-              Yetersiz
-            </th>
-            <th >
-              Onay
-            </th>
-          </tr>
-          <% onaylar.forEach(oyku => { %>
-            <tr >
-              <td>
-                <a href=<%=oyku.link %> target="_blank">
-                  <%= oyku.baslik %>
-                </a>
-              <td>
-                <%= oyku.yorumcuIsim%>
-              </td>
-              <td style="text-align: center;">
-                <input type="radio" id="onayladim"
-                class="onayladimBox" name="onay" 
-                data-yorumid="<%= oyku._id%>"
-                 autocomplete="off" value="true"
-                >
-              </td>
-              <td style="text-align: center;">
-                <input type="radio" id="onaylamadim" 
-                class="onaylamadimBox" name="onay" 
-                data-yorumid="<%= oyku._id%>" 
-                autocomplete="off" value="false">
-              </td>
-              <td>
-                <button data-yorumid="<%= oyku._id%>"  autocomplete="off" class="tabloButonu onayOnay">Gönder?</button>
-              </td>
-            </tr>
-          <% }) %>
-        </table>
-      <%}}%>
-    <h2>Öyküleriniz</h2>
-    <p><a href="../yazar/<%=currentUser.gercekAd%>" class="visibleLink" target="_blank">Buradan</a> erişebilirsiniz.</p>
-
-    <h2>Editörü Dene</h2>
-    <p>Bu editör henüz yapım aşamasında.</p>
-    <button id="newDraft">Yeni Öykü Oluştur</button>
+      <% if (currentUser.sekil==='okurYazar' ){%>
+        <div>
+          <h2>Yorumlanacak Öyküler</h2>
+          <% if (yorumlar.length===0){%>
+            <p>Şu an yorumlamanız gereken öykü bulunmamaktadır.</p>
+            <%}else{%>
+              <table class="yorumTablosu" rules="all">
+                <tr>
+                  <th>
+                    Öykü
+                  </th>
+                  <th>
+                    Yorum?
+                  </th>
+                </tr>
+                <% yorumlar.forEach(oyku=> { %>
+                  <tr>
+                    <td>
+                      <a href=<%=oyku.link %> target="_blank">
+                        <%= oyku.baslik %>
+                      </a>
+                    <td>
+                      <input type="checkbox" class="yorumladimBox" data-yorumid="<%= oyku._id%>" autocomplete="off">
+                      <button data-yorumid="<%= oyku._id%>" autocomplete="off"
+                        class="tabloButonu yorumOnay">Gönder?</button>
+                    </td>
+                  </tr>
+                  <% }) %>
+              </table>
+              <%}%>
+                <h2>Onayınızı Bekleyen Yorumlar</h2>
+                <% if (onaylar.length===0){%>
+                  <p>Şu an onaylamanız gereken yorum bulunmamaktadır.</p>
+                  <%}else{%>
+                    <table class="yorumTablosu" rules="all">
+                      <tr>
+                        <th>
+                          Öykü
+                        </th>
+                        <th>
+                          Yorumcu
+                        </th>
+                        <th>
+                          Yeterli
+                        </th>
+                        <th>
+                          Yetersiz
+                        </th>
+                        <th>
+                          Onay
+                        </th>
+                      </tr>
+                      <% onaylar.forEach(oyku=> { %>
+                        <tr>
+                          <td>
+                            <a href=<%=oyku.link %> target="_blank">
+                              <%= oyku.baslik %>
+                            </a>
+                          <td>
+                            <%= oyku.yorumcuIsim%>
+                          </td>
+                          <td style="text-align: center;">
+                            <input type="radio" id="onayladim" class="onayladimBox" name="onay"
+                              data-yorumid="<%= oyku._id%>" autocomplete="off" value="true">
+                          </td>
+                          <td style="text-align: center;">
+                            <input type="radio" id="onaylamadim" class="onaylamadimBox" name="onay"
+                              data-yorumid="<%= oyku._id%>" autocomplete="off" value="false">
+                          </td>
+                          <td>
+                            <button data-yorumid="<%= oyku._id%>" autocomplete="off"
+                              class="tabloButonu onayOnay">Gönder?</button>
+                          </td>
+                        </tr>
+                        <% }) %>
+                    </table>
+                    <%}}%>
+                      <h2>Öyküleriniz</h2>
+                      <p><a href="../yazar/<%=currentUser.gercekAd%>" class="visibleLink" target="_blank">Buradan</a>
+                        erişebilirsiniz.</p>
 
 
-    <%if (currentUser.taslaklar.length>0){%>
-      <table class="yorumTablosu" rules="all">
-        <tr>
-          <th>
-            Başlık
-          </th> 
-          <th >
-            Sil
-          </th>
-        </tr>
-        <% currentUser.taslaklar.forEach(taslak => { %>
-          <tr >
-            <td>
-              <a href=<%="../editor/editor.html?draft="+taslak.id+"&mode=edit" %> target="_blank">
-                <%= taslak.baslik %>
-              </a>
-            <td>
-              <button class="deleteDraft" data-draft-id=<%=taslak.id %>>Sil?</button>
-            </td>
-          </tr>
-        <% }) %>
-      </table>
-    <%}%>
 
-  </div>
-    
-  <%- include("./partials/footer.ejs") %>
+        </div>
 
-</body>
-<script defer src="/scripts/uyeSayfa.js"></script>
+        <%- include("./partials/footer.ejs") %>
+
+  </body>
+  <script defer src="/scripts/uyeSayfa.js"></script>
+
 </html>
