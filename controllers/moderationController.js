@@ -40,8 +40,9 @@ async function weeklyModeration(req, res) {
 }
 
 async function vacationCheck(req, res) {
-  const numberOfParticipants = Kullanici.find({ katilim: "yazacak" }).lean()
-    .length;
+  const numberOfParticipants = await Kullanici.find({
+    katilim: "yazacak",
+  }).lean().length;
   if (numberOfParticipants <= LIMIT_TO_VACATION && numberOfParticipants > 0) {
     await Kullanici.updateMany(
       { katilim: "yazacak" },
@@ -52,7 +53,7 @@ async function vacationCheck(req, res) {
     res.json(`no story will be written this week.`);
   } else {
     res.json(
-      `${numberOfParticipants} persons are writing. No need for a vacation`
+      `${numberOfParticipants} people are writing. No need for a vacation`
     );
   }
 }
