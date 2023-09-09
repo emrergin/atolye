@@ -20,43 +20,6 @@ async function haftaBilgisi(req, res) {
   res.json(haftalar);
 }
 
-async function draftCall(req, res) {
-  const relatedDraft = await Taslak.findById(req.params.id).lean();
-  const relatedAuthor = await Kullanici.findById(relatedDraft.yazarObje).lean();
-  res.json({
-    icerik: relatedDraft.icerik,
-    baslik: relatedDraft.baslik,
-    author: relatedAuthor.gercekAd,
-  });
-}
-
-async function draftUpdate(req, res) {
-  if (req.user) {
-    const relatedDraft = await Taslak.findById(req.params.id);
-    if (!relatedDraft) {
-      res.status(404).json("draft does not exist.");
-    }
-    if (relatedDraft.yazarObje.toString() !== req.user._id.toString()) {
-      res.status(401).json(`unauthorized`);
-    }
-    relatedDraft.baslik = req.body.baslik;
-    relatedDraft.icerik = req.body.icerik;
-    await relatedDraft.save();
-
-    const relatedUser = await Kullanici.findById(req.user._id);
-    const indexOfDraft = relatedUser.taslaklar.findIndex(
-      (a) => a.id === req.params.id
-    );
-    relatedUser.taslaklar[indexOfDraft].baslik = req.body.baslik;
-    relatedUser.markModified("taslaklar");
-    await relatedUser.save();
-
-    res.json(relatedDraft);
-  } else {
-    res.status(401).json(`unauthorized`);
-  }
-}
-
 async function storiesWithPagination(req, res) {
   const totalNumberOfStories = await Oyku.countDocuments();
   const perPage = 10;
@@ -84,8 +47,6 @@ module.exports = {
   oykuler,
   oykulerKisa,
   haftaBilgisi,
-  draftCall,
-  draftUpdate,
   storiesWithPagination,
   randomStory,
 };
