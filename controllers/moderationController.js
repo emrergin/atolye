@@ -40,9 +40,12 @@ async function weeklyModeration(req, res) {
 }
 
 async function vacationCheck(req, res) {
-  const numberOfParticipants = await Kullanici.find({
-    katilim: "yazacak",
-  }).lean().length;
+  const numberOfParticipants = (
+    await Kullanici.find({
+      katilim: "yazacak",
+    }).lean()
+  ).length;
+
   if (numberOfParticipants <= LIMIT_TO_VACATION && numberOfParticipants > 0) {
     await Kullanici.updateMany(
       { katilim: "yazacak" },
@@ -68,8 +71,19 @@ async function storyFetcher(req, res) {
 
   for (let author of activeAuthors) {
     const storiesByThisAuthor = await Oyku.find({
-      yazarObje: author.yazarObje,
-      metin: { $exists: false },
+      $or: [
+        {
+          metin: { $exists: false },
+        },
+        {
+          metin: /^<!DOCTYPE/,
+        },
+      ],
+      $and: [
+        {
+          yazarObje: author.yazarObje,
+        },
+      ],
     });
     for (let story of storiesByThisAuthor) {
       const textOfStory = await fetchStory(story.link);
@@ -79,7 +93,6 @@ async function storyFetcher(req, res) {
       await story.save();
     }
   }
-
   res.json("story texts update is complete.");
 }
 
