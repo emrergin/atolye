@@ -26,24 +26,17 @@ app.use(compression());
 // connect to mongodb & listen for requests
 
 mongoose
-  .connect(process.env.MONGOURL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-  })
+  .connect(process.env.MONGOURL)
   .then((result) => app.listen(process.env.PORT || 3000))
   .catch((err) => console.log(err));
 
 // register view engine
 app.set("view engine", "ejs");
 
-// kullanicilar vs.
 passport.use(
-  new LocalStrategy((username, password, done) => {
-    Kullanici.findOne({ username: username.trim() }, (err, user) => {
-      if (err) {
-        return done(err);
-      }
+  new LocalStrategy(async function (username, password, done) {
+    try {
+      const user = await Kullanici.findOne({ username: username.trim() });
       if (!user) {
         return done(null, false, { message: "Kullanıcı adı yanlış." });
       }
@@ -51,7 +44,9 @@ passport.use(
         return done(null, false, { message: "Parola yanlış." });
       }
       return done(null, user);
-    });
+    } catch (err) {
+      return done(err);
+    }
   })
 );
 
@@ -59,10 +54,13 @@ passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
 
-passport.deserializeUser(function (id, done) {
-  Kullanici.findById(id, function (err, user) {
-    done(err, user);
-  });
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await Kullanici.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err);
+  }
 });
 
 app.use(
